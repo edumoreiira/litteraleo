@@ -1,4 +1,5 @@
-import { Component } from "@angular/core";
+import { Component, computed, effect, inject, input, signal } from "@angular/core";
+import { DocumentListenerService } from "../../../services/platform/document-listener.service";
 
 @Component({
  selector: 'app-searchbar',
@@ -6,6 +7,9 @@ import { Component } from "@angular/core";
  imports: [],
 })
 export class SearchbarComponent {
-  // This component can be extended with search functionality in the future
-  // Currently, it serves as a placeholder for a search bar
+  documentListener = inject(DocumentListenerService);
+  // 
+  _mobileViewport = input(0, {alias: 'mobileView'}); // viewport width in pixels that triggers the mobile version of searchbar
+  isMobile = computed(() => this.documentListener.screenSize$() <= this._mobileViewport());
+
 }

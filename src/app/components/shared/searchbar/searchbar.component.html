@@ -1,10 +1,16 @@
-<div class="flex items-center px-4 py-[.35rem] border border-input rounded shadow-xs w-[210px]">
-  <div class="flex items-center gap-2">
-    <i class="fi fi-rr-search text-muted-fg"></i>
-    <input
-      type="text"
-      class="w-full bg-transparent placeholder:text-muted-fg text-fg outline-none"
-      placeholder="Pesquisar..."
-    >
+@if(isMobile() === false) {
+  <div class="flex items-center px-4 py-[.35rem] border border-input rounded shadow-xs w-[210px]">
+    <div class="flex items-center gap-2">
+      <i class="fi fi-rr-search text-muted-fg"></i>
+      <input
+        type="text"
+        class="w-full bg-transparent placeholder:text-muted-fg text-fg outline-none"
+        placeholder="Pesquisar..."
+      >
+    </div>
   </div>
-</div>
+} @else {
+  <button class="p-2 hover:bg-muted transition-colors rounded cursor-pointer">
+    <i class="fi fi-br-search text-muted-fg text-xl"></i>
+  </button>
+}
