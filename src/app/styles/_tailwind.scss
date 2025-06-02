@@ -1,6 +1,7 @@
 @use "tailwindcss";
 
 @theme {
+    --default-font-family: "Geist";
     --text: var(--fg);
     --radius: var(--radius);
     --color-bg: var(--color-bg);
