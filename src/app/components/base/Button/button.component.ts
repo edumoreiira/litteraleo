@@ -8,7 +8,7 @@ import { ChangeDetectionStrategy, Component, computed, HostBinding, input } from
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ButtonComponent {
-    variant = input<"contained" | "outline">("contained");
+    variant = input<"contained" | "outline" | "text">("contained");
     baseless = input<boolean>(false);
     _size = input<"sm" | "base" | "lg" | "xl" | "2xl">("sm", { alias: "size" });
 
@@ -27,6 +27,8 @@ export class ButtonComponent {
 
     private outline = "border border-border shadow-xs " +
     "hover:bg-accent transition-all"
+
+    private text = "text-fg hover:bg-accent transition-all";
 
     @HostBinding("class")
     get variantClasses() {
