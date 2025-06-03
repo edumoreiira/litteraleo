@@ -8,7 +8,7 @@ import { DocumentListenerService } from '../../services/platform/document-listen
   host: {
     class: 'sticky block top-[0] left-[0] w-full z-50 px-4 sm:px-6 md:px-12 py-4 flex items-center justify-between transition-colors',
     '[attr.style]': '"transform: translateY(-" + navbarOffset() + "px);"',
-    '[class.bg-white]': 'sm() ? scrollFromTop() > 60 : scrollFromTop() > 30',
+    '[class.bg-extreme]': 'sm() ? scrollFromTop() > 60 : scrollFromTop() > 30',
   },
   templateUrl: './navbar.component.html',
   imports: [ButtonComponent, SearchbarComponent],

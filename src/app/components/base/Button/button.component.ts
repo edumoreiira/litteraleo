@@ -23,7 +23,7 @@ export class ButtonComponent {
     
     private contained = 
     "bg-primary text-primary-fg font-semibold shadow-xs " +
-    "hover:bg-primary-400 transition-all"
+    "hover:opacity-85 transition-all"
 
     private outline = "border border-border shadow-xs " +
     "hover:bg-accent transition-all"

@@ -23,10 +23,10 @@ export class DocumentListenerService {
   scrollFromTop$ = this.scrollFromTop.asReadonly();
   //viewports
   readonly isXs = computed(() => this.screenSize() < 640);
-  readonly isSm = computed(() => this.screenSize() >= 640 && this.screenSize() < 768);
-  readonly isMd = computed(() => this.screenSize() >= 768 && this.screenSize() < 1024);
-  readonly isLg = computed(() => this.screenSize() >= 1024 && this.screenSize() < 1280);
-  readonly isXl = computed(() => this.screenSize() >= 1280 && this.screenSize() < 1536);
+  readonly isSm = computed(() => this.screenSize() >= 640);
+  readonly isMd = computed(() => this.screenSize() >= 768);
+  readonly isLg = computed(() => this.screenSize() >= 1024);
+  readonly isXl = computed(() => this.screenSize() >= 1280);
   readonly is2xl = computed(() => this.screenSize() >= 1536);
 
   constructor(rendererFactory: RendererFactory2) {

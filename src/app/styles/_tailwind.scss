@@ -6,6 +6,7 @@
     --font-serif: Abril Fatface, Georgia, Cambria, "Times New Roman", Times, serif;
     --text: var(--fg);
     --radius: var(--radius);
+    --color-extreme: var(--color-extreme);
     --color-bg: var(--color-bg);
     --color-fg: var(--color-fg);
     --color-card: var(--color-card);
@@ -41,7 +42,8 @@
 
 :root {
     --radius: 0.65rem;
-    --color-bg: oklch(0.975 0.0034 325.6);
+    --color-extreme: oklch(1 0 none);
+    --color-bg: oklch(0.989 0.002 301.07);
     --color-fg: oklch(0.1149 0 0);
     --color-card: oklch(1 0 0);
     --color-card-fg: oklch(0.141 0.005 285.823);
@@ -78,8 +80,9 @@
 }
 
 .dark {
+    --color-extreme: oklch(0 0 none);
     --color-bg: oklch(0.1149 0 0);
-    --color-fg: oklch(0.9572 0.0034 325.6);
+    --color-fg: oklch(0.989 0.002 301.07);
     --color-card: oklch(0.21 0.006 285.885);
     --color-card-fg: oklch(0.985 0 0);
     --color-popover: oklch(0.21 0.006 285.885);
