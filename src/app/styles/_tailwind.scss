@@ -2,6 +2,8 @@
 
 @theme {
     --default-font-family: "Geist";
+    --font-sans: Geist, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";  
+    --font-serif: Abril Fatface, Georgia, Cambria, "Times New Roman", Times, serif;
     --text: var(--fg);
     --radius: var(--radius);
     --color-bg: var(--color-bg);
