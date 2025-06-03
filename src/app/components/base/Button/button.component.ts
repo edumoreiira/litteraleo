@@ -12,7 +12,7 @@ export class ButtonComponent {
     baseless = input<boolean>(false);
     _size = input<"sm" | "base" | "lg" | "xl" | "2xl">("sm", { alias: "size" });
 
-    private base = "py-[.35rem] rounded font-medium"
+    private base = "py-[.35rem] rounded font-[700] font-[Lora] italic lowercase"
     private size = computed(() => {
         return this._size() === "sm" ? "text-sm px-3" :
         this._size() === "base" ? "text-base px-[.9rem]" :
