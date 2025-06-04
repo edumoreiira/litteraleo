@@ -26,12 +26,10 @@ export class NavbarComponent implements AfterViewChecked {
 
   ngAfterViewChecked(): void {
     this.maxOffset = this.el.nativeElement.offsetHeight; // update maxOffset based on the navbar height
+    this.handleNavbarOffset(); // ensure the offset is correctly set after view checked
   }
 
-
-  //host listeners
-  @HostListener('window:scroll')
-  onWindowScroll() {
+  handleNavbarOffset() {
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop; 
     const delta = scrollTop - this.lastScrollTop;
     const isAboveThreshold = this.sm() ? scrollTop > 150 : scrollTop > 60;
@@ -44,5 +42,10 @@ export class NavbarComponent implements AfterViewChecked {
       this.navbarOffset.set(0); //reset navbar offset if scrolled above threshold
     }
     this.lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+  }
+  //host listeners
+  @HostListener('window:scroll')
+  onWindowScroll() {
+    this.handleNavbarOffset();
   }
 }
