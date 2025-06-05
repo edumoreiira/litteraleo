@@ -1,21 +1,17 @@
-import { Component, ElementRef, inject, OnInit, signal, viewChild } from '@angular/core';
-import { ReviewCardComponent } from '../../shared/review-card/review-card.component';
+import { Component, contentChild, contentChildren, ElementRef, inject, OnInit, signal, viewChild } from '@angular/core';
+import { ReviewCardComponent } from '../review-card/review-card.component';
 import { createAnimation } from '../../../angular-animations/animations.utils';
 
 @Component({
-  selector: 'app-review-card-section',
+  selector: 'app-card-slider',
 
-  imports: [ReviewCardComponent],
+  imports: [],
   host: {
     class: 'relative max-w-full'
   },
   template: `
     <div #cardContainer class="flex items-start gap-4 overflow-auto hide-scrollbar snap-x snap-mandatory relative'">
-      <article #card app-review-card class="flex-1 snap-start min-w-[389px]"></article>
-      <article app-review-card class="flex-1 snap-start min-w-[389px]"></article>
-      <article app-review-card class="flex-1 snap-center min-w-[389px]"></article>
-      <article app-review-card class="flex-1 snap-end min-w-[389px]"></article>
-      <article app-review-card class="flex-1 snap-end min-w-[389px]"></article>
+      <ng-content></ng-content>
     </div>
     @if(scrollPosition() !== 'end') {
       <button @fadeIn
@@ -36,9 +32,16 @@ import { createAnimation } from '../../../angular-animations/animations.utils';
     `,
     animations: [createAnimation('fadeIn', { transform: 'scale(.5)'})]
 })
-export class ReviewCardSectionComponent implements OnInit {
+export class CardSlider implements OnInit {
+  // To use this component, you need to use #card on child component you want to measure the width of scroll.
+  // Example:
+  // <app-card-slider>
+  //   <app-review-card #card></app-review-card>  =>  this will be the card that will be used to measure the width of scroll.
+  //   <app-review-card></app-review-card>
+  // </app-card-slider>
+
   private cardContainerRef = viewChild('cardContainer', { read: ElementRef });
-  private cardRef = viewChild('card', { read: ElementRef });
+  private cardRef = contentChild('card', { read: ElementRef });
   // 
   protected scrollPosition = signal<'start' | 'end' | 'middle'>('middle');
 
@@ -51,6 +54,7 @@ export class ReviewCardSectionComponent implements OnInit {
 
   scrollRight() {
     const cardElement = this.cardRef()?.nativeElement;
+    console.log(cardElement);
     if (cardElement) {
       const scrollAmount = cardElement.offsetWidth;
       this.scroll(scrollAmount);

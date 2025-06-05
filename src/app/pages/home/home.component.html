@@ -24,7 +24,13 @@
 <section class="page-container {{ padding }}">
   <div class="flex flex-col items-center lg:gap-6 gap-3">
     <h1 appTitle>Últimas Resenhas</h1>
-    <app-review-card-section/>
+    <app-card-slider>
+      <article #card app-review-card class="flex-1 snap-start min-w-[389px]"></article>
+      <article app-review-card class="flex-1 snap-center min-w-[389px]"></article>
+      <article app-review-card class="flex-1 snap-center min-w-[389px]"></article>
+      <article app-review-card class="flex-1 snap-center min-w-[389px]"></article>
+      <article app-review-card class="flex-1 snap-end min-w-[389px]"></article>
+    </app-card-slider>
   </div>
 </section>
 <div class="h-[2000px]"></div>
