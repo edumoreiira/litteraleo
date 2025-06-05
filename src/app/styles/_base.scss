@@ -24,3 +24,13 @@ body {
   width: min(1200px, 100% - 3rem);
   margin: 0 auto;
 }
+
+.hide-scrollbar {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE e Edge */
+
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari e Edge (baseado em Chromium) */
+}

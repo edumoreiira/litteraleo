@@ -26,7 +26,9 @@ export class NavbarComponent implements AfterViewChecked {
 
   ngAfterViewChecked(): void {
     this.maxOffset = this.el.nativeElement.offsetHeight; // update maxOffset based on the navbar height
-    this.handleNavbarOffset(); // ensure the offset is correctly set after view checked
+    if(typeof window !== 'undefined') {
+      this.handleNavbarOffset(); // ensure the offset is correctly set after view checked
+    }
   }
 
   handleNavbarOffset() {
