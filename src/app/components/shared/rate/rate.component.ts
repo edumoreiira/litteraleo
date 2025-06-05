@@ -1,5 +1,6 @@
 import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input, OnInit, output, signal } from '@angular/core';
+import { createAnimation } from '../../../angular-animations/animations.utils';
 
 @Component({
   selector: 'app-rate',
@@ -9,21 +10,19 @@ import { ChangeDetectionStrategy, Component, input, OnInit, output, signal } fro
   },
   template: `
     @for(star of stars(); track $index) {
-      @if(star === 0) {
-        <i class="fi fi-br-star opacity-50"
+      <div class="relative">
+        <i class="fi fi-br-star opacity-50 transition-all"
         [ngClass]="{'cursor-pointer': canVote()}"
         (mouseenter)="canVote() ?  onMouseIn($index) : null"
         (mouseout)="canVote() ?  onMouseOut() : null"
-        (click)="rate($index + 1)"></i>
-      } @else {
-        <i class="fi fi-sr-star"
-        [ngClass]="{'cursor-pointer': canVote()}"
-        (mouseenter)="canVote() ?  onMouseIn($index): null"
-        (mouseout)="canVote() ?  onMouseOut(): null"
-        (click)="rate($index + 1)"></i>
-      }
+        (click)="canVote() ? rate($index + 1) : null"></i>
+        @if(star === 1) {
+          <i class="fi fi-sr-star transition-all absolute left-[0] top-[0] pointer-events-none" @popIn></i>
+        }
+      </div>
     }
   `,
+  animations: [createAnimation('popIn', { transform: 'scale(0) '})],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RateComponent implements OnInit{
