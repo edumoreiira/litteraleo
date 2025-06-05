@@ -1,0 +1,80 @@
+<div class="flex flex-col justify-between gap-4 text-start p-5 text-muted-fg">
+  <div>
+    <div class="flex items-center justify-between">
+      <div>
+        <h1 class="font-bold text-2xl">Lorem ipsum dolor sit amet consectetur.</h1>
+        <span class="opacity-70 text-lg">Livro de Alguém Legal</span>
+      </div>
+      <div>
+        <app-rate [canVote]="false" class="text-xl text-primary gap-1" />
+        <span class="text-sm opacity-70">Minha avaliação</span>
+      </div>
+    </div>
+    <p appText class="mt-4">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Officiis quo earum adipisci perferendis velit cum recusandae, aliquam quod quae reprehenderit ea inventore ad rerum, magni necessitatibus repellat. Fuga, excepturi. Et, obcaecati iusto.</p>
+  </div>
+  
+  
+  <div class="flex items-center gap-2 flex-wrap">
+    @for(tag of tags; track $index) {
+      <span 
+        class="py-1 px-3 font-serif italic border border-zinc-300 text-zinc-500 rounded text-sm">
+        {{ tag }}
+      </span>
+    }
+  </div>
+
+  <div class="grid grid-cols-2 gap-3">
+    <div class="flex items-center gap-3">
+      <i class="fi fi-sr-book-alt"></i>
+      <span>425 páginas</span>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <i class="fi fi-sr-clock-three"></i>
+      <span>Leitura de 10-14 horas</span>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <i class="fi fi-sr-calendar-lines-pen"></i>
+      <span>Públicado em 2003</span>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <i class="fi fi-sr-pen-clip"></i>
+      <span>Darkside Books</span>
+    </div>
+  </div>
+
+  <div class="flex items-center justify-between gap-4">
+    <div class="flex items-center gap-3">
+      <button app-button size="lg"
+      class="flex items-center gap-2">
+        <i class="fi fi-sr-feedback-alt text-sm"></i>
+        ler resenha
+      </button>
+      <button app-button size="lg" variant="text"
+      class="flex items-center gap-2 text-primary hover:bg-zinc-200!">
+        <i class="fi fi-sr-feedback text-sm"></i>
+        deixe seu comentário
+      </button>
+    </div>
+
+    <div class="flex items-center gap-4">
+      <div class="flex items-center">
+        <i class="fi fi-sr-thumbs-up p-2 hover:text-primary cursor-pointer"></i>
+        16
+      </div>
+      <div class="flex items-center">
+        <i class="fi fi-sr-thumbs-down p-2 hover:text-primary cursor-pointer"></i>
+        2
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<div class="rounded-lg h-[400px] w-[300px] shrink-0 overflow-hidden">
+<img src="./books/sherlock.webp" alt=""
+  class="h-full w-full object-cover">
+</div>
