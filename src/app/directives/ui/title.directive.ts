@@ -8,7 +8,7 @@ import { Directive, input } from '@angular/core';
 })
 export class TitleDirective {
   size = input<'sm' | 'base' | 'lg'>("base")
-  base = 'font-serif font-bold text-primary lowercase'
+  base = 'font-[Abril_Fatface] font-bold text-primary lowercase'
   getClass() {
     switch (this.size()) {
       case 'lg':
