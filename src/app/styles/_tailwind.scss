@@ -35,9 +35,9 @@
     --color-primary-700: var(--color-primary-700);
     --color-primary-800: var(--color-primary-800);
     --color-primary-900: var(--color-primary-900);
-    --default-transition-timing-function: var(--default-transition-timing-function);
-    --default-transition-duration: var(--default-transition-duration);
-    --breakpoint-xs: var(--breakpoint-xs);
+    --default-transition-timing-function: ease-in-out;
+    --default-transition-duration: 175ms;
+    --breakpoint-xs: 420px;
 }
 
 :root {
@@ -72,11 +72,6 @@
     --color-primary-800: oklch(42.68% 0.244 282.95);
     --color-primary-900: oklch(38.46% 0.218 283.53);
     --color-primary-950: oklch(35.53% 0.199 283.89);
-
-    //misc
-    --default-transition-timing-function: ease-in-out;
-    --default-transition-duration: 175ms;
-    --breakpoint-xs: 420px;
 }
 
 .dark {

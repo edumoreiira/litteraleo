@@ -21,8 +21,9 @@
     />
   </div>
 </main>
+
 <section class="page-container {{ padding }}">
-  <div class="flex flex-col items-center lg:gap-6 gap-3">
+  <div class="flex flex-col items-center lg:gap-8 sm:gap-6 gap-4">
     <h1 appTitle>Últimas Resenhas</h1>
     <app-card-slider>
       <article #card app-review-card class="flex-1 snap-start min-w-[389px]"></article>
@@ -31,6 +32,24 @@
       <article app-review-card class="flex-1 snap-center min-w-[389px]"></article>
       <article app-review-card class="flex-1 snap-end min-w-[389px]"></article>
     </app-card-slider>
+    <button
+      app-button
+      variant="contained"
+      size="lg"
+      class="flex items-center gap-2"
+      routerLink="/reviews"
+    >
+    <i class="fi fi-sr-feedback-alt text-sm"></i>
+    Ver todas as resenhas
+    </button>
+  </div>
+</section>
+
+<section class="page-container {{ padding }}">
+  <div class="flex flex-col items-center lg:gap8 sm:gap-6 gap-4 text-center">
+    <h1 appTitle> Recomendação do mês!</h1>
+    <p appText size="lg">Lorem ipsum dolor sit amet consectetur adipisicing elit. Optio obcaecati veniam a!</p>
+    <app-recommendation-card></app-recommendation-card>
   </div>
 </section>
 <div class="h-[2000px]"></div>

@@ -1,16 +1,23 @@
-<div class="flex flex-col justify-between gap-4 text-start p-5 text-muted-fg">
-  <div>
-    <div class="flex items-center justify-between">
-      <div>
-        <h1 class="font-bold text-2xl">Lorem ipsum dolor sit amet consectetur.</h1>
-        <span class="opacity-70 text-lg">Livro de Alguém Legal</span>
+<div class="flex flex-col justify-around gap-4 text-start p-5 text-muted-fg">
+  <div class="flex gap-2">
+    <div>
+      <div class="flex lg:items-center justify-between gap-2 lg:flex-row flex-col-reverse">
+        <div>
+          <h1 class="font-bold text-xl lg:text-2xl">Lorem ipsum dolor sit amet consectetur.</h1>
+          <span class="opacity-60 text-lg">Livro de Alguém Legal</span>
+        </div>
+        <div>
+          <app-rate [canVote]="false" class="text-xl text-primary gap-1" />
+          <span class="text-sm opacity-60">Minha avaliação</span>
+        </div>
       </div>
-      <div>
-        <app-rate [canVote]="false" class="text-xl text-primary gap-1" />
-        <span class="text-sm opacity-70">Minha avaliação</span>
-      </div>
+      <p appText class="mt-4">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Incidunt nostrum velit error temporibus laboriosam? Odio, odit incidunt! Quia, facere obcaecati!</p>
     </div>
-    <p appText class="mt-4">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Officiis quo earum adipisci perferendis velit cum recusandae, aliquam quod quae reprehenderit ea inventore ad rerum, magni necessitatibus repellat. Fuga, excepturi. Et, obcaecati iusto.</p>
+    <!-- small book image on the corner -->
+    <div class="block lg:hidden shrink-0 min-[500px]:w-[100px] min-[500px]:h-[150px] w-[70px] h-[95px] bg-red-500 rounded">
+      <img src="./books/sherlock.webp" alt="Capa do livro Sherlock Holmes"
+        class="w-full h-full object-cover rounded">
+    </div>
   </div>
   
   
@@ -44,22 +51,22 @@
       <span>Darkside Books</span>
     </div>
   </div>
-
-  <div class="flex items-center justify-between gap-4">
-    <div class="flex items-center gap-3">
-      <button app-button size="lg"
-      class="flex items-center gap-2">
-        <i class="fi fi-sr-feedback-alt text-sm"></i>
+  @let sm = documentListener.isSm();
+  <div class="flex items-center gap-4 flex-wrap justify-center xs:flex-row flex-col">
+    <div class="flex items-center gap-3 xs:flex-row flex-col justify-center">
+      <button app-button [size]="sm ? 'lg' : 'base'"
+      class="flex items-center gap-2 min-w-fit">
+        <i class="fi fi-sr-lightbulb-on text-sm"></i>
         ler resenha
       </button>
-      <button app-button size="lg" variant="text"
-      class="flex items-center gap-2 text-primary hover:bg-zinc-200!">
-        <i class="fi fi-sr-feedback text-sm"></i>
+      <button app-button [size]="sm ? 'lg' : 'base'" variant="text"
+      class="flex items-center gap-2 text-primary hover:bg-zinc-200! min-w-fit">
+        <i class="fi fi-sr-comment-dots text-sm"></i>
         deixe seu comentário
       </button>
     </div>
 
-    <div class="flex items-center gap-4">
+    <div class="flex items-center gap-4 xs:ml-auto">
       <div class="flex items-center">
         <i class="fi fi-sr-thumbs-up p-2 hover:text-primary cursor-pointer"></i>
         16
@@ -74,7 +81,7 @@
 
 </div>
 
-<div class="rounded-lg h-[400px] w-[300px] shrink-0 overflow-hidden">
+<div class="hidden lg:block rounded-lg aspect-1/1.5 w-[275px] min-h-[412.5px] shrink-0 overflow-hidden">
 <img src="./books/sherlock.webp" alt=""
   class="h-full w-full object-cover">
 </div>
