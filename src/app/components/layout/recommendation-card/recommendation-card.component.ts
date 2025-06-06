@@ -8,7 +8,7 @@ import { DocumentListenerService } from '../../../services/platform/document-lis
 @Component({
   selector: 'app-recommendation-card',
   host: {
-    class: 'block bg-card text-card-fg rounded p-3 flex gap-4 md:flex-row flex-col'
+    class: 'block bg-card text-card-fg rounded p-2 flex gap-4 md:flex-row flex-col'
   },
   imports: [TextDirective, RateComponent, ButtonComponent],
   templateUrl: './recommendation-card.component.html',

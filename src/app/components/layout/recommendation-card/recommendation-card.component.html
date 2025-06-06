@@ -1,6 +1,7 @@
-<div class="flex flex-col justify-around gap-4 text-start p-5 text-muted-fg">
+<div class="flex flex-col justify-around gap-6 text-start text-muted-fg grow-1
+p-3 sm:p-5 ">
   <div class="flex gap-2">
-    <div>
+    <div class="w-full">
       <div class="flex lg:items-center justify-between gap-2 lg:flex-row flex-col-reverse">
         <div>
           <h1 class="font-bold text-xl lg:text-2xl">Lorem ipsum dolor sit amet consectetur.</h1>
@@ -11,12 +12,14 @@
           <span class="text-sm opacity-60">Minha avaliação</span>
         </div>
       </div>
-      <p appText class="mt-4">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Incidunt nostrum velit error temporibus laboriosam? Odio, odit incidunt! Quia, facere obcaecati!</p>
+      <p appText class="mt-3">Hola</p>
     </div>
     <!-- small book image on the corner -->
-    <div class="block lg:hidden shrink-0 min-[500px]:w-[100px] min-[500px]:h-[150px] w-[70px] h-[95px] bg-red-500 rounded">
+    <div class="block lg:hidden shrink-0 rounded-lg overflow-hidden
+     min-[500px]:w-[100px] min-[500px]:h-[150px] w-[70px] h-[95px] 
+     min-[500px]:-mt-[1.1rem] min-[500px]:-mr-[1.1rem] sm:-mt-6 sm:-mr-6 -mt-4 -mr-4">
       <img src="./books/sherlock.webp" alt="Capa do livro Sherlock Holmes"
-        class="w-full h-full object-cover rounded">
+        class="w-full h-full object-cover">
     </div>
   </div>
   
@@ -30,30 +33,40 @@
     }
   </div>
 
-  <div class="grid grid-cols-2 gap-3">
-    <div class="flex items-center gap-3">
+  <div class="flex items-center gap-x-8 md:gap-x-26 gap-y-3 flex-wrap mb-6 xs:mb-0">
+    <div class="flex items-center gap-2">
       <i class="fi fi-sr-book-alt"></i>
       <span>425 páginas</span>
     </div>
 
-    <div class="flex items-center gap-3">
+    <div class="flex items-center gap-2">
       <i class="fi fi-sr-clock-three"></i>
       <span>Leitura de 10-14 horas</span>
     </div>
 
-    <div class="flex items-center gap-3">
+    <div class="flex items-center gap-2">
       <i class="fi fi-sr-calendar-lines-pen"></i>
       <span>Públicado em 2003</span>
     </div>
 
-    <div class="flex items-center gap-3">
+    <!-- <div class="flex items-center gap-2">
       <i class="fi fi-sr-pen-clip"></i>
       <span>Darkside Books</span>
     </div>
+
+    <div class="flex items-center gap-2">
+      <i class="fi fi-sr-graduation-cap"></i>
+      <span>Leitura Rebuscada</span>
+    </div>
+
+    <div class="flex items-center gap-2">
+      <i class="fi fi-sr-pen-clip"></i>
+      <span>Darkside Books</span>
+    </div> -->
   </div>
   @let sm = documentListener.isSm();
-  <div class="flex items-center gap-4 flex-wrap justify-center xs:flex-row flex-col">
-    <div class="flex items-center gap-3 xs:flex-row flex-col justify-center">
+  <div class="flex items-center gap-4 flex-wrap xs:justify-start justify-center xs:flex-row flex-col">
+    <div class="flex items-center gap-3 xs:flex-row flex-col xs:justify-start justify-center">
       <button app-button [size]="sm ? 'lg' : 'base'"
       class="flex items-center gap-2 min-w-fit">
         <i class="fi fi-sr-lightbulb-on text-sm"></i>
@@ -81,7 +94,12 @@
 
 </div>
 
-<div class="hidden lg:block rounded-lg aspect-1/1.5 w-[275px] min-h-[412.5px] shrink-0 overflow-hidden">
+<div class="hidden lg:block shrink-0 aspect-[1/1.5] min-w-0 flex-none overflow-hidden relative rounded">
+  <img src="./books/sherlock.webp" alt=""
+  class="absolute left-0 top-0 h-full w-full object-cover">
+</div>
+<!-- 
+<div class="hidden lg:block rounded-lg aspect-1/1.5 w-[270px] min-h-[405.5px] shrink-0 overflow-hidden">
 <img src="./books/sherlock.webp" alt=""
   class="h-full w-full object-cover">
-</div>
+</div> -->
