@@ -2,6 +2,9 @@ import { AfterViewChecked, ChangeDetectionStrategy, Component, computed, Element
 import { ButtonComponent } from '../base/Button/button.component';
 import { SearchbarComponent } from "../shared/searchbar/searchbar.component";
 import { DocumentListenerService } from '../../services/platform/document-listener.service';
+import { RouterLink } from '@angular/router';
+import { ModalService } from '../../services/ui/modal.service';
+import { SignInFormComponent } from '../forms/sign-in-form/sign-in-form.component';
 
 @Component({
   selector: 'app-navbar',
@@ -11,13 +14,14 @@ import { DocumentListenerService } from '../../services/platform/document-listen
     '[class.bg-extreme]': 'sm() ? scrollFromTop() > 60 : scrollFromTop() > 30',
   },
   templateUrl: './navbar.component.html',
-  imports: [ButtonComponent, SearchbarComponent],
+  imports: [ButtonComponent, SearchbarComponent, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NavbarComponent implements AfterViewChecked {
   protected documentListener = inject(DocumentListenerService);
+  private el = inject(ElementRef);
+  private modal = inject(ModalService);
   //
-  el = inject(ElementRef);
   navbarOffset = signal(0);
   lastScrollTop = 0;
   maxOffset = 90;
@@ -44,6 +48,10 @@ export class NavbarComponent implements AfterViewChecked {
       this.navbarOffset.set(0); //reset navbar offset if scrolled above threshold
     }
     this.lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+  }
+
+  openLoginModal() {
+    const modalRef = this.modal.open(SignInFormComponent, { role: 'dialog' })
   }
   //host listeners
   @HostListener('window:scroll')
