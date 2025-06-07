@@ -1,0 +1,78 @@
+$backdrop: var(--color-backdrop);
+$modal-bkg: var(--color-popover);
+$modal-fg: var(--color-popover-fg);
+$close-btn: var(--color-muted-fg);
+$close-btn-hover: var(--color-primary);
+$close-btn-active: var(--color-primary-400);
+$radius: var(--radius);
+
+
+:host { // host with modal class
+    position: fixed;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+    .modal { // host
+
+    &__backdrop {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: $backdrop;
+        // backdrop-filter: blur(3px);
+    }
+    &__content {
+        background-color: $modal-bkg;
+        color: $modal-fg;
+        border-radius: $radius;
+        padding: 2em;
+        position: relative;
+        cursor: default;
+        z-index: 1;
+        word-break: break-word;
+    }
+    &__close-btn {
+        position: absolute;
+        top: 1em;
+        right: 1.1em;
+        padding: .2em;
+        display: flex;
+        color: $close-btn;
+        font-size: 1.2em;
+        cursor: pointer;
+        transition: color 150ms ease-in-out;
+        z-index: 2;
+        &:hover, &:focus {
+            color: $close-btn-hover;
+        }
+        &:active {
+            transition: ease-out 100ms;
+            color: $close-btn-active;
+        }
+        .fi {
+            &::before {
+                pointer-events: none;
+            }
+        }
+    }
+}
+
+.close-sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
