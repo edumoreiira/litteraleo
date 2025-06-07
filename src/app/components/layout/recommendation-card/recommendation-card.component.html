@@ -4,7 +4,7 @@ p-3 sm:p-5 ">
     <div class="w-full">
       <div class="flex lg:items-center justify-between gap-2 lg:flex-row flex-col-reverse">
         <div>
-          <h1 class="font-bold text-xl lg:text-2xl">Lorem ipsum dolor sit amet consectetur.</h1>
+          <h1 class="font-bold text-xl lg:text-2xl text-card-fg">Lorem ipsum dolor sit amet consectetur.</h1>
           <span class="opacity-60 text-lg">Livro de Alguém Legal</span>
         </div>
         <div>
@@ -12,7 +12,7 @@ p-3 sm:p-5 ">
           <span class="text-sm opacity-60">Minha avaliação</span>
         </div>
       </div>
-      <p appText class="mt-3">Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit quod nostrum placeat autem veniam, beatae similique magnam cupiditate eligendi dolorem vitae quisquam sunt. Ab, cupiditate ea? Tempore qui sapiente magnam soluta dolor blanditiis illo, quos non reiciendis dolorum ea odio praesentium similique corrupti recusandae inventore. Soluta animi aliquam natus beatae numquam est totam velit dolorum esse, nesciunt amet voluptatem, expedita aspernatur qui. Quaerat adipisci rem temporibus illo. Sapiente fugiat saepe, quos rem illum eum ipsa nisi, magni, ullam facilis nostrum delectus non reprehenderit pariatur iusto ad ea voluptate. Incidunt impedit voluptatum sequi modi consequatur velit accusamus quam dolor ea exercitationem magni, quia reiciendis obcaecati praesentium quisquam temporibus quas similique rem et animi laborum nostrum nobis! Asperiores quas temporibus maxime obcaecati earum, delectus eum distinctio ut alias incidunt saepe dolorum cumque.</p>
+      <p appText class="mt-3">Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit quod nostrum placeat autem veniam, beatae similique magnam cupiditate eligendi dolorem vitae quisquam sunt. Ab, cupiditate ea? Tempore qui sapiente magnam soluta dolor blanditiis illo, quos non reiciendis dolorum ea odio praesentium similique corrupti recusandae inventore. Soluta animi aliquam natus beatae numquam est totam velit dolorum esse, nesciunt </p>
     </div>
     <!-- small book image on the corner -->
     <div class="block lg:hidden shrink-0 rounded-lg overflow-hidden
@@ -27,7 +27,7 @@ p-3 sm:p-5 ">
   <div class="flex items-center gap-2 flex-wrap">
     @for(tag of tags; track $index) {
       <span 
-        class="py-1 px-3 font-serif italic border border-zinc-300 text-zinc-500 rounded text-sm">
+        class="py-1 px-3 font-serif italic border border-card-border text-card-muted-fg rounded text-sm">
         {{ tag }}
       </span>
     }
@@ -73,7 +73,7 @@ p-3 sm:p-5 ">
         ler resenha
       </button>
       <button app-button [size]="sm ? 'lg' : 'base'" variant="text"
-      class="flex items-center gap-2 text-primary hover:bg-zinc-200! min-w-fit">
+      class="flex items-center gap-2 text-primary hover:bg-card-muted! min-w-fit">
         <i class="fi fi-sr-comment-dots text-sm"></i>
         deixe seu comentário
       </button>

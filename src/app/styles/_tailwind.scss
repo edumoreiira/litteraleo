@@ -11,6 +11,9 @@
     --color-fg: var(--color-fg);
     --color-card: var(--color-card);
     --color-card-fg: var(--color-card-fg);
+    --color-card-border: var(--color-card-border);
+    --color-card-muted: var(--color-card-muted);
+    --color-card-muted-fg: var(--color-card-muted-fg);
     --color-popover: var(--color-popover);
     --color-popover-fg: var(--color-popover-fg);
     --color-primary-fg: var(--color-primary-fg);
@@ -47,6 +50,9 @@
     --color-fg: oklch(0.1149 0 0);
     --color-card: oklch(0.96 0.0026 301.35);
     --color-card-fg: oklch(0.141 0.005 285.823);
+    --color-card-muted: oklch(0.920 0.0086 286.375);
+    --color-card-muted-fg: oklch(0.495 0.021 285.938);
+    --color-card-border: oklch(0.88 0.004 286.32);
     --color-popover: oklch(1 0 0);
     --color-popover-fg: oklch(0.141 0.005 285.823);
     --color-primary-fg: oklch(0.969 0.016 293.756);
@@ -72,6 +78,7 @@
     --color-primary-800: oklch(42.68% 0.244 282.95);
     --color-primary-900: oklch(38.46% 0.218 283.53);
     --color-primary-950: oklch(35.53% 0.199 283.89);
+    --color-backdrop: hsla(0, 0%, 0%, 0.377);
 }
 
 .dark {
