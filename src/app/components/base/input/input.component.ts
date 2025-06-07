@@ -21,7 +21,6 @@ type InputTypes = 'text' | 'email' | 'password' | 'number' | 'tel' | 'url';
     [placeholder]="placeholder()"
     (input)="onInput($event)">
   `,
-  styleUrl: './input.component.scss',
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

@@ -12,7 +12,7 @@ import { ModalSizeUnit } from '../../../../models/modal.interface';
   template: `
   <!-- <div class="modal"> host div-->
   <div class="modal__content" @popUp focusTrap
-    [ngStyle]="{'width': 'min(' + minWidth() + ', 100%)'}"
+    [ngStyle]="{'width': 'min(' + minWidth() + ', calc(100% - 1.5rem))'}"
     [attr.role]="role()" [attr.aria-labelledby]="ariaLabelledBy()" [attr.aria-describedby]="ariaDescribedBy()"
     [attr.aria-label]="ariaLabel()" aria-modal="true"> 
     <button #ModalCloseButton class="close-sr-only" aria-label="Close Modal" (keydown)="onKeydownClose($event)"></button>
@@ -23,7 +23,7 @@ import { ModalSizeUnit } from '../../../../models/modal.interface';
   styleUrl: './modal.component.scss',
   animations: [
     createAnimation('popUp', { duration: '200ms', transform: 'scale(1.1)', opacity: '0' }),
-    createAnimation('fadeInOut', { duration: '250ms', opacity: '0' }),
+    createAnimation('fadeInOut', { duration: '400ms', opacity: '0' }),
     createQueryAnimations('queryAnimationsModal', '@popUp, @fadeInOut')
   ],
   changeDetection: ChangeDetectionStrategy.OnPush

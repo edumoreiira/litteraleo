@@ -26,12 +26,13 @@ import { createAnimation } from '../../../angular-animations/animations.utils';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RateComponent implements OnInit{
-  canVote = input(true);
-  maxStars = input(5);
-  initialRating = input(3);
-  rating = signal(0);
-  stars = signal<number[]>([]);
-  onRate = output<number>()
+  public canVote = input(true);
+  public initialRating = input(3);
+  public maxStars = input(5);
+  public onRate = output<number>()
+  // 
+  protected rating = signal(0);
+  protected stars = signal<number[]>([]);
 
   ngOnInit(): void {
     this.setRating(this.initialRating());
