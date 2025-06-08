@@ -12,6 +12,7 @@ import { ModalSizeUnit } from '../../../../models/modal.interface';
   template: `
   <!-- <div class="modal"> host div-->
   <div class="modal__content" @popUp focusTrap
+    style="view-transition-name: modal-content"
     [ngStyle]="{'min-width': 'min(' + minWidth() + ', calc(100% - 1.5rem))'}"
     [attr.role]="role()" [attr.aria-labelledby]="ariaLabelledBy()" [attr.aria-describedby]="ariaDescribedBy()"
     [attr.aria-label]="ariaLabel()" aria-modal="true"> 

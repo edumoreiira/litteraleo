@@ -1,8 +1,9 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { InputComponent } from "../../base/input/input.component";
 import { Form, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonComponent } from '../../base/Button/button.component';
 import { AuthService } from '../../../services/auth/auth.service';
+import { createAnimation } from 'app/angular-animations/animations.utils';
 export interface SignInForm {
   email: FormControl<string>;
   password: FormControl<string>;
@@ -11,6 +12,7 @@ export interface SignInForm {
   selector: 'app-sign-in-form',
   imports: [InputComponent, ReactiveFormsModule, ButtonComponent],
   templateUrl: './sign-in-form.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SignInFormComponent {
   private auth = inject(AuthService);
