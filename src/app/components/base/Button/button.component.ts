@@ -8,11 +8,12 @@ import { ChangeDetectionStrategy, Component, computed, HostBinding, input } from
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ButtonComponent {
-    variant = input<"contained" | "outline" | "text">("contained");
+    variant = input<"contained" | "outline" | "text" | "link">("contained");
     baseless = input<boolean>(false);
     _size = input<"sm" | "base" | "lg" | "xl" | "2xl">("sm", { alias: "size" });
 
-    private base = "py-1.5 rounded font-[700] font-serif italic lowercase"
+    private base = "py-1.5 rounded font-[700] font-serif italic lowercase transition-all" +
+    "disabled:opacity-50"
     private size = computed(() => {
         return this._size() === "sm" ? "text-sm px-3" :
         this._size() === "base" ? "text-base px-[.9rem]" :
@@ -23,12 +24,14 @@ export class ButtonComponent {
     
     private contained = 
     "bg-primary text-primary-fg font-semibold shadow-xs " +
-    "hover:opacity-85 transition-all"
+    "hover:opacity-85"
 
     private outline = "border border-border shadow-xs " +
-    "hover:bg-accent transition-all"
+    "hover:bg-accent"
 
-    private text = "text-fg hover:bg-accent transition-all";
+    private text = "text-fg hover:bg-accent";
+
+    private link = "text-primary hover:underline cursor-pointer";
 
     @HostBinding("class")
     get variantClasses() {

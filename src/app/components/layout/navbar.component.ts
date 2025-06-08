@@ -5,6 +5,7 @@ import { DocumentListenerService } from '../../services/platform/document-listen
 import { RouterLink } from '@angular/router';
 import { ModalService } from '../../services/ui/modal.service';
 import { SignInFormComponent } from '../forms/sign-in-form/sign-in-form.component';
+import { AuthWrapperComponent } from '../forms/auth-wrapper/auth-wrapper.component';
 
 @Component({
   selector: 'app-navbar',
@@ -51,7 +52,16 @@ export class NavbarComponent implements AfterViewChecked {
   }
 
   openLoginModal() {
-    const modalRef = this.modal.open(SignInFormComponent, { role: 'dialog' })
+    const modalRef = this.modal.open(AuthWrapperComponent, 
+      { role: 'dialog', componentInputs: {
+        initialMode: 'sign-in'
+      } })
+  }
+  openSignUpModal() {
+    const modalRef = this.modal.open(AuthWrapperComponent, 
+      { role: 'dialog', componentInputs: {
+        initialMode: 'sign-up'
+      } })
   }
   //host listeners
   @HostListener('window:scroll')

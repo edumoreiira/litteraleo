@@ -1,0 +1,47 @@
+<form
+  class="flex flex-col gap-4"
+  [formGroup]="loginForm"
+  (submit)="onLoginSubmit()"
+>
+  <form action=""></form>
+  <app-input
+    type="text"
+    label="Nome"
+    identifier="sign-up-name"
+    placeholder="John Doe"
+  ></app-input>
+
+  <app-input
+    type="email"
+    label="Email"
+    identifier="sign-up-email"
+    placeholder="example@gmail.com"
+  ></app-input>
+
+  <div class="flex items-stretch gap-2 flex-wrap">
+    <app-input
+      class="flex-grow"
+      type="password"
+      label="Senha"
+      identifier="sign-up-password"
+      placeholder=""
+    ></app-input>
+
+    <app-input
+      class="flex-grow"
+      type="password"
+      label="Confirmar senha"
+      identifier="sign-up-password-confirm"
+      placeholder=""
+    ></app-input>
+  </div>
+
+  <button
+    app-button
+    class="text-base! rounded-lg"
+    type="submit"
+    [disabled]="loginForm.invalid"
+  >
+    Entrar
+  </button>
+</form>

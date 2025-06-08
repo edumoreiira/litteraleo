@@ -8,11 +8,11 @@ export interface SignInForm {
   password: FormControl<string>;
 }
 @Component({
-  selector: 'app-sign-in-form',
+  selector: 'app-sign-up-form',
   imports: [InputComponent, ReactiveFormsModule, ButtonComponent],
-  templateUrl: './sign-in-form.component.html',
+  templateUrl: './sign-up-form.component.html',
 })
-export class SignInFormComponent {
+export class SignUpFormComponent {
   private auth = inject(AuthService);
   // 
   loginForm!: FormGroup<SignInForm>;
