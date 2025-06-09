@@ -1,8 +1,9 @@
-import { ApplicationRef, Component, computed, inject, input, OnInit, signal } from '@angular/core';
+import { ApplicationRef, ChangeDetectionStrategy, Component, computed, inject, input, OnInit, signal } from '@angular/core';
 import { SignInFormComponent } from '../sign-in-form/sign-in-form.component';
 import { SignUpFormComponent } from '../sign-up-form/sign-up-form.component';
 import { ButtonComponent } from 'app/components/base/Button/button.component';
 import { createAnimation } from 'app/angular-animations/animations.utils';
+import { AuthService } from 'app/services/auth/auth.service';
 type AuthWrapperMode = 'sign-in' | 'sign-up';
 @Component({
   selector: 'app-auth-wrapper',
@@ -18,7 +19,9 @@ type AuthWrapperMode = 'sign-in' | 'sign-up';
     style="view-transition-name: auth-description">Conecte-se rapidamente com uma conta vinculada.</p>
     <div class="flex items-center gap-4"
     style="view-transition-name: auth-social-buttons">
-      <button app-button variant="outline" class="flex-1 rounded-lg">
+      <button app-button variant="outline" class="flex-1 rounded-lg"
+      (click)="signInWithGoogle()">
+        <span class="sr-only">Entrar com o Google</span>
         <img
           src="./icons/google.png"
           alt="Ícone do Google"
@@ -26,6 +29,7 @@ type AuthWrapperMode = 'sign-in' | 'sign-up';
         />
       </button>
       <button app-button variant="outline" class="flex-1 rounded-lg">
+        <span class="sr-only">Entrar com a Apple</span>
         <img src="./icons/apple.png" alt="Ícone da Apple" class="h-4.5 mx-auto" />
       </button>
     </div>
@@ -53,9 +57,11 @@ type AuthWrapperMode = 'sign-in' | 'sign-up';
   }
   `,
   animations: [createAnimation('slide', { animateX: true, animateY: true })],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AuthWrapperComponent implements OnInit {
   private appRef = inject(ApplicationRef);
+  private auth = inject(AuthService);
   // 
   mode = signal<AuthWrapperMode | undefined>(undefined);
   initialMode = input.required<AuthWrapperMode>();
@@ -74,6 +80,10 @@ export class AuthWrapperComponent implements OnInit {
     } else {
       this.mode.set(newMode);
     }
+  }
+
+  signInWithGoogle() {
+    this.auth.signInWithGoogle()
   }
   
 }

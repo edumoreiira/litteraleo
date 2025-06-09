@@ -1,10 +1,9 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { InputComponent } from "../../base/input/input.component";
-import { Form, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonComponent } from '../../base/Button/button.component';
 import { AuthService } from '../../../services/auth/auth.service';
-import { createAnimation } from 'app/angular-animations/animations.utils';
-export interface SignInForm {
+interface SignInForm {
   email: FormControl<string>;
   password: FormControl<string>;
 }
@@ -30,12 +29,7 @@ export class SignInFormComponent {
     if(this.loginForm.invalid) {
       return;
     }
-
     const { email, password } = this.loginForm.value;
     this.auth.signInWithEmail(email!, password!);
   }
-
-  // signInWithGoogle() {
-  //   this.auth.signInWithGoogle();
-  // }
 }

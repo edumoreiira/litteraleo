@@ -1,14 +1,14 @@
 <form
-  class="flex flex-col gap-4"
-  [formGroup]="loginForm"
-  (submit)="onLoginSubmit()"
+  class="flex flex-col gap-4 max-w-[380px]"
+  [formGroup]="signUpForm"
+  (submit)="onSignUpSubmit()"
 >
-  <form action=""></form>
   <app-input
     type="text"
     label="Nome"
     identifier="sign-up-name"
     placeholder="John Doe"
+    formControlName="name"
   ></app-input>
 
   <app-input
@@ -16,23 +16,25 @@
     label="Email"
     identifier="sign-up-email"
     placeholder="example@gmail.com"
+    formControlName="email"
   ></app-input>
 
   <div class="flex items-stretch gap-2 flex-wrap">
     <app-input
-      class="flex-grow"
+      class="flex-[1_1_150px]"
       type="password"
       label="Senha"
       identifier="sign-up-password"
-      placeholder=""
+      formControlName="password"
     ></app-input>
 
     <app-input
-      class="flex-grow"
+      class="flex-[1_1_150px]"
       type="password"
       label="Confirmar senha"
       identifier="sign-up-password-confirm"
-      placeholder=""
+      placeholder="Repita a senha"
+      formControlName="passwordConfirm"
     ></app-input>
   </div>
 
@@ -41,8 +43,8 @@
     style="view-transition-name: auth-submit-btn"
     class="text-base! rounded-lg"
     type="submit"
-    [disabled]="loginForm.invalid"
+    [disabled]="signUpForm.invalid"
   >
-    Entrar
+    Registrar
   </button>
 </form>

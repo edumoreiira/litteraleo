@@ -19,6 +19,6 @@
   style="view-transition-name: auth-submit-btn"
   class="text-base! rounded-lg" 
   type="submit"
-  [disabled]="loginForm.invalid"
+  [disabled]="!loginForm.valid"
   >Entrar</button>
 </form>

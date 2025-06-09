@@ -1,12 +1,14 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { InputComponent } from "../../base/input/input.component";
-import { Form, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonComponent } from '../../base/Button/button.component';
 import { AuthService } from '../../../services/auth/auth.service';
-import { createAnimation } from 'app/angular-animations/animations.utils';
-export interface SignInForm {
+import { matchPasswordsValidator } from 'app/validators/forms.validators';
+interface SignUpForm {
+  name: FormControl<string>;
   email: FormControl<string>;
   password: FormControl<string>;
+  passwordConfirm: FormControl<string>;
 }
 @Component({
   selector: 'app-sign-up-form',
@@ -17,25 +19,23 @@ export interface SignInForm {
 export class SignUpFormComponent {
   private auth = inject(AuthService);
   // 
-  loginForm!: FormGroup<SignInForm>;
+  signUpForm!: FormGroup<SignUpForm>;
 
   constructor(private fb: FormBuilder) {
-    this.loginForm = this.fb.group({
+    this.signUpForm = this.fb.group({
+      name: this.fb.control('', { nonNullable: true, validators: [Validators.required] }),
       email: this.fb.control('', { nonNullable: true, validators: [Validators.email, Validators.required] }),
-      password: this.fb.control('', { nonNullable: true, validators: [Validators.required]})
-    })
+      password: this.fb.control('', { nonNullable: true, validators: [Validators.required]}),
+      passwordConfirm: this.fb.control('', { nonNullable: true, validators: [Validators.required] })
+    }, { validators: matchPasswordsValidator('password', 'passwordConfirm') });
   }
 
-  onLoginSubmit() {
-    if(this.loginForm.invalid) {
+  onSignUpSubmit() {
+    if(this.signUpForm.invalid) {
       return;
     }
-
-    const { email, password } = this.loginForm.value;
-    this.auth.signInWithEmail(email!, password!);
+    const { name, email, password } = this.signUpForm.value;
+    this.auth.signUpWithEmail(name!, email!, password!);
+    
   }
-
-  // signInWithGoogle() {
-  //   this.auth.signInWithGoogle();
-  // }
 }

@@ -54,7 +54,6 @@ export class CardSlider implements OnInit {
 
   scrollRight() {
     const cardElement = this.cardRef()?.nativeElement;
-    console.log(cardElement);
     if (cardElement) {
       const scrollAmount = cardElement.offsetWidth;
       this.scroll(scrollAmount);
