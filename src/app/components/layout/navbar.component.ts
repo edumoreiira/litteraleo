@@ -5,7 +5,10 @@ import { DocumentListenerService } from '../../services/platform/document-listen
 import { RouterLink } from '@angular/router';
 import { ModalService } from '../../services/ui/modal.service';
 import { SignInFormComponent } from '../forms/sign-in-form/sign-in-form.component';
+<<<<<<< HEAD
 import { AuthWrapperComponent } from '../forms/auth-wrapper/auth-wrapper.component';
+=======
+>>>>>>> 5eeeb41174503a00b08407cf912cfd83a744f7b3
 
 @Component({
   selector: 'app-navbar',
