@@ -4,6 +4,7 @@ import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } 
 import { ButtonComponent } from '../../base/Button/button.component';
 import { AuthService } from '../../../services/auth/auth.service';
 import { matchPasswordsValidator } from 'app/validators/forms.validators';
+import { ToastService } from 'app/services/ui/toast.service';
 interface SignUpForm {
   name: FormControl<string>;
   email: FormControl<string>;
@@ -18,6 +19,7 @@ interface SignUpForm {
 })
 export class SignUpFormComponent {
   private auth = inject(AuthService);
+  private toast = inject(ToastService);
   // 
   signUpForm!: FormGroup<SignUpForm>;
 
@@ -35,7 +37,15 @@ export class SignUpFormComponent {
       return;
     }
     const { name, email, password } = this.signUpForm.value;
-    this.auth.signUpWithEmail(name!, email!, password!);
+
+    this.auth.signUpWithEmail(name!, email!, password!).then(res => {
+      if(res.error) {
+        this.toast.create({ variant: 'error', message: res.error.message || 'Erro ao tentar realizar cadastro' });
+      } else if(res.data.session) {
+        this.toast.create({ variant: 'success', message: 'Cadastro realizado com sucesso!' });
+      }
+      
+    })
     
   }
 }

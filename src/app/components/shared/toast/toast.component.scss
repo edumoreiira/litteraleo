@@ -1,0 +1,121 @@
+
+:host {
+    pointer-events: none;
+}
+.toast {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 12px;
+    align-items: stretch;
+    padding: 2em;
+    pointer-events: none;
+    list-style: none;
+    width: min(420px, 100%);
+
+    &__item {
+        color: var(--color-popover-fg);
+        background-color: hsla(var(--muted-dark));
+        border-radius: var(--radius);
+        padding-block: 14px;
+        padding-left: 20px;
+        padding-right: 30px;
+        pointer-events: all;
+        position: relative;
+        overflow: hidden;
+
+        &:hover {
+            .toast__close {
+                opacity: .7;
+                &:hover {
+                    opacity: 1;
+                }
+            }
+        }
+
+        &--outline {
+            background-color: hsla(var(--muted-dark), 0.5);
+            border: 1px solid hsla(var(--border));
+            backdrop-filter: blur(3px);
+        }
+
+        &--error {
+            background-color: var(--color-destructive);
+            color: var(--color-destructive-fg);
+            // border: 1px solid var(--color-destructive);
+            // backdrop-filter: blur(3px);
+        }
+
+        &--success {
+            background-color: var(--color-success);
+            color: var(--color-success-fg);
+            // border: 1px solid hsla(var(--success));
+            // backdrop-filter: blur(3px);
+        }
+    }
+
+    &__message {
+        line-height: 1.2;
+    }
+
+    &__icon {
+        &--success {
+            color: hsl(var(--success));
+        }
+        &--danger {
+            color: hsl(var(--danger));
+        }
+    }
+
+    &__close {
+        position: absolute;
+        top: 2px;
+        right: 2px;
+        padding: 6px;
+        cursor: pointer;
+        transition: opacity 150ms ease-in-out;
+        opacity: 0;
+    }
+    
+    &__body {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        &--with-title {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            align-items: flex-start;
+        }
+    }
+
+    &__header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        &--danger {
+            color: hsl(var(--danger));
+        }
+        &--success {
+            color: hsl(var(--success));
+        }
+        .toast__icon {
+            font-size: 17px;
+        }
+    }
+
+    &__title {
+        font-weight: 600;
+        line-height: 1;
+        font-size: 18px;
+    }
+}
+
+.fi {
+    display: flex;
+}

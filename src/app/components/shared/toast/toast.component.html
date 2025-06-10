@@ -1,0 +1,67 @@
+<ol class="toast">
+    @for (toast of toasts(); track toast.id) {
+        @if(toast.isVisible) {
+            <li class="toast__item toast__item--{{ toast.variant }}" @toastAnimation
+                (mouseenter)="pauseToast(toast)"
+                (mouseleave)="resumeToast(toast)"
+                role="alert"
+            >
+                <div class="toast__close" (click)="toastService.removeToast(toast)">
+                    <i class="fi fi-rr-cross-small"></i>
+                </div>
+                @if(!toast.title) {
+                    <div class="toast__body">
+                        @if(toast.variant !== 'default' && toast.variant !== 'outline') {
+                            <div class="toast__icon toast__icon--{{ toast.variant }}">
+                                @switch (toast.variant) {
+                                    @case ('success') {
+                                        <i class="fi fi-rr-check-circle"></i>
+                                    }
+                                    @case ('error') {
+                                        <i class="fi fi-rr-cross-circle"></i>
+                                    }
+                                    @case ('warning') {
+                                        <i class="fi fi-rr-warning"></i>
+                                    }
+                                    @case ('info') {
+                                        <i class="fi fi-rr-info"></i>
+                                    }
+                                }
+                            </div>
+                        }
+                        <div class="toast__message">
+                            <p>{{ toast.message }}</p>
+                        </div>
+                    </div>
+                } @else {
+                    <div class="toast__body--with-title">
+                        <div class="toast__header toast__header--{{ toast.variant }}">
+                            @if(toast.variant !== 'default' && toast.variant !== 'outline') {
+                                <div class="toast__icon">
+                                    @switch (toast.variant) {
+                                        @case ('success') {
+                                            <i class="fi fi-rr-check-circle"></i>
+                                        }
+                                        @case ('error') {
+                                            <i class="fi fi-rr-cross-circle"></i>
+                                        }
+                                        @case ('warning') {
+                                            <i class="fi fi-rr-warning"></i>
+                                        }
+                                        @case ('info') {
+                                            <i class="fi fi-rr-info"></i>
+                                        }
+                                    }
+                                </div>
+                            }
+                            <h2 class="toast__title">{{ toast.title }}</h2>
+                        </div>
+                        <div class="toast__message">
+                            <p>{{ toast.message }}</p>
+                        </div>
+                    </div>
+                }
+            </li>
+        }
+    }
+</ol>

@@ -3,6 +3,7 @@ import { InputComponent } from "../../base/input/input.component";
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonComponent } from '../../base/Button/button.component';
 import { AuthService } from '../../../services/auth/auth.service';
+import { ToastService } from 'app/services/ui/toast.service';
 interface SignInForm {
   email: FormControl<string>;
   password: FormControl<string>;
@@ -15,6 +16,7 @@ interface SignInForm {
 })
 export class SignInFormComponent {
   private auth = inject(AuthService);
+  private toast = inject(ToastService);
   // 
   loginForm!: FormGroup<SignInForm>;
 
@@ -30,6 +32,14 @@ export class SignInFormComponent {
       return;
     }
     const { email, password } = this.loginForm.value;
-    this.auth.signInWithEmail(email!, password!);
+    this.auth.signInWithEmail(email!, password!).then(res => {
+      if (res.error) {
+        const msg = res.error.code === 'invalid_credentials' ? 'Email ou senha inválidos' : res.error.message;
+        this.toast.create({ variant: 'error', message: msg || 'Erro ao tentar realizar login' });
+      }
+      if (res.data.session) {
+        this.toast.create({ variant: 'success', message: 'Login realizado com sucesso!' });
+      }
+    })
   }
 }
