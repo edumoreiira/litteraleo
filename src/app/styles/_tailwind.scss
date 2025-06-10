@@ -1,4 +1,4 @@
-@use "tailwindcss";
+@import "tailwindcss";
 
 @theme {
     --default-font-family: "Geist";
@@ -24,6 +24,9 @@
     --color-accent: var(--color-accent);
     --color-accent-fg: var(--color-accent-fg);
     --color-destructive: var(--color-destructive);
+    --color-destructive-fg: var(--color-destructive-fg);
+    --color-success: var(--color-success);
+    --color-success-fg: var(--color-success-fg);
     --color-border: var(--color-border);
     --color-input: var(--color-input);
     --color-ring: var(--color-ring);
@@ -62,7 +65,10 @@
     --color-muted-fg: oklch(0.552 0.016 285.938);
     --color-accent: oklch(0.967 0.001 286.375);
     --color-accent-fg: oklch(0.21 0.006 285.885);
-    --color-destructive: oklch(0.577 0.245 27.325);
+    --color-destructive: oklch(0.6368 0.2078 25.33);
+    --color-destructive-fg: oklch(0.969 0.006 27.325);
+    --color-success: oklch(0.7734 0.1946 142);
+    --color-success-fg: oklch(0.969 0.016 142.5);
     --color-border: oklch(0.92 0.004 286.32);
     --color-input: oklch(0.92 0.004 286.32);
     --color-ring: oklch(0.606 0.25 292.717);
