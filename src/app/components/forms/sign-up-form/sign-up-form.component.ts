@@ -32,13 +32,13 @@ export class SignUpFormComponent {
     }, { validators: matchPasswordsValidator('password', 'passwordConfirm') });
   }
 
-  onSignUpSubmit() {
+  async onSignUpSubmit() {
     if(this.signUpForm.invalid) {
       return;
     }
     const { name, email, password } = this.signUpForm.value;
 
-    this.auth.signUpWithEmail(name!, email!, password!).then(res => {
+    await this.auth.signUpWithEmail(name!, email!, password!).then(res => {
       if(res.error) {
         this.toast.create({ variant: 'error', message: res.error.message || 'Erro ao tentar realizar cadastro' });
       } else if(res.data.session) {

@@ -15,12 +15,21 @@
                 href="#">Sobre</a></li>
         </ul>
         <app-searchbar [mobileView]="640"/>
-        <div class="flex items-center gap-2">
-            <button app-button size="base"
-            (click)="openLoginModal()">Login</button>
-            <button app-button size="base" variant="text"
-            (click)="openSignUpModal()">Registrar</button>
-        </div>
+        @if(!isUserLoggedIn()) {
+            <div class="flex items-center gap-2">
+                <button app-button size="base"
+                (click)="openLoginModal()">Login</button>
+                <button app-button size="base" variant="text"
+                (click)="openSignUpModal()">Registrar</button>
+            </div>
+        } @else {
+            <div class="flex items-center gap-2">
+                <button app-button variant="outline"
+                (click)="logout()">Sign Out</button>
+                <img class="w-10 h-10 rounded-full object-cover" 
+                [src]="user()?.user_metadata?.avatar_url" alt="Foto de avatar do usuário">
+            </div>
+        }
     </div>
 
 <!-- </div> -->

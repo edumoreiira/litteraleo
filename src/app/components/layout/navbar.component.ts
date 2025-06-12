@@ -6,6 +6,7 @@ import { RouterLink } from '@angular/router';
 import { ModalService } from '../../services/ui/modal.service';
 import { SignInFormComponent } from '../forms/sign-in-form/sign-in-form.component';
 import { AuthWrapperComponent } from '../forms/auth-wrapper/auth-wrapper.component';
+import { AuthService } from 'app/services/auth/auth.service';
 
 @Component({
   selector: 'app-navbar',
@@ -22,7 +23,10 @@ export class NavbarComponent implements AfterViewChecked {
   protected documentListener = inject(DocumentListenerService);
   private el = inject(ElementRef);
   private modal = inject(ModalService);
+  private auth = inject(AuthService);
+  protected isUserLoggedIn = computed(() => !!this.auth.$currentUser());
   //
+  user = computed(() => this.auth.$currentUser());
   navbarOffset = signal(0);
   lastScrollTop = 0;
   maxOffset = 90;
@@ -63,6 +67,11 @@ export class NavbarComponent implements AfterViewChecked {
         initialMode: 'sign-up'
       } })
   }
+
+  async logout() {
+    await this.auth.logout()
+  }
+
   //host listeners
   @HostListener('window:scroll')
   onWindowScroll() {

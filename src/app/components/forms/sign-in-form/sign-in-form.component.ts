@@ -27,12 +27,12 @@ export class SignInFormComponent {
     })
   }
 
-  onLoginSubmit() {
+  async onLoginSubmit() {
     if(this.loginForm.invalid) {
       return;
     }
     const { email, password } = this.loginForm.value;
-    this.auth.signInWithEmail(email!, password!).then(res => {
+    await this.auth.signInWithEmail(email!, password!).then(res => {
       if (res.error) {
         const msg = res.error.code === 'invalid_credentials' ? 'Email ou senha inválidos' : res.error.message;
         this.toast.create({ variant: 'error', message: msg || 'Erro ao tentar realizar login' });
