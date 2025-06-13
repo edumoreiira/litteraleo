@@ -8,6 +8,7 @@ import { CurrentUser } from "app/models/user.interface";
 export class AuthService {
   private supabase = inject(SupabaseService).client;
   private currentUser = signal<CurrentUser | undefined>(undefined);
+  $userId = computed(() => this.currentUser()?.id);
   $currentUser = this.currentUser.asReadonly();
   isLoggedIn = computed(() => !!this.currentUser());
 

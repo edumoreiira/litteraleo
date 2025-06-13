@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { UserPostsService } from 'app/services/posts/user-posts.service';
 
 @Component({
   selector: 'app-resenhas',
@@ -6,5 +7,4 @@ import { Component } from '@angular/core';
   templateUrl: './resenhas.component.html',
 })
 export class ResenhasComponent {
-
 }
