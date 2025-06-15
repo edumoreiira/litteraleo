@@ -1,0 +1,26 @@
+<div class="bg-popover text-popover-fg border border-border rounded overflow-hidden shadow-xs text-sm" @popUpCombobox>
+  <div class="p-3 flex items-center gap-2">
+    <i class="fi fi-rr-search"></i>
+    <input [(ngModel)]="searchValue"
+    type="text" class="flex-1 bg-transparent text-popover-fg placeholder:text-muted-fg outline-none" placeholder="Pesquisar...">
+  </div>
+  <div class="h-px bg-border w-full"></div>
+  <div class="flex flex-col p-1 max-h-[20rem]"
+  style="scrollbar-width: thin;"
+  [ngClass]="{'overflow-auto': filteredOptions().length > 8}">
+    @for(option of filteredOptions(); track option.value) {
+      <button class="flex items-center gap-2 text-start px-3 py-2 hover:bg-muted transition-colors rounded-lg"
+      (click)="allowMultipleOptions() ? handleMultipleOptions(option) : handleSingleOption(option)" @fadeOption>
+      <div class="w-3.5 text-start">
+        @if(option.active) {
+          <i class="fi fi-rr-check"></i>
+        }
+      </div>
+        {{ option.label }}
+      </button>
+    }
+    @if(filteredOptions().length === 0 ) {
+      <span class="px-4 py-2 mx-auto text-muted-fg" @fadeOption>Nenhum item encontrado...</span>
+    }
+  </div>
+</div>

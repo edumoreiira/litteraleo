@@ -94,29 +94,29 @@ export class InputComponent implements ControlValueAccessor, OnInit, OnDestroy{
     }
   }
 
-validateInputState() {
-  const hostEl = this.el.nativeElement;
-  let debounceTimeout: ReturnType<typeof setTimeout>
+  validateInputState() {
+    const hostEl = this.el.nativeElement;
+    let debounceTimeout: ReturnType<typeof setTimeout>
 
-  this.mutationObserver = new MutationObserver(() => {
-    if (debounceTimeout) {
-      clearTimeout(debounceTimeout);
-    }
-
-    debounceTimeout = setTimeout(() => { // debounce to avoid multiple calls
-      const currentClassList = hostEl.classList;
-      if (currentClassList.contains('ng-invalid') && currentClassList.contains('ng-dirty')) {
-        this.invalid.set(true);
-      } else {
-        this.invalid.set(false);
+    this.mutationObserver = new MutationObserver(() => {
+      if (debounceTimeout) {
+        clearTimeout(debounceTimeout);
       }
-    }, 50);
-  });
 
-  this.mutationObserver.observe(hostEl, {
-    attributes: true,
-    attributeFilter: ['class'],
-  });
-}
+      debounceTimeout = setTimeout(() => { // debounce to avoid multiple calls
+        const currentClassList = hostEl.classList;
+        if (currentClassList.contains('ng-invalid') && currentClassList.contains('ng-dirty')) {
+          this.invalid.set(true);
+        } else {
+          this.invalid.set(false);
+        }
+      }, 50);
+    });
+
+    this.mutationObserver.observe(hostEl, {
+      attributes: true,
+      attributeFilter: ['class'],
+    });
+  }
 
 }
