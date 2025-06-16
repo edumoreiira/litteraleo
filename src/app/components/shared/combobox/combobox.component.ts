@@ -1,4 +1,4 @@
-import { NgClass } from '@angular/common';
+import { NgClass, NgStyle } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, effect, input, OnDestroy, OnInit, output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { createAnimation, createQueryAnimations } from 'app/angular-animations/animations.utils';
@@ -7,13 +7,15 @@ export interface ComboboxOption {
   value: any;
   active: boolean;
 }
+
+export type CustomWidth = `${number}${'px' | 'rem' | 'em' | '%' | 'vw' | 'vh'}`;
 @Component({
   selector: 'app-combobox',
   host: {
     '[@queryAnimationCombobox]': ''
   },
   templateUrl: './combobox.component.html',
-  imports: [FormsModule, NgClass],
+  imports: [FormsModule, NgClass, NgStyle],
   animations: [
     createAnimation('fadeOption', { animateY: true, duration: '100ms' }),
     createAnimation('popUpCombobox', { animateY: true, transform: 'scale(.95)' }),
@@ -25,6 +27,7 @@ export class ComboboxComponent implements OnInit, OnDestroy {
   readonly _comboboxOptions = input.required<ComboboxOption[]>({ alias: 'options'});
   readonly allowMultipleOptions = input<boolean>(false);
   readonly dumbComponent = input<boolean>(false);
+  customWidth = input<CustomWidth>();
 
   updatedLabel = output<string>();
   activeOptions = output<ComboboxOption[]>();

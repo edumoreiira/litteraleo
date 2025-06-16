@@ -20,7 +20,7 @@ import {
 } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { CdkOverlayOrigin } from '@angular/cdk/overlay';
-import { ComboboxComponent, ComboboxOption } from './combobox.component';
+import { ComboboxComponent, ComboboxOption, CustomWidth } from './combobox.component';
 
 const overlayPositions: ConnectedPosition[] = [
   {
@@ -65,6 +65,7 @@ export class ComboboxDirective implements OnInit, OnDestroy {
   readonly initialOptions = input.required<ComboboxOption[]>({ alias: 'options' });
   readonly allowMultipleOptions = input(false);
   readonly dumbComponent = input(false);
+  readonly customWidth = input<CustomWidth>();
   options = signal<ComboboxOption[]>([]);
 
   updateComboboxOnInputChange = effect(() => {
@@ -110,6 +111,7 @@ export class ComboboxDirective implements OnInit, OnDestroy {
     isFirstOpen ? this.comboboxRef.setInput('options', this.initialOptions()) : this.comboboxRef.setInput('options', this.options()); // set initialOptions input if first open, otherwise use the signal value
     this.comboboxRef.setInput('allowMultipleOptions', this.allowMultipleOptions());
     this.comboboxRef.setInput('dumbComponent', this.dumbComponent());
+    this.comboboxRef.setInput('customWidth', this.customWidth());
 
     setTimeout(() => {
       window.dispatchEvent(new Event('resize'));

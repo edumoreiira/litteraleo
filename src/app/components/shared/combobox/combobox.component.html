@@ -1,8 +1,9 @@
-<div class="bg-popover text-popover-fg border border-border rounded overflow-hidden shadow-xs text-sm" @popUpCombobox>
+<div class="flex flex-col bg-popover text-popover-fg border border-border rounded overflow-hidden shadow-xs text-sm box-border"
+[ngStyle]="customWidth() ? {'width': customWidth()} : {}" @popUpCombobox>
   <div class="p-3 flex items-center gap-2">
     <i class="fi fi-rr-search"></i>
     <input [(ngModel)]="searchValue"
-    type="text" class="flex-1 bg-transparent text-popover-fg placeholder:text-muted-fg outline-none" placeholder="Pesquisar...">
+    type="text" class="w-full bg-transparent text-popover-fg placeholder:text-muted-fg outline-none" placeholder="Pesquisar...">
   </div>
   <div class="h-px bg-border w-full"></div>
   <div class="flex flex-col p-1 max-h-[20rem]"
@@ -20,7 +21,7 @@
       </button>
     }
     @if(filteredOptions().length === 0 ) {
-      <span class="px-4 py-2 mx-auto text-muted-fg" @fadeOption>Nenhum item encontrado...</span>
+      <span class="px-4 py-2 text-center text-muted-fg" @fadeOption>Nenhum item encontrado...</span>
     }
   </div>
 </div>
