@@ -64,11 +64,11 @@ export class ComboboxDirective implements OnInit, OnDestroy {
   readonly _label = input<string>('Selecione uma opção', { alias: 'label' });
   readonly initialOptions = input.required<ComboboxOption[]>({ alias: 'options' });
   readonly allowMultipleOptions = input(false);
+  readonly dumbComponent = input(false);
   options = signal<ComboboxOption[]>([]);
 
   updateComboboxOnInputChange = effect(() => {
     this.options.set(this.initialOptions());
-    console.log('xd')
     untracked(() => {
       this.updateLabel(this.initialOptions())
       this.comboboxRef?.setInput('options', this.options());
@@ -96,7 +96,6 @@ export class ComboboxDirective implements OnInit, OnDestroy {
     this.overlayRef.backdropClick().subscribe(() => this.close());
     
     this.setInitialLabelValue();
-    console.log(this._label())
   }
 
   ngOnDestroy() {
@@ -110,6 +109,7 @@ export class ComboboxDirective implements OnInit, OnDestroy {
 
     isFirstOpen ? this.comboboxRef.setInput('options', this.initialOptions()) : this.comboboxRef.setInput('options', this.options()); // set initialOptions input if first open, otherwise use the signal value
     this.comboboxRef.setInput('allowMultipleOptions', this.allowMultipleOptions());
+    this.comboboxRef.setInput('dumbComponent', this.dumbComponent());
 
     setTimeout(() => {
       window.dispatchEvent(new Event('resize'));
@@ -117,7 +117,7 @@ export class ComboboxDirective implements OnInit, OnDestroy {
 
     this.comboboxRef.instance.activeOptions.subscribe((activeOptions) => {
       this.activeOptions.emit(activeOptions)
-      this.updateLabel(activeOptions); // update label on options change (when combobox is open and user selects options)
+      if (this.dumbComponent() === false) this.updateLabel(activeOptions); // update label on options change (when combobox is open and user selects options)
     }); // emit active options changes
     this.comboboxRef.instance.lastComboboxOptions.subscribe((lastOptions) => { // update options when combobox is closed with last changes
       this.options.set(lastOptions);

@@ -24,6 +24,7 @@ export interface ComboboxOption {
 export class ComboboxComponent implements OnInit, OnDestroy {
   readonly _comboboxOptions = input.required<ComboboxOption[]>({ alias: 'options'});
   readonly allowMultipleOptions = input<boolean>(false);
+  readonly dumbComponent = input<boolean>(false);
 
   updatedLabel = output<string>();
   activeOptions = output<ComboboxOption[]>();
@@ -53,26 +54,40 @@ export class ComboboxComponent implements OnInit, OnDestroy {
 
   // allow multiple options
   handleMultipleOptions(option: ComboboxOption) {
-    this.comboboxOptions.update((current) => 
-      current.map((item) => item.value === option.value ? { ...item, active: !item.active } : item)
-    );
-    this.emitActiveOptions()
-    this.updateLabel();
+    if (this.dumbComponent() === false) {
+      this.comboboxOptions.update((current) => 
+        current.map((item) => item.value === option.value ? { ...item, active: !item.active } : item)
+      );
+      this.emitActiveOptions(this.comboboxOptions());
+      this.updateLabel();
+    } else if (this.dumbComponent() === true) {
+      const updatedOptions = this.comboboxOptions().map(item =>
+        item.value === option.value ? { ...item, active: !item.active } : item
+      );
+      this.emitActiveOptions(updatedOptions);
+    }
   }
 
   handleSingleOption(option: ComboboxOption) {
-    this.comboboxOptions.update((current) => 
-      current.map(item => item.value === option.value ? 
-        { ...item, active: !item.active } :
-        item.active ? { ...item, active: false } : item
+    if (this.dumbComponent() === false) {
+      this.comboboxOptions.update((current) => 
+        current.map(item => item.value === option.value ? 
+          { ...item, active: !item.active } :
+          item.active ? { ...item, active: false } : item
+        )
       )
-    )
-    this.emitActiveOptions()
-    this.updateLabel();
+      this.emitActiveOptions(this.comboboxOptions());
+      this.updateLabel();
+    } else if (this.dumbComponent() === true) {
+      const updatedOptions = this.comboboxOptions().map(item =>
+        item.value === option.value ? { ...item, active: !item.active } : item
+      );
+      this.emitActiveOptions(updatedOptions);
+    }
   }
 
-  private emitActiveOptions() {
-    const activeOptionsArr = this.comboboxOptions().filter(item => item.active);
+  private emitActiveOptions(optionsArr: ComboboxOption[]) {
+    const activeOptionsArr = optionsArr.filter(item => item.active);
     this.activeOptions.emit(activeOptionsArr);
   }
 
@@ -84,8 +99,4 @@ export class ComboboxComponent implements OnInit, OnDestroy {
       this.updatedLabel.emit('initial');
     }
   }
-
-
-
-  //snippets
 }
