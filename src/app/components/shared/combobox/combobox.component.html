@@ -11,10 +11,10 @@
   [ngClass]="{'overflow-auto': filteredOptions().length > 8}">
     @for(option of filteredOptions(); track option.value) {
       <button class="flex items-center gap-2 text-start px-3 py-2 hover:bg-muted transition-colors rounded-lg"
-      (click)="allowMultipleOptions() ? handleMultipleOptions(option) : handleSingleOption(option)" @fadeOption>
+      (click)="handleOptionSelection(option)" @fadeOption>
       <div class="w-3.5 text-start">
         @if(option.active) {
-          <i class="fi fi-rr-check"></i>
+          <i class="fi fi-rr-check" @iconPopUp></i>
         }
       </div>
         {{ option.label }}

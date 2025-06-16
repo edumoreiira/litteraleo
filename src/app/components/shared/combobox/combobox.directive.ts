@@ -15,43 +15,12 @@ import {
 } from '@angular/core';
 import {
   Overlay,
-  OverlayRef,
-  ConnectedPosition,
+  OverlayRef
 } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { CdkOverlayOrigin } from '@angular/cdk/overlay';
 import { ComboboxComponent, ComboboxOption, CustomWidth } from './combobox.component';
-
-const overlayPositions: ConnectedPosition[] = [
-  {
-    originX: 'start',
-    originY: 'bottom',
-    overlayX: 'start',
-    overlayY: 'top',
-    offsetY: 5
-  },
-  {
-    originX: 'end',
-    originY: 'bottom',
-    overlayX: 'end',
-    overlayY: 'top',
-    offsetY: 5
-  },
-  {
-    originX: 'start',
-    originY: 'top',
-    overlayX: 'start',
-    overlayY: 'bottom',
-    offsetY: -5
-  },
-  {
-    originX: 'end',
-    originY: 'top',
-    overlayX: 'end',
-    overlayY: 'bottom',
-    offsetY: -5
-  },
-];
+import { COMBOBOX_OVERLAY_POSITIONS } from './overlay-positions';
 
 @Directive({
   selector: '[appCombobox]',
@@ -66,16 +35,8 @@ export class ComboboxDirective implements OnInit, OnDestroy {
   readonly allowMultipleOptions = input(false);
   readonly dumbComponent = input(false);
   readonly customWidth = input<CustomWidth>();
+
   options = signal<ComboboxOption[]>([]);
-
-  updateComboboxOnInputChange = effect(() => {
-    this.options.set(this.initialOptions());
-    untracked(() => {
-      this.updateLabel(this.initialOptions())
-      this.comboboxRef?.setInput('options', this.options());
-    }) // update label on input change
-  });
-
   activeOptions = output<ComboboxOption[]>();
   updatedLabel = output<string>();
 
@@ -84,18 +45,16 @@ export class ComboboxDirective implements OnInit, OnDestroy {
   private overlay = inject(Overlay);
   private vcr = inject(ViewContainerRef);
 
-  ngOnInit() {
-    const positionStrategy = this.overlay
-      .position()
-      .flexibleConnectedTo(this.origin.elementRef)
-      .withPositions(overlayPositions)
+  updateComboboxOnInputChange = effect(() => {
+    this.options.set(this.initialOptions());
+    untracked(() => {
+      this.updateLabel(this.initialOptions()) // update label on input change
+      this.comboboxRef?.setInput('options', this.options()); // update combobox options if input changes
+    })
+  });
 
-    this.overlayRef = this.overlay.create({
-      positionStrategy,
-      scrollStrategy: this.overlay.scrollStrategies.reposition(),
-    });
-    this.overlayRef.backdropClick().subscribe(() => this.close());
-    
+  ngOnInit() {
+    this.createOverlay(); 
     this.setInitialLabelValue();
   }
 
@@ -105,24 +64,30 @@ export class ComboboxDirective implements OnInit, OnDestroy {
 
   private open() {
     const portal = new ComponentPortal(ComboboxComponent, this.vcr);
-    const isFirstOpen = this.options().length === 0;
     this.comboboxRef = this.overlayRef.attach(portal);
+    
+    this.setupComboboxInputs(); // set inputs for the combobox component
+    this.handleComboboxEvents(); // listen to combobox emits
+    this.forceUpdateComboboxPosition(); // force update position to ensure correct placement (avoid issues caused by :enter animations)
+  }
 
+  private setupComboboxInputs() {
+    if (!this.comboboxRef) return;
+    const isFirstOpen = this.options().length === 0;
     isFirstOpen ? this.comboboxRef.setInput('options', this.initialOptions()) : this.comboboxRef.setInput('options', this.options()); // set initialOptions input if first open, otherwise use the signal value
     this.comboboxRef.setInput('allowMultipleOptions', this.allowMultipleOptions());
     this.comboboxRef.setInput('dumbComponent', this.dumbComponent());
     this.comboboxRef.setInput('customWidth', this.customWidth());
+  }
 
-    setTimeout(() => {
-      window.dispatchEvent(new Event('resize'));
-    }, 400); // Adjust overlay position after opening
-
+  private handleComboboxEvents() {
+    if (!this.comboboxRef) return;
     this.comboboxRef.instance.activeOptions.subscribe((activeOptions) => {
       this.activeOptions.emit(activeOptions)
       if (this.dumbComponent() === false) this.updateLabel(activeOptions); // update label on options change (when combobox is open and user selects options)
     }); // emit active options changes
     this.comboboxRef.instance.lastComboboxOptions.subscribe((lastOptions) => { // update options when combobox is closed with last changes
-      this.options.set(lastOptions);
+      if (this.dumbComponent() === false) this.options.set(lastOptions);
     });
   }
 
@@ -130,17 +95,35 @@ export class ComboboxDirective implements OnInit, OnDestroy {
     this.overlayRef.detach();
   }
 
-  setInitialLabelValue() {
+  private setInitialLabelValue() {
     this.updatedLabel.emit(this._label());
   }
 
-  updateLabel(options: ComboboxOption[]) {
+  private updateLabel(options: ComboboxOption[]) {
     const activeOptions = options.filter(item => item.active);
     if (activeOptions.length > 0) {
       this.updatedLabel.emit(activeOptions.map(item => item.label).join(', '));
     } else {
       this.setInitialLabelValue(); // reset to initial label if no active options
     }
+  }
+
+  private forceUpdateComboboxPosition() {
+    setTimeout(() => {
+      window.dispatchEvent(new Event('resize'));
+    }, 400);
+  }
+
+  private createOverlay() {
+    const positionStrategy = this.overlay
+      .position()
+      .flexibleConnectedTo(this.origin.elementRef)
+      .withPositions(COMBOBOX_OVERLAY_POSITIONS);
+
+    this.overlayRef = this.overlay.create({
+      positionStrategy,
+      scrollStrategy: this.overlay.scrollStrategies.reposition(),
+    });
   }
 
   @HostListener('click')

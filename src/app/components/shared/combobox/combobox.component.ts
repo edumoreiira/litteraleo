@@ -19,6 +19,7 @@ export type CustomWidth = `${number}${'px' | 'rem' | 'em' | '%' | 'vw' | 'vh'}`;
   animations: [
     createAnimation('fadeOption', { animateY: true, duration: '100ms' }),
     createAnimation('popUpCombobox', { animateY: true, transform: 'scale(.95)' }),
+    createAnimation('iconPopUp', { transform: 'scale(.2)'}),
     createQueryAnimations('queryAnimationCombobox', '@popUpCombobox')
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -55,38 +56,34 @@ export class ComboboxComponent implements OnInit, OnDestroy {
     this.lastComboboxOptions.emit(this.comboboxOptions());
   }
 
-  // allow multiple options
-  handleMultipleOptions(option: ComboboxOption) {
-    if (this.dumbComponent() === false) {
-      this.comboboxOptions.update((current) => 
-        current.map((item) => item.value === option.value ? { ...item, active: !item.active } : item)
-      );
-      this.emitActiveOptions(this.comboboxOptions());
-      this.updateLabel();
-    } else if (this.dumbComponent() === true) {
-      const updatedOptions = this.comboboxOptions().map(item =>
-        item.value === option.value ? { ...item, active: !item.active } : item
-      );
+  handleOptionSelection(option: ComboboxOption) {
+    const updatedOptions = this.allowMultipleOptions() 
+      ? this.handleMultipleSelection(option)
+      : this.handleSingleSelection(option);
+
+    if (this.dumbComponent()) {
       this.emitActiveOptions(updatedOptions);
+    } else {
+      this.comboboxOptions.set(updatedOptions);
+      this.emitActiveOptions(updatedOptions);
+      this.updateLabel();
     }
   }
 
-  handleSingleOption(option: ComboboxOption) {
-    if (this.dumbComponent() === false) {
-      this.comboboxOptions.update((current) => 
-        current.map(item => item.value === option.value ? 
-          { ...item, active: !item.active } :
-          item.active ? { ...item, active: false } : item
-        )
-      )
-      this.emitActiveOptions(this.comboboxOptions());
-      this.updateLabel();
-    } else if (this.dumbComponent() === true) {
-      const updatedOptions = this.comboboxOptions().map(item =>
-        item.value === option.value ? { ...item, active: !item.active } : item
-      );
-      this.emitActiveOptions(updatedOptions);
-    }
+  // allow multiple options
+  private handleMultipleSelection(option: ComboboxOption): ComboboxOption[] {
+    return this.comboboxOptions().map(item =>
+      item.value === option.value 
+        ? { ...item, active: !item.active } 
+        : item
+    );
+  }
+
+  private handleSingleSelection(option: ComboboxOption): ComboboxOption[] {
+    return this.comboboxOptions().map(item => ({
+      ...item,
+      active: item.value === option.value ? !item.active : false
+    }));
   }
 
   private emitActiveOptions(optionsArr: ComboboxOption[]) {
