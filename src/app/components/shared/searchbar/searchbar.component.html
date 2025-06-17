@@ -1,11 +1,11 @@
 @if(isMobile() === false) {
-  <div class="flex items-center px-4 py-[.35rem] border border-input rounded shadow-xs w-[210px] bg-extreme">
-    <div class="flex items-center gap-2">
+  <div class="flex flex-1 items-center px-4 py-[.35rem] border border-input rounded shadow-xs bg-extreme">
+    <div class="flex flex-1 items-center gap-2">
       <i class="fi fi-rr-search text-muted-fg"></i>
       <input
         type="text"
         class="w-full bg-transparent placeholder:text-muted-fg text-fg outline-none"
-        placeholder="Pesquisar..."
+        [placeholder]="placeholder()"
       >
     </div>
   </div>

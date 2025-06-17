@@ -11,5 +11,6 @@ export class SearchbarComponent {
   // 
   _mobileViewport = input(0, {alias: 'mobileView'}); // viewport width in pixels that triggers the mobile version of searchbar
   isMobile = computed(() => this.documentListener.screenSize$() <= this._mobileViewport());
+  readonly placeholder = input<string>('Pesquisar...');
 
 }

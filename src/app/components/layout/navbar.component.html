@@ -14,7 +14,7 @@
             <li><a class="hover:text-primary transition-colors" 
                 href="#">Sobre</a></li>
         </ul>
-        <app-searchbar [mobileView]="640"/>
+        <app-searchbar class="block w-[210px]" [mobileView]="640"/>
         @if(!isUserLoggedIn()) {
             <div class="flex items-center gap-2">
                 <button app-button size="base"

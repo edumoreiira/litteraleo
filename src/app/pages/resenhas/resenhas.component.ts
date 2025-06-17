@@ -1,24 +1,26 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { UserPostsService } from 'app/services/posts/user-posts.service';
-import { ComboboxComponent, ComboboxOption } from "../../components/shared/combobox/combobox.component";
+import { ComboboxOption } from "../../components/shared/combobox/combobox.component";
 import { ButtonComponent } from 'app/components/base/Button/button.component';
 import { createAnimation } from 'app/angular-animations/animations.utils';
 import { ComboboxDirective } from 'app/components/shared/combobox/combobox.directive';
+import { SearchbarComponent } from "../../components/shared/searchbar/searchbar.component";
 
 @Component({
   selector: 'app-resenhas',
-  imports: [ComboboxComponent, ButtonComponent, ComboboxDirective],
+  imports: [ButtonComponent, ComboboxDirective, SearchbarComponent],
   templateUrl: './resenhas.component.html',
   animations: [createAnimation('popUp', { animateY: true, transform: 'scale(.95)' })],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ResenhasComponent {
   private userPostsService = inject(UserPostsService);
-  label = signal('');
+  labelCategorias = signal('');
+  labelAvaliacoes = signal('');
   isComboboxOpen = signal(false);
 
   comboboxOptions = signal<ComboboxOption[]>([
-    { label: 'Opção 1', value: 'opcao1', active: true },
+    { label: 'Opção 1', value: 'opcao1', active: false },
     { label: 'Opção 2', value: 'opcao2', active: false },
     { label: 'Lanterna', value: 'opcao3', active: false },
   ])
@@ -26,6 +28,15 @@ export class ResenhasComponent {
 
   toggleComboboxOpen() {
     this.isComboboxOpen.update(state => !state);
+  }
+
+  updateOptions(activeOptions: ComboboxOption[]) {
+    this.comboboxOptions.update(options => {
+      return options.map(option => ({
+        ...option,
+        active: activeOptions.some(activeOption => activeOption.value === option.value)
+      }));
+    })
   }
 
   x(a:any) {

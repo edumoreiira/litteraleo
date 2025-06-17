@@ -8,7 +8,7 @@ import { ChangeDetectionStrategy, Component, computed, HostBinding, input } from
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ButtonComponent {
-    variant = input<"contained" | "outline" | "text" | "link">("contained");
+    variant = input<"contained" | "outline" | "text" | "link" | "outline_static">("contained");
     baseless = input<boolean>(false);
     _size = input<"sm" | "base" | "lg" | "xl" | "2xl">("sm", { alias: "size" });
 
@@ -28,6 +28,8 @@ export class ButtonComponent {
 
     private outline = "border border-border shadow-xs " +
     "hover:bg-accent"
+
+    private outline_static = "bg-popover text-popover-fg border border-border shadow-xs"
 
     private text = "text-fg hover:bg-accent";
 

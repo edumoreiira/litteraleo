@@ -1,38 +1,25 @@
-<main class="page-container pt-80 h-[800px]">
-  <div class="px-3 py-4 bg-card text-card-fg rounded">
-    <span class="text-card-muted-fg border border-card-border rounded px-4 py-1.5 text-sm">Tema</span>
+<main class="page-container pt-12 md:pt-22">
+  <div class="flex md:flex-row flex-col  px-3 py-4 bg-card text-card-fg rounded gap-4 justify-between">
+    <app-searchbar class="flex md:w-[500px] w-full"
+    placeholder="Pesquisar pelo título, autor ou palavra-chave..."/>
+    
+    <div class="flex gap-2">
+      <button class="flex items-center justify-between gap-1 flex-1 md:flex-auto" size="base"
+      app-button variant="outline_static" appCombobox [options]="comboboxOptions()"
+      [allowMultipleOptions]="false" label="Todas as categorias"
+      (updatedLabel)="labelCategorias.set($event)"
+      >
+        <span class="max-w-[150px] whitespace-nowrap overflow-hidden text-ellipsis font-light">{{ labelCategorias() }}</span>
+        <i class="fi fi-rr-caret-down"></i>
+      </button>
+      <button class="flex items-center justify-between gap-1 flex-1 md:flex-auto" size="base"
+      app-button variant="outline_static" appCombobox [options]="comboboxOptions()"
+      [allowMultipleOptions]="false" label="Todas as avaliações"
+      (updatedLabel)="labelAvaliacoes.set($event)"
+      >
+        <span class="max-w-[150px] whitespace-nowrap overflow-hidden text-ellipsis font-light">{{ labelAvaliacoes() }}</span>
+        <i class="fi fi-rr-caret-down"></i>
+      </button>
+    </div>
   </div>
-
-
-
-
-
-
-
-
-
-
-  <!-- <button app-button variant="outline"
-  cdkOverlayOrigin #trigger="cdkOverlayOrigin"
-  (click)="toggleComboboxOpen()">Categorias</button>
-
-  <ng-template
-  cdkConnectedOverlay
-  [cdkConnectedOverlayOrigin]="trigger"
-  [cdkConnectedOverlayOpen]="isComboboxOpen()"
-  [cdkConnectedOverlayOffsetY]="5"
-  (detach)="isComboboxOpen.set(false)">
-  
-    <app-combobox [options]="comboboxOptions()" [allowMultipleOptions]="true"/>
-  </ng-template> -->
-  <button class="flex items-center gap-2"
-  app-button variant="outline" appCombobox [options]="comboboxOptions()"
-  [allowMultipleOptions]="true" label="Categorias"
-  (updatedLabel)="label.set($event)"
-  >
-    <span class="max-w-[150px] whitespace-nowrap overflow-hidden text-ellipsis">{{ label() }}</span>
-    <i class="fi fi-rr-caret-down"></i>
-  </button>
-
-  <button (click)="embaralhar()">embaralhar</button>
 </main>
