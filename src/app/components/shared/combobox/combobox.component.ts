@@ -1,7 +1,8 @@
 import { NgClass, NgStyle } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, effect, input, OnDestroy, OnInit, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, input, OnDestroy, OnInit, output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { createAnimation, createQueryAnimations } from 'app/angular-animations/animations.utils';
+import { ClickOutsideDirective } from 'app/directives/behavior/click-outside.directive';
 export interface ComboboxOption {
   label: string;
   value: any;
@@ -14,6 +15,10 @@ export type CustomWidth = `${number}${'px' | 'rem' | 'em' | '%' | 'vw' | 'vh'}`;
   host: {
     '[@queryAnimationCombobox]': ''
   },
+  hostDirectives: [{
+    directive: ClickOutsideDirective,
+    outputs: ['clickOutside']
+  }],
   templateUrl: './combobox.component.html',
   imports: [FormsModule, NgClass, NgStyle],
   animations: [
@@ -25,6 +30,8 @@ export type CustomWidth = `${number}${'px' | 'rem' | 'em' | '%' | 'vw' | 'vh'}`;
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ComboboxComponent implements OnInit, OnDestroy {
+  private clickOutsideDirective = inject(ClickOutsideDirective);
+  // 
   readonly _comboboxOptions = input.required<ComboboxOption[]>({ alias: 'options'});
   readonly allowMultipleOptions = input<boolean>(false);
   readonly dumbComponent = input<boolean>(false);
@@ -35,6 +42,7 @@ export class ComboboxComponent implements OnInit, OnDestroy {
   searchValue = signal('');
   comboboxOptions = signal<ComboboxOption[]>([]);
   lastComboboxOptions = output<ComboboxOption[]>();
+  clickOutside = output<void>();
 
   readonly filteredOptions = computed(() => {
     const search = this.searchValue().toLowerCase().trim();
@@ -47,6 +55,12 @@ export class ComboboxComponent implements OnInit, OnDestroy {
   updateComboboxOnInputChange = effect(() => {
     this.comboboxOptions.set(this._comboboxOptions());
   })
+
+  constructor() {
+    this.clickOutsideDirective.clickOutside.subscribe(() => {
+      this.clickOutside.emit();
+    });
+  }
 
   ngOnInit(): void {
     this.comboboxOptions.set(this._comboboxOptions());

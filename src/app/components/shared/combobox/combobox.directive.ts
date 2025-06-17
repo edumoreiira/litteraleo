@@ -89,6 +89,7 @@ export class ComboboxDirective implements OnInit, OnDestroy {
     this.comboboxRef.instance.lastComboboxOptions.subscribe((lastOptions) => { // update options when combobox is closed with last changes
       if (this.dumbComponent() === false) this.options.set(lastOptions);
     });
+    this.comboboxRef.instance.clickOutside.subscribe(() => this.close());
   }
 
   private close() {
