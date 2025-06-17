@@ -1,0 +1,226 @@
+@use 'tailwindcss';
+//paginator
+$control-button-fg: var(--color-primary);
+$control-button-hover-bkg: var(--color-muted);
+$control-button-hover-fg: var(--color-primary-700);
+$control-button-active-bkg: var(--color-primary-400);
+$control-button-active-fg: var(--color-primary-fg);
+
+$foreground: var(--color-muted-fg);
+$background: var(--color-muted);
+$border-color: var(--color-border);
+$hover-border-color: var(--color-border);
+$hover-bkg-color: var(--color-accent);
+$hover-fg-color: var(--color-accent-fg);
+$active-bkg-color: var(--color-primary-200);
+$active-fg-color: var(--color-primary-fg);
+$selected-bkg-color: var(--color-primary-300);
+$selected-fg-color: var(--color-primary-fg);
+$disabled-border-color: var(--color-border);
+$disabled-fg-color: var(--color-muted-fg);
+$radius: .6rem;
+$useBorder: true;
+$useBorderSelector: true;
+
+$button-padding-block: .2rem; //height of the button
+$button-width: 2.3rem;
+$control-button-width: 2.5rem;
+$font-size: 1rem;
+
+//selector
+
+$selector-border-color: var(--color-border);
+$selector-background: var(--color-muted);
+$selector-input-placeholder: var(--muted-foreground-neutral);
+$selector-input-fg: var(--color-primary-300);
+$selector-button-bkg: var(--color-muted);
+$selector-button-fg: var(--color-primary);
+$hover-selector-button-bkg: var(--color-accent);
+$hover-selector-button-fg: var(--color-primary-400);
+$active-selector-button-bkg: var(--color-primary-400);
+$active-selector-button-fg: var(--color-primary-fg);
+
+:host {
+    display: inline-block;
+    position: relative;
+}
+
+
+.paginator {
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    color: $foreground;
+    position: relative;
+    z-index: 2;
+    
+    &__item,
+    &__prev,
+    &__next {
+        // padding-inline: .1rem;
+        font-weight: 500;
+        padding-block: $button-padding-block;
+        background-color: $background;
+        cursor: pointer;
+        @if $useBorder {
+            border: 1px solid $border-color;
+        }
+        transition: all 150ms ease-in-out;
+
+        .fi {
+            display: flex;
+        }
+
+        &:hover:not(&--active, :disabled) {
+            background-color: $hover-bkg-color;
+            border-color: $hover-border-color;
+            color: $hover-fg-color;
+        }
+        // bug fix to right side border color
+        &:has(+ &:hover:not(&--active, :disabled)) {
+            border-right-color: $hover-border-color;
+        }
+
+        &:active:not(&--active, :disabled) {
+            background-color: $active-bkg-color;
+            color: $active-fg-color;
+            transition: background-color ease-out 100ms;
+        }
+
+        &:disabled {
+            cursor: default;
+            border-color: $disabled-border-color;
+            color: --alpha($foreground / 50%);
+            // opacity: .5;
+        }
+    }
+
+    &__item {
+        min-width: $button-width;
+        font-size: $font-size;
+        border-left: 0;
+        &--selector {
+            color: $control-button-fg;
+        }
+        &--active {
+            background-color: $selected-bkg-color;
+            color: $selected-fg-color;
+            &:disabled {
+                background-color: --alpha($active-bkg-color / 50%);
+            }
+        }
+        &--selector:disabled { // fix border color to right side when disabled
+            opacity: 1;
+            border-color: $disabled-border-color;
+            border-right-color: $border-color;
+        }
+    }
+
+    &__prev {
+        border-radius: $radius 0 0 $radius;
+    }
+
+    &__next {
+        border-radius: 0 $radius $radius 0;
+        border-left: 0;
+    }
+    //control buttons
+    &__prev,
+    &__next {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-width: $control-button-width;
+        color: $control-button-fg;
+        &:hover:not(&--active, :disabled) {
+            background-color: $control-button-hover-bkg;
+            color: $control-button-hover-fg;
+        }
+        &:active:not(&--active, :disabled) {
+            background-color: $control-button-active-bkg;
+            color: $control-button-active-fg;
+        }
+    }
+
+    // @media screen and (max-width: 768px) {
+    //     &__item {
+    //         padding-block: .8em;
+    //         min-width: 4em;
+    //     }
+
+    //     &__prev,
+    //     &__next {
+    //         min-width: 4.5em;
+    //     }
+
+    //     &__prev {
+    //         border-radius: calc(var(--radius)) 0 0 calc(var(--radius));
+    //     }
+    
+    //     &__next {
+    //         border-radius: 0 calc(var(--radius)) calc(var(--radius)) 0;
+    //         border-left: 0;
+    //     }
+    // }
+
+}
+
+.select {
+    position: absolute;
+    top: calc(100% + .5rem);
+    right: 50%;
+    transform: translateX(50%);
+    display: flex;
+    align-items: center;
+    z-index: 10;
+    background-color: $selector-background;
+    border-radius: $radius;
+    font-size: .75rem;
+    z-index: 1;
+    @if $useBorderSelector {
+        border: 1px solid $selector-border-color;
+    }
+
+    &__header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: .3rem .7rem;
+        padding-right: .15rem;
+        gap: .3rem;
+        h2 {
+            white-space: nowrap;
+        }
+
+        input {
+            max-width: 2.5rem;
+            background-color: transparent;
+            text-align: center;
+            color: $selector-input-fg;
+            
+            &:focus {
+                outline: none;
+            }
+            &::placeholder {
+                color: $selector-input-placeholder;
+            }
+        }
+
+    }
+    button {
+        padding: .2rem .4rem;
+        align-self: stretch;
+        background-color: $selector-button-bkg;
+        color: $selector-button-fg;
+        border-radius: 0 $radius $radius 0;
+        transition: all 150ms ease-in-out;
+        &:hover {
+            background-color: $hover-selector-button-bkg;
+            color: $hover-selector-button-fg;
+        }
+        &:active {
+            background-color: $active-selector-button-bkg;
+            color: $active-selector-button-fg;
+        }
+    }
+}

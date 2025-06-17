@@ -1,4 +1,4 @@
-<main class="page-container pt-12 md:pt-22">
+<main class="page-container pt-12 md:pt-22 h-[1600px]">
   <div class="flex md:flex-row flex-col  px-3 py-4 bg-card text-card-fg rounded gap-4 justify-between">
     <app-searchbar class="flex md:w-[500px] w-full"
     placeholder="Pesquisar pelo título, autor ou palavra-chave..."/>
@@ -21,5 +21,21 @@
         <i class="fi fi-rr-caret-down"></i>
       </button>
     </div>
+  </div>
+
+  <section class="flex flex-wrap gap-4 mt-8">
+    <article class="flex-[1_1_375px]" app-card-review></article>
+    <article class="flex-[1_1_375px]" app-card-review></article>
+    <article class="flex-[1_1_375px]" app-card-review></article>
+    <article class="flex-[1_1_375px]" app-card-review></article>
+    <article class="flex-[1_1_375px]" app-card-review></article>
+    <article class="flex-[1_1_375px]" app-card-review></article>
+    <article class="flex-[1_1_375px]" app-card-review></article>
+    <article class="flex-[1_1_375px]" app-card-review></article>
+  </section>
+
+  <div class="grid justify-end">
+    <app-paginator class="mt-8"
+    [limit]="2"></app-paginator>
   </div>
 </main>

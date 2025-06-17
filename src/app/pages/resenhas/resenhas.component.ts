@@ -5,10 +5,12 @@ import { ButtonComponent } from 'app/components/base/Button/button.component';
 import { createAnimation } from 'app/angular-animations/animations.utils';
 import { ComboboxDirective } from 'app/components/shared/combobox/combobox.directive';
 import { SearchbarComponent } from "../../components/shared/searchbar/searchbar.component";
+import { CardReviewComponent } from 'app/components/shared/review-card/card-review.component';
+import PaginatorComponent from "../../components/shared/paginator/paginator.component";
 
 @Component({
   selector: 'app-resenhas',
-  imports: [ButtonComponent, ComboboxDirective, SearchbarComponent],
+  imports: [ButtonComponent, ComboboxDirective, SearchbarComponent, CardReviewComponent, PaginatorComponent],
   templateUrl: './resenhas.component.html',
   animations: [createAnimation('popUp', { animateY: true, transform: 'scale(.95)' })],
   changeDetection: ChangeDetectionStrategy.OnPush

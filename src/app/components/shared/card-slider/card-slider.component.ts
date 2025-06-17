@@ -1,5 +1,4 @@
 import { Component, contentChild, contentChildren, ElementRef, inject, OnInit, signal, viewChild } from '@angular/core';
-import { ReviewCardComponent } from '../review-card/review-card.component';
 import { createAnimation } from '../../../angular-animations/animations.utils';
 
 @Component({
