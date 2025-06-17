@@ -5,6 +5,7 @@ import { routes } from './app.routes';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { BrowserAnimationsModule, provideAnimations } from '@angular/platform-browser/animations';
 import { AuthService } from './services/auth/auth.service';
+import { provideEnvironmentNgxMask } from 'ngx-mask';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -13,6 +14,7 @@ export const appConfig: ApplicationConfig = {
     importProvidersFrom(BrowserAnimationsModule),
     provideAnimations(),
     provideZonelessChangeDetection(),
-    provideAppInitializer(() => inject(AuthService).load())
+    provideAppInitializer(() => inject(AuthService).load()),
+    provideEnvironmentNgxMask()
   ]
 };
