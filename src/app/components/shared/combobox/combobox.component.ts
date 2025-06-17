@@ -2,7 +2,7 @@ import { NgClass, NgStyle } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, effect, inject, input, OnDestroy, OnInit, output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { createAnimation, createQueryAnimations } from 'app/angular-animations/animations.utils';
-import { ClickOutsideDirective } from 'app/directives/behavior/click-outside.directive';
+import { ClickOutsideDirective } from 'app/directives/utils/click-outside.directive';
 export interface ComboboxOption {
   label: string;
   value: any;

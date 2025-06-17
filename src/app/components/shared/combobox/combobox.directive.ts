@@ -28,6 +28,9 @@ import { COMBOBOX_OVERLAY_POSITIONS } from './overlay-positions';
   providers: [Overlay, CdkOverlayOrigin],
 })
 export class ComboboxDirective implements OnInit, OnDestroy {
+  private origin = inject(CdkOverlayOrigin);
+  private overlay = inject(Overlay);
+  private vcr = inject(ViewContainerRef);
   comboboxRef?: ComponentRef<ComboboxComponent>
   // 
   readonly _label = input<string>('Selecione uma opção', { alias: 'label' });
@@ -41,9 +44,6 @@ export class ComboboxDirective implements OnInit, OnDestroy {
   updatedLabel = output<string>();
 
   private overlayRef!: OverlayRef;
-  private origin = inject(CdkOverlayOrigin);
-  private overlay = inject(Overlay);
-  private vcr = inject(ViewContainerRef);
 
   updateComboboxOnInputChange = effect(() => {
     this.options.set(this.initialOptions());
