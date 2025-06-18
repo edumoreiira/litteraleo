@@ -1,48 +1,24 @@
 import { CdkOverlayOrigin, ConnectedPosition, Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
-import { Directive, HostListener, inject, input, OnDestroy, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
+import { Directive, HostListener, inject, input, OnDestroy, TemplateRef, ViewContainerRef } from '@angular/core';
 
 const OVERLAY_POSITIONS: ConnectedPosition[] = [
-  {
-    originX: 'start',
-    originY: 'bottom',
-    overlayX: 'start',
-    overlayY: 'top',
-    offsetY: 5
-  },
-  {
-    originX: 'end',
-    originY: 'bottom',
-    overlayX: 'end',
-    overlayY: 'top',
-    offsetY: 5
-  },
-  {
-    originX: 'start',
-    originY: 'top',
-    overlayX: 'start',
-    overlayY: 'bottom',
-    offsetY: -5
-  },
-  {
-    originX: 'end',
-    originY: 'top',
-    overlayX: 'end',
-    overlayY: 'bottom',
-    offsetY: -5
-  }
-]
+  { originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top',    offsetY:  5 },
+  { originX:   'end', originY: 'bottom', overlayX:   'end', overlayY: 'top',    offsetY:  5 },
+  { originX: 'start', originY:    'top', overlayX: 'start', overlayY: 'bottom', offsetY: -5 },
+  { originX:   'end', originY:    'top', overlayX:   'end', overlayY: 'bottom', offsetY: -5 },
+];
 
 @Directive({
   selector: '[popOver]',
-  providers: [CdkOverlayOrigin, Overlay],
+  hostDirectives: [CdkOverlayOrigin]
 })
 export class PopOverDirective implements OnDestroy { 
   private origin = inject(CdkOverlayOrigin);
   private overlay = inject(Overlay);
   private vcr = inject(ViewContainerRef);
   // inputs
-  readonly overlayTemplate = input.required<TemplateRef<any>>();
+  readonly overlayTemplate = input.required<TemplateRef<any>>({ alias: 'popOver' });
   readonly updatePositionAfter = input<number>();
 
   private overlayRef?: OverlayRef;
