@@ -7,15 +7,15 @@ $control-button-active-bkg: var(--color-primary-400);
 $control-button-active-fg: var(--color-primary-fg);
 
 $foreground: var(--color-muted-fg);
-$background: var(--color-muted);
+$background: var(--color-popover);
 $border-color: var(--color-border);
 $hover-border-color: var(--color-border);
-$hover-bkg-color: var(--color-accent);
+$hover-bkg-color: var(--color-muted);
 $hover-fg-color: var(--color-accent-fg);
-$active-bkg-color: var(--color-primary-200);
-$active-fg-color: var(--color-primary-fg);
-$selected-bkg-color: var(--color-primary-300);
-$selected-fg-color: var(--color-primary-fg);
+$active-bkg-color: var(--color-muted);
+$active-fg-color: var(--color-accent-fg);
+$selected-bkg-color: var(--color-accent);
+$selected-fg-color: var(--color-accent-fg);
 $disabled-border-color: var(--color-border);
 $disabled-fg-color: var(--color-muted-fg);
 $radius: .6rem;
@@ -58,7 +58,6 @@ $active-selector-button-fg: var(--color-primary-fg);
     &__prev,
     &__next {
         // padding-inline: .1rem;
-        font-weight: 500;
         padding-block: $button-padding-block;
         background-color: $background;
         cursor: pointer;

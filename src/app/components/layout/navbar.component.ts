@@ -1,12 +1,12 @@
-import { AfterViewChecked, ChangeDetectionStrategy, Component, computed, ElementRef, HostBinding, HostListener, inject, signal } from '@angular/core';
+import { AfterViewChecked, AfterViewInit, ChangeDetectionStrategy, Component, computed, ElementRef, HostBinding, HostListener, inject, signal } from '@angular/core';
 import { ButtonComponent } from '../base/Button/button.component';
 import { SearchbarComponent } from "../shared/searchbar/searchbar.component";
 import { DocumentListenerService } from '../../services/platform/document-listener.service';
 import { RouterLink } from '@angular/router';
 import { ModalService } from '../../services/ui/modal.service';
-import { SignInFormComponent } from '../forms/sign-in-form/sign-in-form.component';
 import { AuthWrapperComponent } from '../forms/auth-wrapper/auth-wrapper.component';
 import { AuthService } from 'app/services/auth/auth.service';
+import { UserIconComponent } from "./user-icon/user-icon.component";
 
 @Component({
   selector: 'app-navbar',
@@ -16,10 +16,10 @@ import { AuthService } from 'app/services/auth/auth.service';
     '[class.bg-extreme]': 'sm() ? scrollFromTop() > 60 : scrollFromTop() > 30',
   },
   templateUrl: './navbar.component.html',
-  imports: [ButtonComponent, SearchbarComponent, RouterLink],
+  imports: [ButtonComponent, SearchbarComponent, RouterLink, UserIconComponent],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NavbarComponent implements AfterViewChecked {
+export class NavbarComponent implements AfterViewInit {
   protected documentListener = inject(DocumentListenerService);
   private el = inject(ElementRef);
   private modal = inject(ModalService);
@@ -33,11 +33,12 @@ export class NavbarComponent implements AfterViewChecked {
   scrollFromTop = computed(() => this.documentListener.scrollFromTop$());
   sm = computed(() => this.documentListener.isSm());
 
-  ngAfterViewChecked(): void {
+  ngAfterViewInit(): void {
     this.maxOffset = this.el.nativeElement.offsetHeight; // update maxOffset based on the navbar height
     if(typeof window !== 'undefined') {
       this.handleNavbarOffset(); // ensure the offset is correctly set after view checked
     }
+    console.log(this.user())
   }
 
   handleNavbarOffset() {

@@ -23,12 +23,9 @@
                 (click)="openSignUpModal()">Registrar</button>
             </div>
         } @else {
-            <div class="flex items-center gap-2">
-                <button app-button variant="outline"
-                (click)="logout()">Sign Out</button>
-                <img class="w-10 h-10 rounded-full object-cover" 
-                [src]="user()?.user_metadata?.avatar_url" alt="Foto de avatar do usuário">
-            </div>
+            <app-user-icon [imgUrl]="user()?.user_metadata?.avatar_url || '' " 
+            (logout)="logout()"
+            />
         }
     </div>
 

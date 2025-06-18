@@ -20,6 +20,7 @@ export default class PaginatorComponent implements OnChanges {
   public limit = input<number>(1);
   public initialPageIndex = input<number>(1);
   public getCurrentPage = output<number>();
+  public shadow = input<boolean>(false);
   public disabled = input(false);
   protected firstButtonValue = computed(() => this.getButtonValue(-1));
   protected secondButtonValue = computed(() => this.getButtonValue(0));

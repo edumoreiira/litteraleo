@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, input, signal } from "@angular/core";
+import { Component, computed, effect, inject, input, OnInit, signal } from "@angular/core";
 import { DocumentListenerService } from "../../../services/platform/document-listener.service";
 
 @Component({
@@ -6,11 +6,14 @@ import { DocumentListenerService } from "../../../services/platform/document-lis
  templateUrl: './searchbar.component.html',
  imports: [],
 })
-export class SearchbarComponent {
+export class SearchbarComponent implements OnInit {
   documentListener = inject(DocumentListenerService);
   // 
   _mobileViewport = input(0, {alias: 'mobileView'}); // viewport width in pixels that triggers the mobile version of searchbar
   isMobile = computed(() => this.documentListener.screenSize$() <= this._mobileViewport());
   readonly placeholder = input<string>('Pesquisar...');
 
+  ngOnInit(): void {
+  }
+  
 }

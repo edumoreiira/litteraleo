@@ -71,4 +71,11 @@ export class PopOverDirective implements OnDestroy {
     }
   }
 
+  @HostListener('document:keydown', ['$event'])
+  onKeydown(event: KeyboardEvent) {
+    if (event.key === 'Escape' && this.overlayRef?.hasAttached()) {
+      this.close();
+    }
+  }
+
 }

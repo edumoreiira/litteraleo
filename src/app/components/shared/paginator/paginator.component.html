@@ -1,5 +1,7 @@
 <div class="paginator">
-    <button class="paginator__prev" (click)="this.currentPage() < 10 ? onPreviousPage() : selectPage(1)"
+    <button class="paginator__prev"
+    [ngClass]="{'shadow-xs': shadow()}"
+    (click)="this.currentPage() < 10 ? onPreviousPage() : selectPage(1)"
     [disabled]="currentPage() === 1 || disabled()">
         @if(this.currentPage() < 10) {
             <i class="fi fi-rr-angle-small-left"></i>
@@ -8,31 +10,33 @@
         }
     </button>
     <button class="paginator__item" [disabled]="disabled()"
-    [ngClass]="{ 'paginator__item--active': firstButtonValue() === currentPage() }"
+    [ngClass]="{ 
+        'paginator__item--active': firstButtonValue() === currentPage(), 'shadow-xs': shadow() }"
     (click)="onPageSelected(firstButtonValue())">
         {{ firstButtonValue() }}
     </button>
     <button class="paginator__item" [disabled]="secondButtonValue() > limit() || disabled()"
-    [ngClass]="{ 'paginator__item--active': secondButtonValue() === currentPage() }"
+    [ngClass]="{ 'paginator__item--active': secondButtonValue() === currentPage(), 'shadow-xs': shadow() }"
     (click)="onPageSelected(secondButtonValue())">
         {{ secondButtonValue() }}
     </button>
     <button class="paginator__item" [disabled]="thirdButtonValue() > limit() || disabled()"
-    [ngClass]="{ 'paginator__item--active': thirdButtonValue() === currentPage() }"
+    [ngClass]="{ 'paginator__item--active': thirdButtonValue() === currentPage(), 'shadow-xs': shadow() }"
     (click)="onPageSelected(thirdButtonValue())">
         {{ thirdButtonValue() }}
     </button>
     <button class="paginator__item paginator__item--selector" (click)="togglePageSelector()"
-    [ngClass]="{ 'paginator__item--active': this.showPageSelector() === true}"
+    [ngClass]="{ 'paginator__item--active': this.showPageSelector() === true, 'shadow-xs': shadow() }"
     [disabled]="limit() <= 3 || disabled()">
         <i class="fi fi-rr-search flex justify-center"></i>
     </button>
     <button class="paginator__item" [disabled]="disabled()"
-    [ngClass]="{ 'paginator__item--active': limit() === currentPage() }"
+    [ngClass]="{ 'paginator__item--active': limit() === currentPage(), 'shadow-xs': shadow() }"
     (click)="onPageSelected(limit())">
         {{ limit() }}
     </button>
     <button class="paginator__next" (click)="onNextPage()"
+    [ngClass]="{ 'shadow-xs': shadow() }"
     [disabled]="currentPage() === limit() || disabled()">
         <i class="fi fi-rr-angle-small-right"></i>
     </button>
@@ -48,7 +52,7 @@
             (keydown.enter)="onSelectSpecificPage(pageSelectorInput.value)">
         </div>
         <button (click)="onSelectSpecificPage(pageSelectorInput.value)">
-            <i class="fi fi-br-angle-double-small-right flex"></i>
+            <i class="fi fi-rr-angle-double-small-right flex"></i>
         </button>
     </div>
 }
