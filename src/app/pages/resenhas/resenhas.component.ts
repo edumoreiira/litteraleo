@@ -41,10 +41,6 @@ export class ResenhasComponent {
     })
   }
 
-  x(a:any) {
-    console.log(a);
-    
-  }
 
   embaralhar() {
     this.comboboxOptions.set(

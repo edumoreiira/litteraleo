@@ -6,5 +6,6 @@ export const routes: Routes = [
     { path: '', component: MainLayoutComponent, children: [
         { path: '', component: HomeComponent },
         { path: 'resenhas', loadComponent: () => import('./pages/resenhas/resenhas.component').then(m => m.ResenhasComponent) },
+        { path: 'nova-resenha', loadComponent: () => import('./pages/nova-resenha/nova-resenha.component').then(m => m.NovaResenhaComponent) },
     ] }
 ];

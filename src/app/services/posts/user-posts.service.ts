@@ -23,7 +23,7 @@ export class UserPostsService {
     }])
 
     if(error) {
-      console.log("Erro ao criar post:", error);
+      console.error("Erro ao criar post:", error);
       this.toast.create({
         variant: 'error',
         message: "Ocorreu um erro ao tentar criar o post"

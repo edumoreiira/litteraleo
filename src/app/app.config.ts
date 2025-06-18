@@ -6,6 +6,7 @@ import { provideClientHydration, withEventReplay } from '@angular/platform-brows
 import { BrowserAnimationsModule, provideAnimations } from '@angular/platform-browser/animations';
 import { AuthService } from './services/auth/auth.service';
 import { provideEnvironmentNgxMask } from 'ngx-mask';
+import { QuillModule } from 'ngx-quill';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -15,6 +16,7 @@ export const appConfig: ApplicationConfig = {
     provideAnimations(),
     provideZonelessChangeDetection(),
     provideAppInitializer(() => inject(AuthService).load()),
-    provideEnvironmentNgxMask()
+    provideEnvironmentNgxMask(),
+    importProvidersFrom(QuillModule.forRoot()),
   ]
 };

@@ -38,7 +38,6 @@ export class NavbarComponent implements AfterViewInit {
     if(typeof window !== 'undefined') {
       this.handleNavbarOffset(); // ensure the offset is correctly set after view checked
     }
-    console.log(this.user())
   }
 
   handleNavbarOffset() {

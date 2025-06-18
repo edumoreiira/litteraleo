@@ -1,0 +1,14 @@
+::ng-deep quill-editor .ql-container {
+  border-radius: 0.65rem; // ou 8px, 12px, etc.
+  border: 1px solid var(--color-border);
+}
+
+::ng-deep quill-editor .ql-toolbar.ql-snow {
+  border-radius: 0.65rem 0.65rem 0 0;
+  border: 1px solid var(--color-border);
+}
+
+::ng-deep quill-editor .ql-container.ql-snow {
+  border-radius: 0 0 0.65rem 0.65rem;
+  border: 1px solid var(--color-border);
+}

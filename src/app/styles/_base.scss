@@ -23,6 +23,10 @@ body {
 .page-container {
   width: min(1200px, 100% - 3rem);
   margin: 0 auto;
+  &--xs {
+    width: min(800px, 100% - 3rem);
+    margin: 0 auto;
+  }
 }
 
 .hide-scrollbar {

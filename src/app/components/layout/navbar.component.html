@@ -6,7 +6,7 @@
 
     
     <div class="flex items-center gap-3 lg:gap-4">
-        <ul class="hidden lg:flex items-center gap-8 text-muted-fg font-medium mr-12">
+        <ul class="hidden lg:flex items-center gap-8 text-muted-fg font-medium mr-8">
             <li><a class="hover:text-primary transition-colors" 
                 routerLink="/">Home</a></li>
             <li><a class="hover:text-primary transition-colors" 
@@ -14,7 +14,10 @@
             <li><a class="hover:text-primary transition-colors" 
                 href="#">Sobre</a></li>
         </ul>
-        <app-searchbar class="block w-[210px]" [mobileView]="640"/>
+
+        <a app-button variant="contained" class="font-sans! font-bold! not-italic!" routerLink="/nova-resenha">+</a>
+
+        <app-searchbar class="sm:block sm:w-[210px]" [mobileView]="640"/>
         @if(!isUserLoggedIn()) {
             <div class="flex items-center gap-2">
                 <button app-button size="base"
