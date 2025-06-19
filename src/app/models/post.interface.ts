@@ -1,6 +1,11 @@
 import { FormControl } from "@angular/forms";
 
-export interface Post {
+export interface PostForm {
   title: FormControl<string>;
   content: FormControl<string>;
+}
+
+export interface Post {
+  title: string;
+  content: string;
 }

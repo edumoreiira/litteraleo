@@ -34,6 +34,7 @@ export class UserPostsService {
         message: "Post criado com sucesso"
       })
     }
+    return { data, error };
   }
 
   updatePost(id: string, title: string, description: string, content: string) {

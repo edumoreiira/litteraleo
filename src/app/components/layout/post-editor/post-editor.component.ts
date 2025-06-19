@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject, output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonComponent } from 'app/components/base/Button/button.component';
 import { InputComponent } from 'app/components/base/input/input.component';
-import { Post } from 'app/models/post.interface';
+import { Post, PostForm } from 'app/models/post.interface';
+import { UserPostsService } from 'app/services/posts/user-posts.service';
 import { QuillModule } from 'ngx-quill';
 
 @Component({
@@ -12,7 +13,7 @@ import { QuillModule } from 'ngx-quill';
   <section class="page-container--xs pt-20">
     <form [formGroup]="form" (ngSubmit)="submitPost()">
       <div class="flex flex-col gap-2 mb-8">
-        <app-input class="w-full" label="Título" identifier="post-editor-title"
+        <app-input size="base" class="w-full" label="Título" identifier="post-editor-title"
         placeholder="Digite o título do seu post"
         formControlName="title" />
       </div>
@@ -24,7 +25,8 @@ import { QuillModule } from 'ngx-quill';
         placeholder="Escreva seu post aqui...">
       </quill-editor>
       <div class="flex justify-end mt-4 gap-2">
-        <button app-button size="base" class="font-medium" variant="text">Pré Visualizar</button>
+        <button app-button size="base" class="font-medium" variant="text" type="button"
+        (click)="onPreview()">Pré Visualizar</button>
         <button app-button size="base" type="submit" [disabled]="this.form.invalid">Publicar</button>
       </div>
     </form>
@@ -34,19 +36,20 @@ import { QuillModule } from 'ngx-quill';
   imports: [CommonModule, ReactiveFormsModule, QuillModule, ButtonComponent, InputComponent]
 })
 export class PostEditorComponent {
-  form: FormGroup<Post>;
+  post = inject(UserPostsService);
+  // 
+  form: FormGroup<PostForm>;
+  preview = output<Post>();
 
   editorModules = {
     toolbar: [
       ['bold', 'italic', 'underline'],
       [{ 'background': [] }, { 'color': [] }],
       [{ 'align': [] }, { 'header': [1, 2, 3, false] }],
-      ['blockquote', 'code-block'],
-      [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+      ['blockquote', { 'list': 'ordered' }, { 'list': 'bullet' }],
       ['link', 'image'],
       ['clean'], // remove formatting
-    ],
-    imageResize: {}
+    ]
   };
 
   constructor(private fb: FormBuilder) {
@@ -56,9 +59,23 @@ export class PostEditorComponent {
     });
   }
 
-  submitPost() {
-    const conteudoHTML = this.form.value.content;
-    console.log('Post HTML:', conteudoHTML);
-    // enviar para o backend ou salvar localmente
+  onPreview() {
+    if (this.form.invalid) {
+      return;
+    }
+    const { title, content } = this.form.value;
+    const post: Post = { title: title as string, content: content as string };
+    this.preview.emit(post);
+  }
+
+  async submitPost() {
+    if (this.form.invalid) {
+      return;
+    }
+    const { title, content } = this.form.value;
+
+    await this.post.createPost(title!, '', content!).then(({ data, error }) => {
+      if (!error) this.form.reset();
+    });
   }
 }

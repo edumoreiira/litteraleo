@@ -1,25 +1,28 @@
+import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ElementRef, forwardRef, HostListener, inject, input, OnDestroy, OnInit, signal, viewChild } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl } from '@angular/forms';
 
 type InputTypes = 'text' | 'email' | 'password' | 'number' | 'tel' | 'url';
 @Component({
   selector: 'app-input',
-  imports: [],
+  imports: [NgClass],
   host: {
     class: 'inline-block'
   },
   template: `
     <label
-    class="font-medium text-sm leading-none mb-2 block" 
+    class="font-medium leading-none mb-2 block" 
+    [ngClass]="size() === 'sm' ? 'text-sm' : size() === 'lg' ? 'text-lg' : 'text-base'"
     [for]="identifier()"> 
       {{ label() }}
     </label>
     <input 
     [attr.aria-invalid]="invalid() ? 'true' : 'false'"
-    class="w-full px-3 py-1.5 border border-input rounded-lg outline-none placeholder:text-muted-fg text-fg text-sm shadow-xs
+    class="w-full px-3 py-1.5 border border-input rounded-lg outline-none placeholder:text-muted-fg text-fg shadow-xs
     focus-visible:ring-[3px] focus-visible:border-ring focus-visible:ring-ring/20 transition-all
     disabled:cursor-not-allowed disabled:opacity-50
     aria-invalid:border-destructive focus-visible:aria-invalid:ring-destructive/20"
+    [ngClass]="size() === 'sm' ? 'text-sm' : size() === 'lg' ? 'text-lg' : 'text-base'"
     #input 
     [id]="identifier()"
     [type]="type()"
@@ -45,6 +48,7 @@ export class InputComponent implements ControlValueAccessor, OnInit, OnDestroy{
   label = input.required<string>();
   placeholder = input<string>('');
   type = input<InputTypes>('text');
+  size = input<'sm' | 'base' | 'lg'>('sm');
   // signals
   value = signal('');
   invalid = signal(false);
@@ -95,6 +99,7 @@ export class InputComponent implements ControlValueAccessor, OnInit, OnDestroy{
   }
 
   validateInputState() {
+    if (typeof window === 'undefined') return;
     const hostEl = this.el.nativeElement;
     let debounceTimeout: ReturnType<typeof setTimeout>
 
