@@ -5,8 +5,8 @@ import { createAnimation, createQueryAnimations } from 'app/angular-animations/a
 import { ClickOutsideDirective } from 'app/directives/utils/click-outside.directive';
 export interface ComboboxOption {
   label: string;
-  value: any;
-  active: boolean;
+  value: string;
+  active?: boolean;
 }
 
 export type CustomWidth = `${number}${'px' | 'rem' | 'em' | '%' | 'vw' | 'vh'}`;
@@ -35,7 +35,9 @@ export class ComboboxComponent implements OnInit, OnDestroy {
   readonly _comboboxOptions = input.required<ComboboxOption[]>({ alias: 'options'});
   readonly allowMultipleOptions = input<boolean>(false);
   readonly dumbComponent = input<boolean>(false);
+  readonly searchable = input<boolean>(true);
   customWidth = input<CustomWidth>();
+  minWidth = input<CustomWidth>();
 
   updatedLabel = output<string>();
   activeOptions = output<ComboboxOption[]>();

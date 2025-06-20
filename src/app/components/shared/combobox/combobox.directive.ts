@@ -38,6 +38,7 @@ export class ComboboxDirective implements OnInit, OnDestroy {
   readonly allowMultipleOptions = input(false);
   readonly dumbComponent = input(false);
   readonly customWidth = input<CustomWidth>();
+  readonly searchable = input<boolean>(true);
 
   options = signal<ComboboxOption[]>([]);
   activeOptions = output<ComboboxOption[]>();
@@ -74,10 +75,13 @@ export class ComboboxDirective implements OnInit, OnDestroy {
   private setupComboboxInputs() {
     if (!this.comboboxRef) return;
     const isFirstOpen = this.options().length === 0;
+    const originWidth = this.origin.elementRef.nativeElement.getBoundingClientRect().width;
     isFirstOpen ? this.comboboxRef.setInput('options', this.initialOptions()) : this.comboboxRef.setInput('options', this.options()); // set initialOptions input if first open, otherwise use the signal value
     this.comboboxRef.setInput('allowMultipleOptions', this.allowMultipleOptions());
     this.comboboxRef.setInput('dumbComponent', this.dumbComponent());
     this.comboboxRef.setInput('customWidth', this.customWidth());
+    this.comboboxRef.setInput('searchable', this.searchable());
+    this.comboboxRef.setInput('minWidth', `${originWidth}px`);
   }
 
   private handleComboboxEvents() {
