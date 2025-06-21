@@ -12,6 +12,7 @@ import {
   effect,
   untracked,
   ComponentRef,
+  model,
 } from '@angular/core';
 import {
   Overlay,
@@ -24,6 +25,9 @@ import { COMBOBOX_OVERLAY_POSITIONS } from './overlay-positions';
 
 @Directive({
   selector: '[appCombobox]',
+  host: {
+    '(click)': 'toggleCombobox()',
+  },
   exportAs: 'comboboxDirective',
   providers: [Overlay, CdkOverlayOrigin],
 })
@@ -33,23 +37,23 @@ export class ComboboxDirective implements OnInit, OnDestroy {
   private vcr = inject(ViewContainerRef);
   comboboxRef?: ComponentRef<ComboboxComponent>
   // 
-  readonly _label = input<string>('Selecione uma opção', { alias: 'label' });
-  readonly initialOptions = input.required<ComboboxOption[]>({ alias: 'options' });
+  readonly label = input<string>('Selecione uma opção');
+  readonly options = model.required<ComboboxOption[]>();
   readonly allowMultipleOptions = input(false);
   readonly dumbComponent = input(false);
   readonly customWidth = input<CustomWidth>();
   readonly searchable = input<boolean>(true);
 
-  options = signal<ComboboxOption[]>([]);
+  // options = signal<ComboboxOption[]>([]);
   activeOptions = output<ComboboxOption[]>();
   updatedLabel = output<string>();
 
   private overlayRef!: OverlayRef;
 
   updateComboboxOnInputChange = effect(() => {
-    this.options.set(this.initialOptions());
+    this.options(); // track options signal for changes
     untracked(() => {
-      this.updateLabel(this.initialOptions()) // update label on input change
+      this.updateLabel(this.options()) // update label on input change
       this.comboboxRef?.setInput('options', this.options()); // update combobox options if input changes
     })
   });
@@ -74,9 +78,9 @@ export class ComboboxDirective implements OnInit, OnDestroy {
 
   private setupComboboxInputs() {
     if (!this.comboboxRef) return;
-    const isFirstOpen = this.options().length === 0;
     const originWidth = this.origin.elementRef.nativeElement.getBoundingClientRect().width;
-    isFirstOpen ? this.comboboxRef.setInput('options', this.initialOptions()) : this.comboboxRef.setInput('options', this.options()); // set initialOptions input if first open, otherwise use the signal value
+
+    this.comboboxRef.setInput('options', this.options());
     this.comboboxRef.setInput('allowMultipleOptions', this.allowMultipleOptions());
     this.comboboxRef.setInput('dumbComponent', this.dumbComponent());
     this.comboboxRef.setInput('customWidth', this.customWidth());
@@ -90,8 +94,8 @@ export class ComboboxDirective implements OnInit, OnDestroy {
       this.activeOptions.emit(activeOptions)
       if (this.dumbComponent() === false) this.updateLabel(activeOptions); // update label on options change (when combobox is open and user selects options)
     }); // emit active options changes
-    this.comboboxRef.instance.lastComboboxOptions.subscribe((lastOptions) => { // update options when combobox is closed with last changes
-      if (this.dumbComponent() === false) this.options.set(lastOptions);
+    this.comboboxRef.instance.comboboxOptions.subscribe((options) => { // update directive options when combobox options change
+      if (this.dumbComponent() === false) this.options.set(options);
     });
     this.comboboxRef.instance.clickOutside.subscribe(() => this.close());
   }
@@ -101,13 +105,14 @@ export class ComboboxDirective implements OnInit, OnDestroy {
   }
 
   private setInitialLabelValue() {
-    this.updatedLabel.emit(this._label());
+    this.updatedLabel.emit(this.label());
   }
 
   private updateLabel(options: ComboboxOption[]) {
     const activeOptions = options.filter(item => item.active);
     if (activeOptions.length > 0) {
-      this.updatedLabel.emit(activeOptions.map(item => item.label).join(', '));
+      const formattedLabel = activeOptions.map(item => item.label).join(', ');
+      this.updatedLabel.emit(formattedLabel);
     } else {
       this.setInitialLabelValue(); // reset to initial label if no active options
     }
@@ -131,8 +136,8 @@ export class ComboboxDirective implements OnInit, OnDestroy {
     });
   }
 
-  @HostListener('click')
-  toggle() {
+  
+  toggleCombobox() {
     this.overlayRef.hasAttached() ? this.close() : this.open();
   }
 

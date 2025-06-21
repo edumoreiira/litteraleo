@@ -1,5 +1,5 @@
 import { NgClass, NgStyle } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, effect, inject, input, OnDestroy, OnInit, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, input, model, OnDestroy, OnInit, output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { createAnimation, createQueryAnimations } from 'app/angular-animations/animations.utils';
 import { ClickOutsideDirective } from 'app/directives/utils/click-outside.directive';
@@ -29,10 +29,10 @@ export type CustomWidth = `${number}${'px' | 'rem' | 'em' | '%' | 'vw' | 'vh'}`;
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ComboboxComponent implements OnInit, OnDestroy {
+export class ComboboxComponent {
   private clickOutsideDirective = inject(ClickOutsideDirective);
   // 
-  readonly _comboboxOptions = input.required<ComboboxOption[]>({ alias: 'options'});
+  readonly comboboxOptions = model.required<ComboboxOption[]>({ alias: 'options'});
   readonly allowMultipleOptions = input<boolean>(false);
   readonly dumbComponent = input<boolean>(false);
   readonly searchable = input<boolean>(true);
@@ -42,8 +42,6 @@ export class ComboboxComponent implements OnInit, OnDestroy {
   updatedLabel = output<string>();
   activeOptions = output<ComboboxOption[]>();
   searchValue = signal('');
-  comboboxOptions = signal<ComboboxOption[]>([]);
-  lastComboboxOptions = output<ComboboxOption[]>();
   clickOutside = output<void>();
 
   readonly filteredOptions = computed(() => {
@@ -53,23 +51,10 @@ export class ComboboxComponent implements OnInit, OnDestroy {
     );
   });
 
-
-  updateComboboxOnInputChange = effect(() => {
-    this.comboboxOptions.set(this._comboboxOptions());
-  })
-
   constructor() {
     this.clickOutsideDirective.clickOutside.subscribe(() => {
       this.clickOutside.emit();
     });
-  }
-
-  ngOnInit(): void {
-    this.comboboxOptions.set(this._comboboxOptions());
-  }
-
-  ngOnDestroy(): void {
-    this.lastComboboxOptions.emit(this.comboboxOptions());
   }
 
   handleOptionSelection(option: ComboboxOption) {
