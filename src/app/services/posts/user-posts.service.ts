@@ -111,24 +111,41 @@ export class UserPostsService {
   }
 
   async getMyPostsWithReactions() {
-  const userId = this.auth.$userId();
+    const userId = this.auth.$userId();
 
-  const { data, error } = await this.supabase
-    .from('posts_with_reactions')
-    .select('*')
-    .eq('author_id', userId)
-    .order('created_at', { ascending: false });
+    const { data, error } = await this.supabase
+      .from('posts_with_reactions')
+      .select('*')
+      .eq('author_id', userId)
+      .order('created_at', { ascending: false });
 
-  if (error) {
-    this.toast.create({
-      variant: 'error',
-      message: 'Erro ao buscar seus posts.'
-    });
-    return [];
+    if (error) {
+      this.toast.create({
+        variant: 'error',
+        message: 'Erro ao buscar seus posts.'
+      });
+      return [];
+    }
+
+    // cada item já vem com { ..., likes: number, dislikes: number }
+    return data;
   }
+  
+  async getAllCategories() {
+    const { data, error } = await this.supabase
+      .from('categories')
+      .select('*')
+      .order('name', { ascending: true });
 
-  // cada item já vem com { ..., likes: number, dislikes: number }
-  return data;
-}
-    
+    if (error) {
+      console.error("Erro ao buscar categorias:", error);
+      this.toast.create({
+        variant: 'error',
+        message: "Ocorreu um erro ao tentar buscar as categorias"
+      });
+      return [];
+    }
+
+    return data;
+  }
 }
