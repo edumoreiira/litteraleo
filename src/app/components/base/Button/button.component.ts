@@ -3,12 +3,15 @@ import { ChangeDetectionStrategy, Component, computed, HostBinding, input } from
 @Component({
     selector: "button[app-button], a[app-button]",
     template: `
-        <ng-content></ng-content>
+    <ng-content></ng-content>
+    @if(variant() === "combobox") {
+        <i class="fi fi-rr-caret-down"></i>
+    }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ButtonComponent {
-    variant = input<"contained" | "outline" | "text" | "link" | "outline_static">("contained");
+    variant = input<"contained" | "outline" | "text" | "link" | "outline_static" | "combobox">("contained");
     baseless = input<boolean>(false);
     _size = input<"sm" | "base" | "lg" | "xl" | "2xl">("sm", { alias: "size" });
 
@@ -30,6 +33,8 @@ export class ButtonComponent {
     "hover:bg-accent"
 
     private outline_static = "bg-popover text-popover-fg border border-border shadow-xs"
+
+    private combobox = this.outline_static + " flex items-center gap-2 ";
 
     private text = "text-fg hover:bg-accent";
 
