@@ -33,6 +33,7 @@ export class ResenhasComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadCategories();
+    this.posts.searchPostsPage(1, 2, '', undefined, ['7c5ae110-1d13-4d14-b337-0e6bd0134e1f'] ).then(posts => console.log(posts));
   }
 
 
