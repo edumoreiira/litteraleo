@@ -15,7 +15,7 @@ export class ButtonComponent {
     baseless = input<boolean>(false);
     _size = input<"sm" | "base" | "lg" | "xl" | "2xl">("sm", { alias: "size" });
 
-    private base = "py-1.5 rounded font-[700] font-serif italic lowercase transition-all " +
+    private base = "py-1.5 rounded font-[700] font-serif italic lowercase transition-[background-color,color,opacity] " +
     "disabled:opacity-50 disabled:cursor-not-allowed" 
     private size = computed(() => {
         return this._size() === "sm" ? "text-sm px-3" :

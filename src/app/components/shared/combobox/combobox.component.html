@@ -16,7 +16,7 @@
   style="scrollbar-width: thin;"
   [ngClass]="{'overflow-auto': filteredOptions().length > 8}">
     @for(option of filteredOptions(); track option.value) {
-      <button class="flex items-center gap-2 text-start pl-3 pr-12 py-2 hover:bg-muted transition-colors rounded-lg"
+      <button class="flex items-center gap-2 text-start pl-3 pr-12 py-2 hover:bg-muted rounded-lg"
       (click)="handleOptionSelection(option)" @fadeOption>
       <div class="w-3.5 text-start">
         @if(option.active) {

@@ -8,7 +8,7 @@ import { A11yModule } from '@angular/cdk/a11y';
 @Component({
   selector: 'app-user-icon',
   template: `
-    <img class="w-10 h-10 rounded-full object-cover cursor-pointer
+    <img class="w-10 h-10 rounded-full object-cover cursor-pointer overflow-hidden border border-border
     hover:ring-2 hover:ring-primary transition-all"
     [src]="imgUrl()" alt="Ícone com avatar do usuário" aria-haspopup="menu"
     [popOver]="options"

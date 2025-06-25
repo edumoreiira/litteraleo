@@ -4,6 +4,8 @@ import { ComboboxOption } from "app/components/shared/combobox/combobox.componen
 export interface PostForm {
   title: FormControl<string>;
   content: FormControl<string>;
+  book_author: FormControl<string>;
+  rate: FormControl<number | null>;
   categories: FormControl<ComboboxOption[]>;
 }
 
@@ -16,6 +18,8 @@ export interface Post {
   updated_at: string;
   author_id: string;
   avatar_url: string | null;
+  rate: number;
+  book_author: string;
   categories: { id: string; name: string }[];
   likes: number;
   dislikes: number;
