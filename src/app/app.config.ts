@@ -1,4 +1,4 @@
-import { ApplicationConfig, importProvidersFrom, inject, provideAppInitializer, provideZoneChangeDetection, provideZonelessChangeDetection } from '@angular/core';
+import { ApplicationConfig, importProvidersFrom, inject, LOCALE_ID, provideAppInitializer, provideZoneChangeDetection, provideZonelessChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
@@ -7,6 +7,10 @@ import { BrowserAnimationsModule, provideAnimations } from '@angular/platform-br
 import { AuthService } from './services/auth/auth.service';
 import { provideEnvironmentNgxMask } from 'ngx-mask';
 import { QuillModule } from 'ngx-quill';
+import { registerLocaleData } from '@angular/common';
+import localePt from '@angular/common/locales/pt';
+
+registerLocaleData(localePt);
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -18,5 +22,6 @@ export const appConfig: ApplicationConfig = {
     provideAppInitializer(() => inject(AuthService).load()),
     provideEnvironmentNgxMask(),
     importProvidersFrom(QuillModule.forRoot()),
+    { provide: LOCALE_ID, useValue: 'pt' }
   ]
 };

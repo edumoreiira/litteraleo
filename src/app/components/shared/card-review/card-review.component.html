@@ -1,31 +1,39 @@
 <!-- <article class="bg-card text-card-fg rounded p-6 min-w-[350px]"> -->
   @if(layout() === 'minimal'){
-    <span class="inline-block px-2 py-[.1rem] border border-zinc-300 text-zinc-500 rounded-lg text-xs font-[Lora]
-    text-light italic">romance</span>
-    <div class="flex items-center justify-between">
-      <h1 class="font-semibold text-lg">Lorem, ipsum.</h1>
-      <app-rate [rating]="3" class="text-primary gap-1"></app-rate>
+    <div class="flex gap-2 flex-wrap items-start">
+      @for (tag of tags(); track $index) {
+        <span class="inline-block px-2 py-[.1rem] border border-zinc-300 text-zinc-500 rounded-lg text-xs font-[Lora]
+        text-light italic">{{ tag }}</span>
+      }
     </div>
-    <span class="block text-sm text-muted-fg mb-2 opacity-70">por Leonardo Moreira</span>
-    <p appText size="sm">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cupiditate asperiores ea voluptatum.</p>
+    <div class="flex items-center justify-between">
+      <h1 class="font-semibold text-lg">{{ title() }}</h1>
+      <app-rate [rating]="rating()" [canVote]="false" class="text-primary gap-1"></app-rate>
+    </div>
+    <span class="block text-sm text-muted-fg mb-2 opacity-70">por {{ author_name() }}</span>
+    <p appText size="sm"> {{ content() }} </p>
     <button class="block text-primary font-semibold ml-auto font-[Lora] italic
     hover:underline cursor-pointer">ver resenha</button>
   } @else {
-    <span class="inline-block px-2 py-[.1rem] border border-zinc-300 text-zinc-500 rounded-lg text-xs font-[Lora]
-    text-light italic">romance</span>
-    <div class="flex items-center justify-between">
-      <h1 class="font-semibold text-lg">Lorem, ipsum.</h1>
-      <app-rate [rating]="3" class="text-primary gap-1"></app-rate>
+    <div class="flex gap-2 flex-wrap items-start">
+      @for (tag of tags(); track $index) {
+        <span class="inline-block px-2 py-[.1rem] border border-zinc-300 text-zinc-500 rounded-lg text-xs font-[Lora]
+        text-light italic">{{ tag }}</span>
+      }
     </div>
-    <span class="block text-sm text-muted-fg opacity-70">de Autor do Livro</span>
-    <p appText size="sm" class="my-2">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cupiditate asperiores ea voluptatum.</p>
+    <div class="flex items-center justify-between">
+      <h1 class="font-semibold text-lg"> {{ title() }} </h1>
+      <app-rate [rating]="rating()" [canVote]="false" class="text-primary gap-1"></app-rate>
+    </div>
+    <span class="block text-sm text-muted-fg opacity-70">de {{ book_author() }}</span>
+    <p appText size="sm" class="my-2">{{ content() }}</p>
     <div class="flex items-center gap-2 justify-between">
       <div class="flex items-center gap-2">
-        <img class="w-7 h-7 rounded-full object-cover bg-neutral-300"
-        src="" alt="">
-        <span class="text-sm text-muted-fg opacity-70">Leonardo M.</span>
+        <img class="w-7 h-7 rounded-full object-cover bg-neutral-300 shrink-0 overflow-hidden"
+        [src]="author_avatar()" alt="Avatar de {{ author_name() }}">
+        <span class="text-sm text-muted-fg opacity-70"> {{ author_name() }} </span>
       </div>
-      <span class="text-sm text-muted-fg opacity-70">21 Jun. 2025</span>
+      <span class="text-sm text-muted-fg opacity-70"> {{ date() | date: "dd MMM y"}} </span>
     </div>
   }
 <!-- </article> -->
