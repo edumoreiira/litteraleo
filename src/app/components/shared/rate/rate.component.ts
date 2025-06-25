@@ -1,12 +1,13 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component, input, OnInit, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, linkedSignal, model, OnInit, output, signal } from '@angular/core';
 import { createAnimation } from '../../../angular-animations/animations.utils';
 
 @Component({
   selector: 'app-rate',
   imports: [NgClass],
   host: {
-    class: 'flex items-center'
+    class: 'flex items-center',
+    '(mouseleave)': 'canVote() ?  onMouseOut() : null'
   },
   template: `
     @for(star of stars(); track $index) {
@@ -14,7 +15,6 @@ import { createAnimation } from '../../../angular-animations/animations.utils';
         <i class="fi fi-br-star opacity-50 transition-all"
         [ngClass]="{'cursor-pointer': canVote()}"
         (mouseenter)="canVote() ?  onMouseIn($index) : null"
-        (mouseout)="canVote() ?  onMouseOut() : null"
         (click)="canVote() ? rate($index + 1) : null"></i>
         @if(star === 1) {
           <i class="fi fi-sr-star transition-all absolute left-[0] top-[0] pointer-events-none" @popIn></i>
@@ -25,33 +25,31 @@ import { createAnimation } from '../../../angular-animations/animations.utils';
   animations: [createAnimation('popIn', { transform: 'scale(0) '})],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class RateComponent implements OnInit{
+export class RateComponent {
   public canVote = input(true);
-  public initialRating = input(3);
   public maxStars = input(5);
-  public onRate = output<number>()
   // 
-  protected rating = signal(0);
-  protected stars = signal<number[]>([]);
-
-  ngOnInit(): void {
-    this.setRating(this.initialRating());
-  }
+  public rating = model<number>(3);
+  protected stars = linkedSignal({
+    source: this.rating,
+    computation:() => {
+      return this.buildStarsArray(this.rating());
+    }
+  });
 
   rate(value: number) {
-    this.setRating(value);
-    this.onRate.emit(value);
-  }
-
-  setRating(rating: number) {
-    this.rating.set(rating);
-    this.setStars(rating);
+    this.rating.set(value);
   }
 
   setStars(filledStars: number) {
+    const starsArray = this.buildStarsArray(filledStars);
+    this.stars.set(starsArray);
+  }
+
+  private buildStarsArray(filledStars: number): number[] {
     const length = this.maxStars();
-    const newStarsArray = Array.from( { length }, (undefined,i) => (i < filledStars ? 1 : 0));
-    this.stars.set(newStarsArray);
+    const flooredFilledStars = Math.floor(filledStars);
+    return Array.from({ length }, (undefined, i) => (i < flooredFilledStars ? 1 : 0));
   }
 
   onMouseIn(starIndex: number) {
