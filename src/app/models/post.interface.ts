@@ -13,14 +13,16 @@ export interface Post {
   id: string;
   title: string;
   description: string;
-  content: string | null;
-  created_at: string;
-  updated_at: string;
+  content: string;
+  created_at: Date;
+  updated_at?: Date;
   author_id: string;
-  avatar_url: string | null;
+  avatar_url?: string;
+  short_name: string;
+  full_name: string;
   rate: number;
   book_author: string;
-  categories: { id: string; name: string }[];
+  categories: PostCategory[];
   likes: number;
   dislikes: number;
 }
@@ -32,7 +34,6 @@ export interface PostPreview {
 }
 
 export interface PostCategory {
-  id: string;
-  name: string;
-  created_at: string;
+  "id": string;
+  "name": string;
 }

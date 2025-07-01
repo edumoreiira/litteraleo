@@ -3,6 +3,7 @@ import { SupabaseService } from '../supabase/supabase.service';
 import { AuthService } from '../auth/auth.service';
 import { ToastService } from '../ui/toast.service';
 import { Post, PostCategory } from 'app/models/post.interface';
+import { PostgrestError } from '@supabase/supabase-js';
 
 @Injectable({
   providedIn: 'root',
@@ -81,9 +82,12 @@ export class UserPostsService {
     minRate?: number,
     categoryIds?: string[]
   ): Promise<{
-    posts: Post[];
-    totalCount: number;
-    totalPages: number;
+    error?: PostgrestError | null;
+    data?: {
+      posts: Post[];
+      totalCount: number;
+      totalPages: number;
+    }
   }> {
     const { data, error } = await this.supabase.rpc('search_posts_paginated', {
       p_title: title ?? null,
@@ -95,7 +99,7 @@ export class UserPostsService {
 
     if (error) {
       this.toast.create({ variant: 'error', message: 'Erro ao buscar posts.' });
-      return { posts: [], totalCount: 0, totalPages: 0 };
+      return { error, data: { posts: [], totalCount: 0, totalPages: 0 } }
     }
     const posts = data || [];
     const totalCount = posts.length ? posts[0].total_count : 0;
@@ -104,7 +108,7 @@ export class UserPostsService {
     const treatedPosts = this.transformPostsData(posts);
 
 
-    return { posts: treatedPosts, totalCount, totalPages };
+    return { data: { posts: treatedPosts, totalCount, totalPages } };
   }
 
   private transformPostsData(posts: Post[]): Post[] {

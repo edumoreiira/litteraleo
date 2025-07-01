@@ -3,7 +3,7 @@
     <div class="flex gap-2 flex-wrap items-start">
       @for (tag of tags(); track $index) {
         <span class="inline-block px-2 py-[.1rem] border border-zinc-300 text-zinc-500 rounded-lg text-xs font-[Lora]
-        text-light italic">{{ tag }}</span>
+        text-light italic">{{ tag.name }}</span>
       }
     </div>
     <div class="flex items-center justify-between">
@@ -15,25 +15,27 @@
     <button class="block text-primary font-semibold ml-auto font-[Lora] italic
     hover:underline cursor-pointer">ver resenha</button>
   } @else {
-    <div class="flex gap-2 flex-wrap items-start">
-      @for (tag of tags(); track $index) {
-        <span class="inline-block px-2 py-[.1rem] border border-zinc-300 text-zinc-500 rounded-lg text-xs font-[Lora]
-        text-light italic">{{ tag }}</span>
-      }
+    <div>
+      <div class="flex gap-2 flex-wrap items-start">
+        @for (tag of tags(); track $index) {
+          <span class="inline-block px-2 py-[.1rem] border border-zinc-300 text-zinc-500 rounded-lg text-xs font-[Lora]
+          text-light italic">{{ tag.name }}</span>
+        }
+      </div>
+      <div class="flex items-center justify-between">
+        <h1 class="font-semibold text-lg"> {{ title() }} </h1>
+        <app-rate [rating]="rating()" [canVote]="false" class="text-primary gap-1"></app-rate>
+      </div>
+      <span class="block text-sm text-muted-fg opacity-70">de {{ book_author() }}</span>
+      <p appText size="sm" class="my-2">{{ content() }}</p>
     </div>
-    <div class="flex items-center justify-between">
-      <h1 class="font-semibold text-lg"> {{ title() }} </h1>
-      <app-rate [rating]="rating()" [canVote]="false" class="text-primary gap-1"></app-rate>
-    </div>
-    <span class="block text-sm text-muted-fg opacity-70">de {{ book_author() }}</span>
-    <p appText size="sm" class="my-2">{{ content() }}</p>
     <div class="flex items-center gap-2 justify-between">
       <div class="flex items-center gap-2">
         <img class="w-7 h-7 rounded-full object-cover bg-neutral-300 shrink-0 overflow-hidden"
         [src]="author_avatar()" alt="Avatar de {{ author_name() }}">
         <span class="text-sm text-muted-fg opacity-70"> {{ author_name() }} </span>
       </div>
-      <span class="text-sm text-muted-fg opacity-70"> {{ date() | date: "dd MMM y"}} </span>
+      <span class="text-sm text-muted-fg opacity-70"> {{ created_at() | date: "dd MMM y"}} </span>
     </div>
   }
 <!-- </article> -->

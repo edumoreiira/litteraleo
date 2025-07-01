@@ -1,6 +1,7 @@
 <main class="page-container pt-12 md:pt-22 h-[1600px]">
   <div class="flex md:flex-row flex-col gap-4 justify-between">
     <app-searchbar class="flex md:w-[500px] w-full"
+    (valueChange)="updateSearchBar($event)"
     placeholder="Pesquisar pelo título, autor ou palavra-chave..."/>
     
     <div class="flex gap-2 overflow-hidden">
@@ -9,40 +10,46 @@
       [allowMultipleOptions]="false" label="avaliações"
       [dumbComponent]="true"
       [searchable]="false"
-      (activeOptions)="updateOptions($event)"
-      (updatedLabel)="labelCategorias.set($event)"
-      >
-        <span class="md:max-w-[200px] w-fit whitespace-nowrap overflow-hidden text-ellipsis font-light">{{ labelCategorias() }}</span>
-        <i class="fi fi-rr-caret-down"></i>
-      </button>
-      <button class="flex items-center justify-between gap-1 flex-1 md:flex-auto min-w-0" size="base"
-      app-button variant="outline_static" appCombobox [options]="categoryOptions()"
-      [allowMultipleOptions]="false" label="todas as categorias"
+      (activeOptions)="updateRateOptions($event)"
       (updatedLabel)="labelAvaliacoes.set($event)"
       >
         <span class="md:max-w-[200px] w-fit whitespace-nowrap overflow-hidden text-ellipsis font-light">{{ labelAvaliacoes() }}</span>
         <i class="fi fi-rr-caret-down"></i>
       </button>
-      <button
-      (click)="embaralhar()">embaralhar</button>
+      <button class="flex items-center justify-between gap-1 flex-1 md:flex-auto min-w-0" size="base"
+      app-button variant="outline_static" appCombobox [options]="categoryOptions()"
+      [allowMultipleOptions]="true" label="todas as categorias"
+      (updatedLabel)="labelCategorias.set($event)"
+      (activeOptions)="searchCategories($event)"
+      >
+        <span class="md:max-w-[200px] w-fit whitespace-nowrap overflow-hidden text-ellipsis font-light">{{ labelCategorias() }}</span>
+        <i class="fi fi-rr-caret-down"></i>
+      </button>
     </div>
   </div>
 
   <section class="flex flex-wrap gap-4 my-10">
-    <article class="flex-[1_1_375px] hover:ring-1 hover:ring-primary/70 hover:scale-101 transition-all cursor-pointer" app-card-review></article>
-    <article class="flex-[1_1_375px] hover:ring-1 hover:ring-primary/70 hover:scale-101 transition-all cursor-pointer" app-card-review></article>
-    <article class="flex-[1_1_375px] hover:ring-1 hover:ring-primary/70 hover:scale-101 transition-all cursor-pointer" app-card-review></article>
-    <article class="flex-[1_1_375px] hover:ring-1 hover:ring-primary/70 hover:scale-101 transition-all cursor-pointer" app-card-review></article>
-    <article class="flex-[1_1_375px] hover:ring-1 hover:ring-primary/70 hover:scale-101 transition-all cursor-pointer" app-card-review></article>
-    <article class="flex-[1_1_375px] hover:ring-1 hover:ring-primary/70 hover:scale-101 transition-all cursor-pointer" app-card-review></article>
-    <article class="flex-[1_1_375px] hover:ring-1 hover:ring-primary/70 hover:scale-101 transition-all cursor-pointer" app-card-review></article>
-    <article class="flex-[1_1_375px] hover:ring-1 hover:ring-primary/70 hover:scale-101 transition-all cursor-pointer" app-card-review></article>
+    @for (post of displayedPosts(); track post.id) {
+      <article app-card-review
+      class="flex-[1_1_375px] hover:ring-1 hover:ring-primary/70 hover:scale-101 transition-all cursor-pointer"
+      [author_name]="post.short_name"
+      [author_avatar]="post.avatar_url || './icons/default_user.jpg'"
+      [title]="post.title"
+      [book_author]="post.book_author"
+      [content]="post.content"
+      [rating]="post.rate"
+      [tags]="post.categories"
+      [created_at]="post.created_at"
+      ></article>
+    }
   </section>
 
   <div class="grid justify-end">
     <app-paginator
     [shadow]="true"
-    [limit]="2"></app-paginator>
+    [limit]="totalPages()"
+    (getCurrentPage)="onPageChange($event)"
+    />
   </div>
   
   
