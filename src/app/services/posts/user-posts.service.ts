@@ -101,7 +101,18 @@ export class UserPostsService {
     const totalCount = posts.length ? posts[0].total_count : 0;
     const totalPages = posts.length ? posts[0].total_pages : 0;
 
-    return { posts, totalCount, totalPages };
+    const treatedPosts = this.transformPostsData(posts);
+
+
+    return { posts: treatedPosts, totalCount, totalPages };
+  }
+
+  private transformPostsData(posts: Post[]): Post[] {
+    return posts.map((post) => ({
+      ...post,
+      created_at: new Date(post.created_at),
+      updated_at: post.updated_at ? new Date(post.updated_at) : undefined,
+    }));
   }
 
   async getMyPosts() {
