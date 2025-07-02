@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { SupabaseService } from '../supabase/supabase.service';
 import { AuthService } from '../auth/auth.service';
 import { ToastService } from '../ui/toast.service';
-import { Post, PostCategory } from 'app/models/post.interface';
+import { Post, PostCategory, PostQuery } from 'app/models/post.interface';
 import { PostgrestError } from '@supabase/supabase-js';
 
 @Injectable({
@@ -76,11 +76,13 @@ export class UserPostsService {
   }
 
   async searchPostsPage(
-    page: number,
-    pageSize = 8,
-    title?: string,
-    minRate?: number,
-    categoryIds?: string[]
+    {
+      page,
+      pageSize = 8,
+      title,
+      minRate,
+      categoryIds
+    }: PostQuery
   ): Promise<{
     error?: PostgrestError | null;
     data?: {

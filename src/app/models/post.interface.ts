@@ -25,6 +25,7 @@ export interface Post {
   categories: PostCategory[];
   likes: number;
   dislikes: number;
+  total_pages: number;
 }
 
 export interface PostPreview {
@@ -36,4 +37,12 @@ export interface PostPreview {
 export interface PostCategory {
   "id": string;
   "name": string;
+}
+
+export type PostQuery = {
+  page: number;
+  pageSize?: number;
+  title?: string;
+  minRate?: number;
+  categoryIds?: string[];
 }

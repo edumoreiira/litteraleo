@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, linkedSignal, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, linkedSignal, OnInit, signal, untracked } from '@angular/core';
 import { UserPostsService } from 'app/services/posts/user-posts.service';
 import { ComboboxOption } from "../../components/shared/combobox/combobox.component";
 import { ButtonComponent } from 'app/components/base/Button/button.component';
@@ -7,14 +7,7 @@ import { ComboboxDirective } from 'app/components/shared/combobox/combobox.direc
 import { SearchbarComponent } from "../../components/shared/searchbar/searchbar.component";
 import { CardReviewComponent } from 'app/components/shared/card-review/card-review.component';
 import PaginatorComponent from "../../components/shared/paginator/paginator.component";
-import { Post } from 'app/models/post.interface';
-
-type PostSearch = {
-  page: number;
-  categories?: string[];
-  rate?: string;
-  search?: string;
-}
+import { Post, PostQuery } from 'app/models/post.interface';
 
 const RATE_OPTIONS: ComboboxOption[] = [
   { label: '1 Estrela', value: '1' },
@@ -34,15 +27,15 @@ const RATE_OPTIONS: ComboboxOption[] = [
 export class ResenhasComponent implements OnInit {
   private posts = inject(UserPostsService);
   private searchDebouceTimeout: any;
+  private postCache: { [searchKey: string]: Post[] } = {};
   labelCategorias = signal('');
   labelAvaliacoes = signal('');
-  isComboboxOpen = signal(false);
   categoryOptions = signal<ComboboxOption[]>([]);
   rateOptions = signal<ComboboxOption[]>(RATE_OPTIONS);
   totalPages = signal(0);
-  searchQuery = signal<PostSearch>({ page: 1 });
+  searchQuery = signal<PostQuery>({ page: 1, pageSize: 8 });
   displayedPosts = signal<Post[]>([]);
-  search = effect(() => { this.searchPost(); })
+  search = effect(() => { this.searchPost(); });
   
   ngOnInit(): void {
     this.loadCategories();
@@ -51,31 +44,39 @@ export class ResenhasComponent implements OnInit {
 
   private searchPost() {
     const query = this.searchQuery(); // Get the current search query and track signal changes
-    const rate = query.rate ? parseInt(query.rate) : undefined;
-    const categories = query.categories && query.categories.length > 0 ? query.categories : undefined;
-    this.posts.searchPostsPage(query.page, 8, query.search, rate, categories).then( ({ data, error }) => {
-      if (data) {
-        this.displayedPosts.set(data.posts);
-        this.totalPages.set(data.totalPages);
-      }
-    });
+    const treatedQuery: PostQuery = {
+      page: query.page,
+      pageSize: 8,
+      title: query.title || '',
+      minRate: query.minRate === 0 ? undefined : query.minRate,
+      categoryIds: query.categoryIds && query.categoryIds.length > 0 ? query.categoryIds : undefined
+    };
+    untracked(() => { // Untrack this effect to avoid infinite loops
+      this.handlePosts(treatedQuery);
+    })
   }
 
-  toggleComboboxOpen() {
-    this.isComboboxOpen.update(state => !state);
-  }
-
-  updateRateOptions(activeOptions: ComboboxOption[]) {
+  private setDumbOptions(activeRate?: number, activeCategories?: string[]) { // Update the active state of rate and category options
     this.rateOptions.update(options => {
       return options.map(option => ({
         ...option,
-        active: activeOptions.some(activeOption => activeOption.value === option.value)
+        active: option.value === activeRate?.toString()
       }));
-    })
-    this.updateSearchRate(activeOptions[0]?.value || '');
+    });
+    this.categoryOptions.update(options => {
+      return options.map(option => ({
+        ...option,
+        active: activeCategories?.includes(option.value)
+      }));
+    });
   }
 
-  searchCategories(activeOptions: ComboboxOption[]) {
+  searchRateOptions(activeOptions: ComboboxOption[]) {
+    const rate = parseInt(activeOptions[0]?.value || '0', 10);
+    this.updateSearchRate(rate);
+  }
+
+  searchCategoriesOptions(activeOptions: ComboboxOption[]) {
     this.updateSearchCategories(activeOptions.map(option => option.value));
   }
 
@@ -91,7 +92,7 @@ export class ResenhasComponent implements OnInit {
   }
 
   async loadInitialPosts() {
-    this.posts.searchPostsPage(1).then(value => {
+    this.posts.searchPostsPage({ page: 1 }).then(value => {
       if (value.data) {
         this.displayedPosts.set(value.data.posts);
         this.totalPages.set(value.data.totalPages);
@@ -111,23 +112,58 @@ export class ResenhasComponent implements OnInit {
     this.searchDebouceTimeout = setTimeout(() => {
       this.searchQuery.update(currentSearch => ({
         ...currentSearch,
-        search: search
+        title: search
       }));
     }, 500);
   }
 
-  updateSearchCategories(categories: string[]) {
+  private updateSearchCategories(categories: string[]) {
     this.searchQuery.update(currentSearch => ({
       ...currentSearch,
-      categories: categories
+      categoryIds: categories
     }));
   }
 
-  updateSearchRate(rate: string) {
+  private updateSearchRate(rate: number) {
     this.searchQuery.update(currentSearch => ({
       ...currentSearch,
-      rate: rate
+      minRate: rate
     }));
+  }
+
+    private handlePosts(search: PostQuery) {
+    const cachedPosts = this.getCachedQuery(search);
+    if (cachedPosts) {
+      const totalPages = cachedPosts[0]?.total_pages || 0;
+      this.applySearch(cachedPosts, totalPages, search.minRate, search.categoryIds);
+    } else {
+      this.fetchPosts(search);
+    }
+  }
+  
+  private fetchPosts(query: PostQuery) {
+    this.posts.searchPostsPage(query).then( ({ data, error }) => {
+      if (data) {
+        this.applySearch(data.posts, data.totalPages, query.minRate, query.categoryIds);
+        this.addPostToCache(query, data.posts);
+      }
+    });
+  }
+
+  private applySearch(posts: Post[], totalPages: number, rate?: number, categories?: string[]) {
+    this.displayedPosts.set(posts);
+    this.totalPages.set(totalPages);
+    this.setDumbOptions(rate, categories);
+  }
+
+  private getCachedQuery(search: PostQuery): Post[] | undefined {
+    const key = JSON.stringify(search);
+    return this.postCache[key];
+  }
+
+  private addPostToCache(search: PostQuery, posts: Post[]) {
+    const key = JSON.stringify(search);
+    this.postCache[key] = posts;
   }
 
     
