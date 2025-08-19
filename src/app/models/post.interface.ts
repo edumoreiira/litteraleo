@@ -25,6 +25,11 @@ export interface Post {
   categories: PostCategory[];
   likes: number;
   dislikes: number;
+}
+
+export interface PaginatedPosts {
+  posts: Post[];
+  total_count: number;
   total_pages: number;
 }
 

@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { SupabaseService } from '../supabase/supabase.service';
 import { AuthService } from '../auth/auth.service';
 import { ToastService } from '../ui/toast.service';
-import { Post, PostCategory, PostQuery } from 'app/models/post.interface';
+import { PaginatedPosts, Post, PostCategory, PostQuery } from 'app/models/post.interface';
 import { PostgrestError } from '@supabase/supabase-js';
 
 @Injectable({
@@ -85,11 +85,7 @@ export class UserPostsService {
     }: PostQuery
   ): Promise<{
     error?: PostgrestError | null;
-    data?: {
-      posts: Post[];
-      totalCount: number;
-      totalPages: number;
-    }
+    data?: PaginatedPosts
   }> {
     const { data, error } = await this.supabase.rpc('search_posts_paginated', {
       p_title: title ?? null,
@@ -101,16 +97,11 @@ export class UserPostsService {
 
     if (error) {
       this.toast.create({ variant: 'error', message: 'Erro ao buscar posts.' });
-      return { error, data: { posts: [], totalCount: 0, totalPages: 0 } }
+      return { error, data: undefined };
     }
-    const posts = data || [];
-    const totalCount = posts.length ? posts[0].total_count : 0;
-    const totalPages = posts.length ? posts[0].total_pages : 0;
+    const treatedPosts = this.transformPostsData(data.posts);
 
-    const treatedPosts = this.transformPostsData(posts);
-
-
-    return { data: { posts: treatedPosts, totalCount, totalPages } };
+    return { data: { posts: treatedPosts, total_count: data.total_count, total_pages: data.total_pages } };
   }
 
   private transformPostsData(posts: Post[]): Post[] {

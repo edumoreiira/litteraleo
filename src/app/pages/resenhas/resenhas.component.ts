@@ -7,7 +7,7 @@ import { ComboboxDirective } from 'app/components/shared/combobox/combobox.direc
 import { SearchbarComponent } from "../../components/shared/searchbar/searchbar.component";
 import { CardReviewComponent } from 'app/components/shared/card-review/card-review.component';
 import PaginatorComponent from "../../components/shared/paginator/paginator.component";
-import { Post, PostQuery } from 'app/models/post.interface';
+import { Post, PaginatedPosts, PostQuery } from 'app/models/post.interface';
 
 const RATE_OPTIONS: ComboboxOption[] = [
   { label: '1 Estrela', value: '1' },
@@ -27,7 +27,7 @@ const RATE_OPTIONS: ComboboxOption[] = [
 export class ResenhasComponent implements OnInit {
   private posts = inject(UserPostsService);
   private searchDebouceTimeout: any;
-  private postCache: { [searchKey: string]: Post[] } = {};
+  private postCache: { [searchKey: string]: PaginatedPosts } = {};
   labelCategorias = signal('');
   labelAvaliacoes = signal('');
   categoryOptions = signal<ComboboxOption[]>([]);
@@ -95,7 +95,7 @@ export class ResenhasComponent implements OnInit {
     this.posts.searchPostsPage({ page: 1 }).then(value => {
       if (value.data) {
         this.displayedPosts.set(value.data.posts);
-        this.totalPages.set(value.data.totalPages);
+        this.totalPages.set(value.data.total_pages);
       }
     });
   }
@@ -134,7 +134,7 @@ export class ResenhasComponent implements OnInit {
     private handlePosts(search: PostQuery) {
     const cachedPosts = this.getCachedQuery(search);
     if (cachedPosts) {
-      const totalPages = cachedPosts[0]?.total_pages || 0;
+      const totalPages = cachedPosts.total_pages;
       this.applySearch(cachedPosts, totalPages, search.minRate, search.categoryIds);
     } else {
       this.fetchPosts(search);
@@ -144,24 +144,24 @@ export class ResenhasComponent implements OnInit {
   private fetchPosts(query: PostQuery) {
     this.posts.searchPostsPage(query).then( ({ data, error }) => {
       if (data) {
-        this.applySearch(data.posts, data.totalPages, query.minRate, query.categoryIds);
-        this.addPostToCache(query, data.posts);
+        this.applySearch(data, data.total_pages, query.minRate, query.categoryIds);
+        this.addPostToCache(query, data);
       }
     });
   }
 
-  private applySearch(posts: Post[], totalPages: number, rate?: number, categories?: string[]) {
-    this.displayedPosts.set(posts);
+  private applySearch(paginatedPost: PaginatedPosts, totalPages: number, rate?: number, categories?: string[]) {
+    this.displayedPosts.set(paginatedPost.posts);
     this.totalPages.set(totalPages);
     this.setDumbOptions(rate, categories);
   }
 
-  private getCachedQuery(search: PostQuery): Post[] | undefined {
+  private getCachedQuery(search: PostQuery): PaginatedPosts | undefined {
     const key = JSON.stringify(search);
     return this.postCache[key];
   }
 
-  private addPostToCache(search: PostQuery, posts: Post[]) {
+  private addPostToCache(search: PostQuery, posts: PaginatedPosts) {
     const key = JSON.stringify(search);
     this.postCache[key] = posts;
   }
