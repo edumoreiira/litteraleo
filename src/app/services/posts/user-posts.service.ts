@@ -79,7 +79,7 @@ export class UserPostsService {
     {
       page,
       pageSize = 8,
-      title,
+      search_text,
       minRate,
       categoryIds
     }: PostQuery
@@ -88,7 +88,7 @@ export class UserPostsService {
     data?: PaginatedPosts
   }> {
     const { data, error } = await this.supabase.rpc('search_posts_paginated', {
-      p_title: title ?? null,
+      p_search_text: search_text ?? null,
       p_min_rate: minRate ?? null,
       p_category_ids: categoryIds ?? null,
       p_page: page,

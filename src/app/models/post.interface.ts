@@ -22,6 +22,7 @@ export interface Post {
   full_name: string;
   rate: number;
   book_author: string;
+  book_name: string;
   categories: PostCategory[];
   likes: number;
   dislikes: number;
@@ -47,7 +48,8 @@ export interface PostCategory {
 export type PostQuery = {
   page: number;
   pageSize?: number;
-  title?: string;
+  search_text?: string;
+  bookName?: string;
   minRate?: number;
   categoryIds?: string[];
 }

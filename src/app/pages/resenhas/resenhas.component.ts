@@ -47,7 +47,7 @@ export class ResenhasComponent implements OnInit {
     const treatedQuery: PostQuery = {
       page: query.page,
       pageSize: 8,
-      title: query.title || '',
+      search_text: query.search_text || '',
       minRate: query.minRate === 0 ? undefined : query.minRate,
       categoryIds: query.categoryIds && query.categoryIds.length > 0 ? query.categoryIds : undefined
     };
@@ -101,34 +101,46 @@ export class ResenhasComponent implements OnInit {
   }
 
   onPageChange(page: number) {
-    this.searchQuery.update(currentSearch => ({
-      ...currentSearch,
-      page: page
-    }));
+    this.searchQuery.update(currentSearch => {
+      const updated: PostQuery = {
+        ...currentSearch,
+        page: page
+      }
+      return updated
+    });
   }
   
   updateSearchBar(search: string) {
     clearTimeout(this.searchDebouceTimeout);
     this.searchDebouceTimeout = setTimeout(() => {
-      this.searchQuery.update(currentSearch => ({
-        ...currentSearch,
-        title: search
-      }));
+      this.searchQuery.update(currentSearch => {
+        const updated: PostQuery = {
+          ...currentSearch,
+          search_text: search
+        }
+        return updated
+      })
     }, 500);
   }
 
   private updateSearchCategories(categories: string[]) {
-    this.searchQuery.update(currentSearch => ({
-      ...currentSearch,
-      categoryIds: categories
-    }));
+    this.searchQuery.update(currentSearch => {
+      const updated: PostQuery = {
+        ...currentSearch,
+        categoryIds: categories
+      }
+      return updated
+    });
   }
 
   private updateSearchRate(rate: number) {
-    this.searchQuery.update(currentSearch => ({
-      ...currentSearch,
-      minRate: rate
-    }));
+    this.searchQuery.update(currentSearch => {
+      const updated: PostQuery = {
+        ...currentSearch,
+        minRate: rate
+      }
+      return updated
+    });
   }
 
     private handlePosts(search: PostQuery) {
