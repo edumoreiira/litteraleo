@@ -19,7 +19,8 @@ export class UserPostsService {
     content: string,
     categoryIds: string[],
     rate: number,
-    bookAuthor: string
+    bookAuthor: string,
+    bookName: string
   ) {
     const authorId = this.auth.$userId();
     const { data, error } = await this.supabase.rpc(
@@ -32,6 +33,7 @@ export class UserPostsService {
         p_category_ids: categoryIds,
         p_rate: rate,
         p_book_author: bookAuthor,
+        p_book_name: bookName
       }
     );
 

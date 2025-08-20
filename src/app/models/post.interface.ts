@@ -5,6 +5,7 @@ export interface PostForm {
   title: FormControl<string>;
   content: FormControl<string>;
   book_author: FormControl<string>;
+  book_name: FormControl<string>;
   rate: FormControl<number | null>;
   categories: FormControl<ComboboxOption[]>;
 }

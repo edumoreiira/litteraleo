@@ -17,10 +17,14 @@ import { NgxMaskDirective } from 'ngx-mask';
   <section class="page-container--xs pt-20">
     <form [formGroup]="form" (ngSubmit)="submitPost()">
       <div class="flex flex-col gap-4">
+        <app-input size="base" class="w-full" label="Título" identifier="post-editor-title"
+        placeholder="Título do seu post"
+        formControlName="title" />
         <div class="flex sm:flex-row flex-col items-end gap-4">
-          <app-input size="base" class="w-full" label="Título" identifier="post-editor-title"
-          placeholder="Título do seu post"
-          formControlName="title" />
+          <app-input size="base" class="w-full" label="Livro" identifier="post-editor-book-author"
+          placeholder="Nome do Livro"
+          formControlName="book_name"
+          />
           <app-input size="base" class="w-full" label="Autor" identifier="post-editor-book-author"
           placeholder="Nome do autor do livro"
           formControlName="book_author"
@@ -96,6 +100,7 @@ export class PostEditorComponent implements OnInit {
       categories: this.fb.control<ComboboxOption[]>([], { nonNullable: true, validators: [Validators.required] }),
       book_author: this.fb.control('', { nonNullable: true, validators: [Validators.required] }),
       rate: this.fb.control<number | null>(3.5, { validators: [Validators.min(0), Validators.max(5)] }),
+      book_name: this.fb.control('', { nonNullable: true, validators: [Validators.required] }),
     });
     this.form.valueChanges.subscribe(() => console.log(this.form.value, this.form));
   }
@@ -134,10 +139,10 @@ export class PostEditorComponent implements OnInit {
     if (this.form.invalid) {
       return;
     }
-    const { title, content, categories, book_author, rate } = this.form.value;
+    const { title, content, categories, book_author, rate, book_name } = this.form.value;
     const categoriesId = categories?.map(category => category.value) || [];
 
-    await this.post.createPost(title!, '', content!, categoriesId, rate!, book_author! ).then(({ data, error }) => {
+    await this.post.createPost(title!, '', content!, categoriesId, rate!, book_author!, book_name!).then(({ data, error }) => {
       if (!error) this.form.reset();
     });
   }
