@@ -49,5 +49,4 @@ import { A11yModule } from '@angular/cdk/a11y';
 export class UserIconComponent {
   readonly imgUrl = input('');
   logout = output<void>();
-
 }

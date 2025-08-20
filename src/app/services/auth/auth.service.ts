@@ -7,6 +7,7 @@ import { CurrentUser } from "app/models/user.interface";
 })
 export class AuthService {
   private supabase = inject(SupabaseService).client;
+  private supabaseUrl = inject(SupabaseService).url;
   private currentUser = signal<CurrentUser | undefined>(undefined);
   $userId = computed(() => this.currentUser()?.id);
   $currentUser = this.currentUser.asReadonly();
@@ -53,6 +54,16 @@ export class AuthService {
   }
 
   async logout() {
-    return await this.supabase.auth.signOut();
+    try {
+      await this.supabase.auth.signOut();
+    } catch (err) {
+      console.error("Erro ao invalidar sessão no servidor:", err);
+    } finally {
+      // Força remoção local da sessão
+      const url = this.supabaseUrl;
+      const projectRef = url.replace("https://", "").split(".")[0];
+      localStorage.removeItem(`sb-${projectRef}-auth-token`);
+      this.currentUser.set(undefined);
+    }
   }
 }

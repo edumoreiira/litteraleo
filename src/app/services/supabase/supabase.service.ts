@@ -13,6 +13,10 @@ export class SupabaseService {
     return this.supabase;
   }
 
+  get url(): string {
+    return environment.SUPABASE_URL;
+  }
+
   constructor() {
     this.supabase = createClient(
       environment.SUPABASE_URL, 

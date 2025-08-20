@@ -69,7 +69,7 @@ export class NavbarComponent implements AfterViewInit {
   }
 
   async logout() {
-    await this.auth.logout()
+    await this.auth.logout();
   }
 
   //host listeners
