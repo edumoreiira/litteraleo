@@ -60,13 +60,15 @@ export class ResenhasComponent implements OnInit {
     this.rateOptions.update(options => {
       return options.map(option => ({
         ...option,
-        active: option.value === activeRate?.toString()
+        active: option.value === activeRate?.toString(),
+        loading: false
       }));
     });
     this.categoryOptions.update(options => {
       return options.map(option => ({
         ...option,
-        active: activeCategories?.includes(option.value)
+        active: activeCategories?.includes(option.value),
+        loading: false
       }));
     });
   }

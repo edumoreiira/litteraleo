@@ -19,7 +19,10 @@
       <button class="flex items-center gap-2 text-start pl-3 pr-12 py-2 hover:bg-muted rounded-lg"
       (click)="handleOptionSelection(option)" @fadeOption>
       <div class="w-3.5 text-start">
-        @if(option.active) {
+        @if(option.loading === true && isLoadingForSeconds()) {
+          <i class="fi fi-rr-spinner animate-spin opacity-50" @iconPopUp></i>
+        }
+        @else if(option.active) {
           <i class="fi fi-rr-check" @iconPopUp></i>
         }
       </div>
