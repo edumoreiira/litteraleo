@@ -52,29 +52,27 @@ export class UserPostsService {
     return { data, error };
   }
 
-  updatePost(id: string, title: string, description: string, content: string) {
-    return this.supabase
+  async updatePost(id: string, title: string, description: string, content: string) {
+    const { data, error } = await this.supabase
       .from('posts')
       .update({
         title,
         description,
         content,
       })
-      .eq('id', id)
-      .then(({ data, error }) => {
-        if (error) {
-          console.error('Erro ao editar post:', error);
-          this.toast.create({
-            variant: 'error',
-            message: 'Ocorreu um erro ao tentar editar o post',
-          });
-        } else {
-          this.toast.create({
-            variant: 'success',
-            message: 'Post editado com sucesso',
-          });
-        }
+      .eq('id', id);
+    if (error) {
+      console.error('Erro ao editar post:', error);
+      this.toast.create({
+        variant: 'error',
+        message: 'Ocorreu um erro ao tentar editar o post',
       });
+    } else {
+      this.toast.create({
+        variant: 'success',
+        message: 'Post editado com sucesso',
+      });
+    }
   }
 
   async searchPostsPage(
