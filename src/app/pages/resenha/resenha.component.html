@@ -1,40 +1,67 @@
-<article class="page-container--xs pt-20">
-  <div class="flex flex-col gap-8">
-    <h1 appTitle size="lg">Lorem ipsum dolor sit amet consectetur adipisicing.</h1>
-
-    <div class="flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <div class="flex items-center gap-2">
-          <img class="h-8 w-8 rounded-full"
-          src="/icons/default_user.jpg" alt="Foto do usuário">
-          <span class="text-sm text-muted-fg">Nome do usuário</span>
+@if (post()){
+  <article class="page-container--xs pt-20">
+    <div class="flex flex-col gap-8">
+      <h1 appTitle size="lg">Lorem ipsum dolor sit amet consectetur adipisicing.</h1>
+  
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="flex items-center gap-2">
+            <img class="h-8 w-8 rounded-full"
+            src="/icons/default_user.jpg" alt="Foto do usuário">
+            <span class="text-sm text-muted-fg">Nome do usuário</span>
+          </div>
+          <div class="h-1 w-1 bg-muted-fg rounded-full"></div>
+          <span class="text-sm text-muted-fg">Feb 20, 2023</span>
         </div>
-        <div class="h-1 w-1 bg-muted-fg rounded-full"></div>
-        <span class="text-sm text-muted-fg">Feb 20, 2023</span>
+        <div class="flex items-center gap-4">
+          <div class="flex items-center gap-1 text-muted-fg hover:text-primary cursor-pointer">
+            <i class="fi fi-rr-heart"></i>
+            <span class="text-sm">0</span>
+          </div>
+          <div class="flex items-center gap-1 text-muted-fg hover:text-primary cursor-pointer">
+            <i class="fi fi-rr-arrow-up-right-from-square"></i>
+          </div>
+        </div>
+        
       </div>
-      <div class="flex items-center gap-4">
-        <div class="flex items-center gap-1 text-muted-fg hover:text-primary cursor-pointer">
-          <i class="fi fi-rr-heart"></i>
-          <span class="text-sm">0</span>
+  
+      <div class="flex sm:flex-row flex-col items-center bg-muted rounded sm:py-0 py-2">
+        <div class="flex sm:flex-row flex-col items-center">
+          <div class="h-12 w-12 rounded m-1.5 shrink-0">
+            <img class="h-12 w-12 object-cover rounded"
+            src="/books/senhor_dos_aneis.jpg" alt="Foto do livro">
+          </div>
+          <div class="flex flex-col sm:items-start items-center whitespace-nowrap">
+            <h2 class="font-serif italic font-semibold leading-none">Senhor dos Anéis</h2>
+            <span class="text-sm text-muted-fg">J.R.R. Tolkien</span>
+          </div>
         </div>
-        <div class="flex items-center gap-1 text-muted-fg hover:text-primary cursor-pointer">
-          <i class="fi fi-rr-arrow-up-right-from-square"></i>
+        <div class="flex sm:flex-row flex-col flex-1 items-center my-2 mx-4 sm:gap-6 gap-2">
+          <div class="flex items-center gap-2 flex-wrap mx-auto">
+            @for(category of categories; track $index) {
+              <span class="text-sm text-muted-fg">{{ category }}</span>
+              @if($index < categories.length - 1) {
+                <div class="h-1 w-1 bg-muted-fg rounded-full"></div>
+              }
+            }
+          </div>
+          <app-rate [canVote]="false" class="text-primary gap-1"></app-rate>
         </div>
       </div>
-      
+  
     </div>
+  
+  </article>
+} @else if(post() === null){
+  <section class="page-container--xs pt-50 flex items-center flex-col gap-2 text-center">
+    <h1 class="text-primary font-bold text-4xl font-serif italic">Resenha não encontrada</h1>
+    <p class="text-muted-fg">A resenha solicitada não está disponível ou o identificador informado é inválido.</p>
+  </section>
+}
+@else if(post() === undefined) {
+  <section class="page-container--xs pt-50 flex items-center flex-col gap-2 text-center">
+    <i class="fi fi-rr-spinner animate-spin text-4xl text-primary"></i>
+    <p class="text-muted-fg mt-2">Carregando resenha...</p>
+  </section>
 
-    <div class="flex items-center p-1.5 gap-2 bg-muted rounded">
-      <div class="h-12 w-12 rounded">
-        <img class="w-full h-full object-cover rounded"
-        src="/books/senhor_dos_aneis.jpg" alt="Foto do livro">
-      </div>
-      <div class="flex flex-col">
-        <h2 class="font-serif italic font-semibold">Senhor dos Anéis</h2>
-        <span class="text-sm text-muted-fg">J.R.R. Tolkien</span>
-      </div>
-    </div>
-
-  </div>
-
-</article>
+}

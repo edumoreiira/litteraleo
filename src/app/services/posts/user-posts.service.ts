@@ -187,6 +187,21 @@ export class UserPostsService {
     // cada item já vem com { ..., likes: number, dislikes: number }
     return data;
   }
+  
+  async getPostById(id: string) {
+    const { data, error } = await this.supabase.rpc('get_post_by_id', {
+      post_id: id
+    });
+
+    if (error) {
+      this.toast.create({
+        variant: 'error',
+        message: 'Erro ao buscar post.',
+      });
+      return null;
+    }
+    return data as Post | null;
+  }
 
   async getAllCategories() {
     const { data, error } = await this.supabase
