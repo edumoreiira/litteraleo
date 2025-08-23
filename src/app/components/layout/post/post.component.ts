@@ -1,22 +1,85 @@
 import { CommonModule } from '@angular/common';
 import { Component, input, OnInit } from '@angular/core';
+import { RateComponent } from 'app/components/shared/rate/rate.component';
+import { TitleDirective } from 'app/directives/ui/title.directive';
+import { Post } from 'app/models/post.interface';
 import { SafeHtmlPipe } from 'app/pipes/safe-html-pipe';
 import { QuillModule } from 'ngx-quill';
 
 @Component({
-  selector: 'app-post',
+  selector: 'article[app-post]',
   template: `
-    <h1 class="text-2xl">{{ title() }}</h1>
-<div class="ql-snow">
-  <div class="ql-editor no-padding" [innerHTML]="content() | safeHtml"></div>
-</div>
+  @let post = postData();
+      <article class="page-container--xs pt-20">
+    <div class="flex flex-col gap-8">
+      <h1 appTitle size="lg">{{ post.title }}</h1>
+  
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="flex items-center gap-2">
+            <img class="h-8 w-8 rounded-full"
+            src="/icons/default_user.jpg" alt="Foto do usuário">
+            <span class="text-sm text-muted-fg">{{ post.full_name }}</span>
+          </div>
+          <div class="h-1 w-1 bg-muted-fg rounded-full"></div>
+          <span class="text-sm text-muted-fg">{{ post.created_at | date: "dd MMM y" }}</span>
+        </div>
+        <div class="flex items-center gap-4">
+          <div class="flex items-center gap-1 hover:text-primary cursor-pointer"
+          [ngClass]="post.has_liked ? 'text-primary' : 'text-muted-fg'">
+            @if(post.has_liked) {
+              <i class="fi fi-sr-heart"></i>
+            } @else {
+              <i class="fi fi-rr-heart"></i>
+            }
+            <span class="text-sm">{{ post.likes_count.toString() }}</span>
+          </div>
+          <div class="flex items-center gap-1 text-muted-fg hover:text-primary cursor-pointer">
+            <i class="fi fi-rr-arrow-up-right-from-square"></i>
+          </div>
+        </div>
+        
+      </div>
+  
+      <div class="flex sm:flex-row flex-col items-center bg-muted rounded sm:p-0 p-3">
+  <div class="flex sm:flex-row flex-col items-center shrink min-w-0 max-w-full">
+          <div class="h-12 w-12 rounded m-1.5 shrink-0">
+            <img class="h-12 w-12 object-cover rounded"
+            src="/books/senhor_dos_aneis.jpg" alt="Foto do livro">
+          </div>
+            <div class="flex flex-col sm:items-start items-center min-w-0 max-w-full">
+              <h2 class="font-serif italic font-semibold leading-none truncate min-w-0 max-w-full" title="{{ post.book_name }}">{{ post.book_name }}</h2>
+              <span class="text-sm text-muted-fg">{{ post.book_author }}</span>
+          </div>
+        </div>
+          <div class="flex sm:flex-row flex-col items-center my-2 mx-4 sm:gap-6 gap-2 min-w-0 min-w-fit grow">
+          <div class="flex items-center gap-x-2 mx-auto">
+            @for(category of post.categories; track $index) {
+              <span class="text-sm text-muted-fg">{{ category.name }}</span>
+              @if($index < post.categories.length - 1) {
+                <div class="h-1 w-1 bg-muted-fg rounded-full"></div>
+              }
+            }
+          </div>
+          <div class="flex items-center gap-1">
+            <app-rate [canVote]="false" [rating]="post.rate" class="text-primary gap-0.5"></app-rate>
+            <span class="text-sm text-primary opacity-50">{{ post.rate || 0 }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="ql-snow">
+        <div class="ql-editor no-padding" [innerHTML]="post.content | safeHtml"></div>
+      </div>
+    </div>
+    
+  </article>
+
   `,
   styles: `
   .no-padding { padding: 0 !important; }
   `,
-  imports: [QuillModule, CommonModule, SafeHtmlPipe]
+  imports: [QuillModule, CommonModule, SafeHtmlPipe, RateComponent, TitleDirective]
 })
 export class PostComponent {
-  readonly title = input('Título do Post');
-  readonly content = input('Conteúdo do Post');
+  postData = input.required<Post>();
 }

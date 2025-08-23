@@ -23,11 +23,11 @@
         }
       </div>
       <div class="flex items-center justify-between">
-        <h1 class="font-semibold text-lg"> {{ title() }} </h1>
+        <h1 class="font-semibold text-md line-clamp-1"> {{ title() }} </h1>
         <app-rate [rating]="rating()" [canVote]="false" class="text-primary gap-1"></app-rate>
       </div>
       <span class="block text-sm text-muted-fg opacity-70">de {{ book_author() }}</span>
-      <p appText size="sm" class="my-2">{{ content() }}</p>
+      <p appText size="sm" class="my-2 line-clamp-3">{{ content() }}</p>
     </div>
     <div class="flex items-center gap-2 justify-between">
       <div class="flex items-center gap-2">

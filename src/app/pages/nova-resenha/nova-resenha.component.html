@@ -2,10 +2,9 @@
   (preview)="onPreviewState($event)"
   />
   <section class="page-container--xs" [ngClass]="{'hidden': state() !== 'preview'}">
-    <app-post
-    [title]="title()"
-    [content]="content()"
-    />
+    <!-- <article app-post
+
+    /> -->
     <button app-button variant="outline"
     (click)="setEditState()">Voltar para edição</button>
   </section>

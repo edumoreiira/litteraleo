@@ -25,8 +25,8 @@ export interface Post {
   book_author: string;
   book_name: string;
   categories: PostCategory[];
-  likes: number;
-  dislikes: number;
+  likes_count: number;
+  has_liked: boolean;
 }
 
 export interface PaginatedPosts {

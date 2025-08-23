@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { PostComponent } from 'app/components/layout/post/post.component';
 import { RateComponent } from 'app/components/shared/rate/rate.component';
 import { TitleDirective } from 'app/directives/ui/title.directive';
 import { Post } from 'app/models/post.interface';
@@ -7,7 +8,7 @@ import { UserPostsService } from 'app/services/posts/user-posts.service';
 
 @Component({
   selector: 'app-resenha',
-  imports: [TitleDirective, RateComponent],
+  imports: [PostComponent],
   templateUrl: './resenha.component.html',
   styleUrl: './resenha.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
