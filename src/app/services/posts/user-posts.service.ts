@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { SupabaseService } from '../supabase/supabase.service';
 import { AuthService } from '../auth/auth.service';
 import { ToastService } from '../ui/toast.service';
-import { PaginatedPosts, Post, PostCategory, PostQuery } from 'app/models/post.interface';
+import { PaginatedPosts, Post, PostCategory, PostLike, PostQuery } from 'app/models/post.interface';
 import { PostgrestError } from '@supabase/supabase-js';
 
 @Injectable({
@@ -219,5 +219,15 @@ export class UserPostsService {
     }
 
     return data as PostCategory[];
+  }
+
+  async toggle_post_like(p_post_id: string) {
+    const { data, error } = await this.supabase.rpc('toggle_post_like', {
+      p_post_id
+    })
+    if(error) {
+      return null;
+    }
+    return data as PostLike;
   }
 }

@@ -35,6 +35,11 @@ export interface PaginatedPosts {
   total_pages: number;
 }
 
+export interface PostLike {
+  likes_count: number;
+  user_liked: boolean;
+}
+
 export interface PostPreview {
   title: string;
   content: string;

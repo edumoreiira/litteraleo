@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, input, OnInit } from '@angular/core';
+import { Component, inject, input, model, OnInit } from '@angular/core';
 import { RateComponent } from 'app/components/shared/rate/rate.component';
 import { TitleDirective } from 'app/directives/ui/title.directive';
 import { Post } from 'app/models/post.interface';
 import { SafeHtmlPipe } from 'app/pipes/safe-html-pipe';
+import { UserPostsService } from 'app/services/posts/user-posts.service';
 import { QuillModule } from 'ngx-quill';
 
 @Component({
@@ -25,18 +26,19 @@ import { QuillModule } from 'ngx-quill';
           <span class="text-sm text-muted-fg">{{ post.created_at | date: "dd MMM y" }}</span>
         </div>
         <div class="flex items-center gap-4">
-          <div class="flex items-center gap-1 hover:text-primary cursor-pointer"
-          [ngClass]="post.has_liked ? 'text-primary' : 'text-muted-fg'">
+          <button class="flex items-center gap-1 hover:text-primary cursor-pointer"
+          [ngClass]="post.has_liked ? 'text-primary' : 'text-muted-fg'"
+          (click)="toggle_like()">
             @if(post.has_liked) {
               <i class="fi fi-sr-heart"></i>
             } @else {
               <i class="fi fi-rr-heart"></i>
             }
             <span class="text-sm">{{ post.likes_count.toString() }}</span>
-          </div>
-          <div class="flex items-center gap-1 text-muted-fg hover:text-primary cursor-pointer">
+          </button>
+          <button class="flex items-center gap-1 text-muted-fg hover:text-primary cursor-pointer">
             <i class="fi fi-rr-arrow-up-right-from-square"></i>
-          </div>
+          </button>
         </div>
         
       </div>
@@ -81,5 +83,25 @@ import { QuillModule } from 'ngx-quill';
   imports: [QuillModule, CommonModule, SafeHtmlPipe, RateComponent, TitleDirective]
 })
 export class PostComponent {
-  postData = input.required<Post>();
+  private postService = inject(UserPostsService);
+
+  postData = model.required<Post>();
+
+  toggle_like() {
+    const post_id = this.postData().id;
+    this.postService.toggle_post_like(post_id).then(data => {
+      if(data) {
+        const new_count = data.likes_count;
+        const new_has_liked = data.user_liked;
+        this.postData.update(value => {
+          const new_post: Post = {
+            ...value,
+            has_liked: new_has_liked,
+            likes_count: new_count
+          };
+          return new_post;
+        })
+      }
+    })
+  }
 }
