@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, effect, ElementRef, HostListener, inject, input, OnChanges, output, signal, SimpleChanges, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, ElementRef, HostListener, inject, input, OnChanges, output, signal, SimpleChanges, untracked, ViewChild } from '@angular/core';
 import { NgxMaskDirective } from 'ngx-mask';
 import { FormsModule } from '@angular/forms';
 import { createAnimation } from 'app/angular-animations/animations.utils';
@@ -27,9 +27,14 @@ export default class PaginatorComponent implements OnChanges {
   protected thirdButtonValue = computed(() => this.getButtonValue(1));
 
   protected currentPage = signal<number>(this.initialPageIndex());
-  protected secondToLastPage = this.limit() - 1;
   protected showPageSelector = signal(false);
   protected pageSelectorInputValue = '';
+  protected onLimitChanged = effect(() => {
+    const limit = this.limit();
+    untracked(() => { 
+      this.selectPage(1)
+    })
+  }); // reset to first page when limit changes
   @ViewChild('pageSelector') pageSelectorElementRef!: ElementRef<HTMLInputElement>;
   @ViewChild('pageSelectorInput') pageSelectorInputElementRef!: ElementRef<HTMLInputElement>;
 

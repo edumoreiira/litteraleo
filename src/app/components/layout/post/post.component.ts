@@ -9,9 +9,11 @@ import { QuillModule } from 'ngx-quill';
 
 @Component({
   selector: 'article[app-post]',
+  host: {
+    class: 'page-container--xs pt-20'
+  },
   template: `
   @let post = postData();
-      <article class="page-container--xs pt-20">
     <div class="flex flex-col gap-8">
       <h1 appTitle size="lg">{{ post.title }}</h1>
   
@@ -73,9 +75,7 @@ import { QuillModule } from 'ngx-quill';
         <div class="ql-editor no-padding" [innerHTML]="post.content | safeHtml"></div>
       </div>
     </div>
-    
-  </article>
-
+  
   `,
   styles: `
   .no-padding { padding: 0 !important; }

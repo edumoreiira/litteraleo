@@ -31,7 +31,7 @@
 
   <section class="flex flex-wrap gap-4 my-10">
     @for (post of displayedPosts(); track post.id) {
-      <article app-card-review
+      <article app-card-review [routerLink]="'../resenha/' + ' /' + post.id"
       class="flex-[1_1_375px] hover:ring-1 hover:ring-primary/70 hover:scale-101 transition-all cursor-pointer"
       [author_name]="post.short_name"
       [author_avatar]="post.avatar_url || './icons/default_user.jpg'"

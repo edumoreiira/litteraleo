@@ -8,6 +8,7 @@ import { SearchbarComponent } from "../../components/shared/searchbar/searchbar.
 import { CardReviewComponent } from 'app/components/shared/card-review/card-review.component';
 import PaginatorComponent from "../../components/shared/paginator/paginator.component";
 import { Post, PaginatedPosts, PostQuery } from 'app/models/post.interface';
+import { RouterLink } from '@angular/router';
 
 const RATE_OPTIONS: ComboboxOption[] = [
   { label: '1 Estrela', value: '1' },
@@ -19,7 +20,7 @@ const RATE_OPTIONS: ComboboxOption[] = [
 
 @Component({
   selector: 'app-resenhas',
-  imports: [ButtonComponent, ComboboxDirective, SearchbarComponent, CardReviewComponent, PaginatorComponent],
+  imports: [ButtonComponent, ComboboxDirective, SearchbarComponent, CardReviewComponent, PaginatorComponent, RouterLink],
   templateUrl: './resenhas.component.html',
   animations: [createAnimation('popUp', { animateY: true, transform: 'scale(.95)' })],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -179,21 +180,4 @@ export class ResenhasComponent implements OnInit {
     const key = JSON.stringify(search);
     this.postCache[key] = posts;
   }
-
-    
-  // embaralhar() {
-  //   this.rateOptions.set(
-  //     [
-  //       { label: 'Opcao 43', value: 'opcao43', active: true },
-  //       { label: 'Opcao 44', value: 'opcao44', active: false }
-  //     ]
-  //   )
-  //   this.categoryOptions.set(
-  //     [
-  //       { label: 'Categoria 1', value: 'categoria1', active: true },
-  //       { label: 'Categoria 2', value: 'categoria2', active: false },
-  //       { label: 'Categoria 3', value: 'categoria3', active: false }
-  //     ]
-  //   );
-  // }
 }
