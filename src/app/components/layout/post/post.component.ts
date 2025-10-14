@@ -3,7 +3,7 @@ import { Component, inject, input, model, OnInit } from '@angular/core';
 import { RateComponent } from 'app/components/shared/rate/rate.component';
 import { TitleDirective } from 'app/directives/ui/title.directive';
 import { Post } from 'app/models/post.interface';
-import { SafeHtmlPipe } from 'app/pipes/safe-html-pipe';
+import { SafeHtmlPipe } from 'app/pipes/safe-html.pipe';
 import { UserPostsService } from 'app/services/posts/user-posts.service';
 import { QuillModule } from 'ngx-quill';
 
@@ -75,7 +75,6 @@ import { QuillModule } from 'ngx-quill';
         <div class="ql-editor no-padding" [innerHTML]="post.content | safeHtml"></div>
       </div>
     </div>
-  
   `,
   styles: `
   .no-padding { padding: 0 !important; }

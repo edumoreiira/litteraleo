@@ -9,7 +9,7 @@ import { createAnimation } from '../../../angular-animations/animations.utils';
     class: 'relative max-w-full'
   },
   template: `
-    <div #cardContainer class="flex items-start gap-4 overflow-auto hide-scrollbar snap-x snap-mandatory relative'">
+    <div #cardContainer class="flex gap-4 overflow-auto hide-scrollbar snap-x snap-mandatory relative'">
       <ng-content></ng-content>
     </div>
     @if(scrollPosition() !== 'end') {
@@ -31,13 +31,13 @@ import { createAnimation } from '../../../angular-animations/animations.utils';
     `,
     animations: [createAnimation('fadeIn', { transform: 'scale(.5)'})]
 })
+// To use this component, you need to use #card on child component you want to measure the width of scroll.
+// Example:
+// <app-card-slider>
+//   <app-review-card #card></app-review-card>  =>  this will be the card that will be used to measure the width of scroll.
+//   <app-review-card></app-review-card>
+// </app-card-slider>
 export class CardSlider implements OnInit {
-  // To use this component, you need to use #card on child component you want to measure the width of scroll.
-  // Example:
-  // <app-card-slider>
-  //   <app-review-card #card></app-review-card>  =>  this will be the card that will be used to measure the width of scroll.
-  //   <app-review-card></app-review-card>
-  // </app-card-slider>
 
   private cardContainerRef = viewChild('cardContainer', { read: ElementRef });
   private cardRef = contentChild('card', { read: ElementRef });
