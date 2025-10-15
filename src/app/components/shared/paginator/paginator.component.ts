@@ -22,19 +22,14 @@ export default class PaginatorComponent implements OnChanges {
   public getCurrentPage = output<number>();
   public shadow = input<boolean>(false);
   public disabled = input(false);
+  // 
   protected firstButtonValue = computed(() => this.getButtonValue(-1));
   protected secondButtonValue = computed(() => this.getButtonValue(0));
   protected thirdButtonValue = computed(() => this.getButtonValue(1));
-
+  
   protected currentPage = signal<number>(this.initialPageIndex());
   protected showPageSelector = signal(false);
   protected pageSelectorInputValue = '';
-  protected onLimitChanged = effect(() => {
-    const limit = this.limit();
-    untracked(() => { 
-      this.selectPage(1)
-    })
-  }); // reset to first page when limit changes
   @ViewChild('pageSelector') pageSelectorElementRef!: ElementRef<HTMLInputElement>;
   @ViewChild('pageSelectorInput') pageSelectorInputElementRef!: ElementRef<HTMLInputElement>;
 
@@ -44,10 +39,12 @@ export default class PaginatorComponent implements OnChanges {
     }
   }
 
-  selectPage(page: number) {
+  selectPage(page: number, emit: boolean = true) {
     if(this.disabled() === false) {
       this.currentPage.set(page);
-      this.getCurrentPage.emit(this.currentPage());
+      if (emit) {
+        this.getCurrentPage.emit(this.currentPage());
+      }
     }
   }
 

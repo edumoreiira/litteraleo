@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, linkedSignal, OnInit, signal, untracked } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, linkedSignal, OnInit, signal, untracked, viewChild } from '@angular/core';
 import { UserPostsService } from 'app/services/posts/user-posts.service';
 import { ComboboxOption } from "../../components/shared/combobox/combobox.component";
 import { ButtonComponent } from 'app/components/base/Button/button.component';
@@ -8,7 +8,8 @@ import { SearchbarComponent } from "../../components/shared/searchbar/searchbar.
 import { CardReviewComponent } from 'app/components/shared/card-review/card-review.component';
 import PaginatorComponent from "../../components/shared/paginator/paginator.component";
 import { Post, PaginatedPosts, PostQuery } from 'app/models/post.interface';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { take } from 'rxjs';
 
 const RATE_OPTIONS: ComboboxOption[] = [
   { label: '1 Estrela', value: '1' },
@@ -20,6 +21,7 @@ const RATE_OPTIONS: ComboboxOption[] = [
 
 @Component({
   selector: 'app-resenhas',
+  standalone: true,
   imports: [ButtonComponent, ComboboxDirective, SearchbarComponent, CardReviewComponent, PaginatorComponent, RouterLink],
   templateUrl: './resenhas.component.html',
   animations: [createAnimation('popUp', { animateY: true, transform: 'scale(.95)' })],
@@ -27,8 +29,11 @@ const RATE_OPTIONS: ComboboxOption[] = [
 })
 export class ResenhasComponent implements OnInit {
   private posts = inject(UserPostsService);
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
   private searchDebouceTimeout: any;
   private postCache: { [searchKey: string]: PaginatedPosts } = {};
+  private isInitializing = true;
   labelCategorias = signal('');
   labelAvaliacoes = signal('');
   categoryOptions = signal<ComboboxOption[]>([]);
@@ -36,11 +41,28 @@ export class ResenhasComponent implements OnInit {
   totalPages = signal(0);
   searchQuery = signal<PostQuery>({ page: 1, pageSize: 8 });
   displayedPosts = signal<Post[]>([]);
-  search = effect(() => { this.searchPost(); });
-  
+  private search = effect(() => { this.searchPost(); });
+  protected paginator = viewChild.required(PaginatorComponent);
+
   ngOnInit(): void {
     this.loadCategories();
-    this.loadInitialPosts();
+    this.initializeFromUrl();
+  }
+
+  private initializeFromUrl() {
+    this.route.queryParams
+    .pipe(take(1))
+    .subscribe(params => {
+      const query: PostQuery = {
+        page: params['page'] ? parseInt(params['page'], 10) : 1,
+        pageSize: 8,
+        search_text: params['search'] || undefined,
+        minRate: params['rate'] ? parseInt(params['rate'], 10) : undefined,
+        categoryIds: params['categories'] ? params['categories'].split(',') : undefined
+      };
+      this.searchQuery.set(query);
+      this.isInitializing = false;
+    });
   }
 
   private searchPost() {
@@ -54,7 +76,34 @@ export class ResenhasComponent implements OnInit {
     };
     untracked(() => { // Untrack this effect to avoid infinite loops
       this.handlePosts(treatedQuery);
+      this.paginator().selectPage(query.page, false); // it keeps the paginator in sync with the search query
+      if (!this.isInitializing) {
+        this.updateUrl(treatedQuery);
+      }
     })
+  }
+
+  private updateUrl(query: PostQuery) {
+    const queryParams: any = {};
+    
+    if (query.page && query.page > 1) {
+      queryParams['page'] = query.page;
+    }
+    if (query.search_text && query.search_text.trim() !== '') {
+      queryParams['search'] = query.search_text;
+    }
+    if (query.minRate && query.minRate > 0) {
+      queryParams['rate'] = query.minRate;
+    }
+    if (query.categoryIds && query.categoryIds.length > 0) {
+      queryParams['categories'] = query.categoryIds.join(',');
+    }
+
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: queryParams,
+      replaceUrl: true
+    });
   }
 
   private setDumbOptions(activeRate?: number, activeCategories?: string[]) { // Update the active state of rate and category options
@@ -94,15 +143,6 @@ export class ResenhasComponent implements OnInit {
     });
   }
 
-  async loadInitialPosts() {
-    this.posts.searchPostsPage({ page: 1 }).then(value => {
-      if (value.data) {
-        this.displayedPosts.set(value.data.posts);
-        this.totalPages.set(value.data.total_pages);
-      }
-    });
-  }
-
   onPageChange(page: number) {
     this.searchQuery.update(currentSearch => {
       const updated: PostQuery = {
@@ -119,7 +159,8 @@ export class ResenhasComponent implements OnInit {
       this.searchQuery.update(currentSearch => {
         const updated: PostQuery = {
           ...currentSearch,
-          search_text: search
+          search_text: search,
+          page: 1 // reset to first page on new search
         }
         return updated
       })
@@ -130,7 +171,8 @@ export class ResenhasComponent implements OnInit {
     this.searchQuery.update(currentSearch => {
       const updated: PostQuery = {
         ...currentSearch,
-        categoryIds: categories
+        categoryIds: categories,
+        page: 1 // reset to first page on new search
       }
       return updated
     });
@@ -140,7 +182,8 @@ export class ResenhasComponent implements OnInit {
     this.searchQuery.update(currentSearch => {
       const updated: PostQuery = {
         ...currentSearch,
-        minRate: rate
+        minRate: rate,
+        page: 1 // reset to first page on new search
       }
       return updated
     });
