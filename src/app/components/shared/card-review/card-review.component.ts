@@ -4,13 +4,14 @@ import { RateComponent } from "../rate/rate.component";
 import { DatePipe } from '@angular/common';
 import { PostCategory } from 'app/models/post.interface';
 import { StripHtmlPipe } from 'app/pipes/strip-html.pipe';
+import { RouterLink } from "@angular/router";
 
 @Component({
   selector: 'article[app-card-review]',
   host: {
     class: 'flex flex-col justify-between bg-card text-card-fg rounded p-6'
   },
-  imports: [TextDirective, RateComponent, DatePipe, StripHtmlPipe],
+  imports: [TextDirective, RateComponent, DatePipe, StripHtmlPipe, RouterLink],
   templateUrl: './card-review.component.html',
 })
 export class CardReviewComponent {
@@ -23,4 +24,5 @@ export class CardReviewComponent {
   book_author = input<string>('');
   author_name = input<string>('');
   author_avatar = input<string>('');
+  url = input<string[]>();
 }

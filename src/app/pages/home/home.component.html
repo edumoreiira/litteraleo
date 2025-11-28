@@ -39,6 +39,7 @@
         [content]="post.content"
         [rating]="post.rate"
         [created_at]="post.created_at"
+        [url]="['/resenha/', post.title, post.id]"
         app-card-review layout="minimal" class="flex-1 min-w-[389px]"></article>
       }
       <!-- <article #card app-card-review layout="minimal" class="flex-1 snap-start min-w-[389px]"></article>

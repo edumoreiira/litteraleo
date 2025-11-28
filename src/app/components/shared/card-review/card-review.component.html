@@ -14,8 +14,9 @@
       <span class="block text-sm text-muted-fg mb-2 opacity-70">por {{ author_name() }}</span>
       <p appText size="sm" class="line-clamp-3"> {{ content() | stripHtml}} </p>
     </div>
-    <button class="block text-primary font-semibold ml-auto font-[Lora] italic
-    hover:underline cursor-pointer">ver resenha</button>
+    <a [routerLink]="url()"
+    class="block text-primary font-semibold ml-auto font-[Lora] italic
+    hover:underline cursor-pointer">ver resenha</a>
   } @else {
     <div>
       <div class="flex gap-2 flex-wrap items-start">
