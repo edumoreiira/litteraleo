@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, linkedSignal, OnInit, signal, untracked, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, OnInit, signal, untracked, viewChild } from '@angular/core';
 import { UserPostsService } from 'app/services/posts/user-posts.service';
 import { ComboboxOption } from "../../components/shared/combobox/combobox.component";
 import { ButtonComponent } from 'app/components/base/Button/button.component';
@@ -7,9 +7,10 @@ import { ComboboxDirective } from 'app/components/shared/combobox/combobox.direc
 import { SearchbarComponent } from "../../components/shared/searchbar/searchbar.component";
 import { CardReviewComponent } from 'app/components/shared/card-review/card-review.component';
 import PaginatorComponent from "../../components/shared/paginator/paginator.component";
-import { Post, PaginatedPosts, PostQuery } from 'app/models/post.interface';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { take } from 'rxjs';
+import { ReviewsService } from 'app/services/posts/reviews.service';
+import { PaginatedReviews, Review, ReviewSearchParams } from 'app/models/review.interface';
 
 const RATE_OPTIONS: ComboboxOption[] = [
   { label: '1 Estrela', value: '1' },
@@ -29,18 +30,19 @@ const RATE_OPTIONS: ComboboxOption[] = [
 })
 export class ResenhasComponent implements OnInit {
   private posts = inject(UserPostsService);
+  private reviews = inject(ReviewsService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private searchDebouceTimeout: any;
-  private postCache: { [searchKey: string]: PaginatedPosts } = {};
+  private postCache: { [searchKey: string]: PaginatedReviews } = {};
   private isInitializing = true;
   labelCategorias = signal('');
   labelAvaliacoes = signal('');
   categoryOptions = signal<ComboboxOption[]>([]);
   rateOptions = signal<ComboboxOption[]>(RATE_OPTIONS);
   totalPages = signal(0);
-  searchQuery = signal<PostQuery>({ page: 1, pageSize: 8 });
-  displayedPosts = signal<Post[]>([]);
+  searchQuery = signal<ReviewSearchParams>({ page: 1, page_size: 8 });
+  dispslayedReviews = signal<Review[]>([]);
   private search = effect(() => { this.searchPost(); });
   protected paginator = viewChild.required(PaginatorComponent);
 
@@ -53,12 +55,12 @@ export class ResenhasComponent implements OnInit {
     this.route.queryParams
     .pipe(take(1))
     .subscribe(params => {
-      const query: PostQuery = {
+      const query: ReviewSearchParams = {
         page: params['page'] ? parseInt(params['page'], 10) : 1,
-        pageSize: 8,
+        page_size: 8,
         search_text: params['search'] || undefined,
-        minRate: params['rate'] ? parseInt(params['rate'], 10) : undefined,
-        categoryIds: params['categories'] ? params['categories'].split(',') : undefined
+        rating: params['rate'] ? parseInt(params['rate'], 10) : undefined,
+        category_ids: params['categories'] ? params['categories'].split(',') : undefined
       };
       this.searchQuery.set(query);
       this.isInitializing = false;
@@ -66,13 +68,14 @@ export class ResenhasComponent implements OnInit {
   }
 
   private searchPost() {
+    console.log('Search query changed, performing search...');
     const query = this.searchQuery(); // Get the current search query and track signal changes
-    const treatedQuery: PostQuery = {
+    const treatedQuery: ReviewSearchParams = {
       page: query.page,
-      pageSize: 8,
+      page_size: 8,
       search_text: query.search_text || '',
-      minRate: query.minRate === 0 ? undefined : query.minRate,
-      categoryIds: query.categoryIds && query.categoryIds.length > 0 ? query.categoryIds : undefined
+      rating: query.rating === 0 ? undefined : query.rating,
+      category_ids: query.category_ids && query.category_ids.length > 0 ? query.category_ids : undefined
     };
     untracked(() => { // Untrack this effect to avoid infinite loops
       this.handlePosts(treatedQuery);
@@ -83,7 +86,7 @@ export class ResenhasComponent implements OnInit {
     })
   }
 
-  private updateUrl(query: PostQuery) {
+  private updateUrl(query: ReviewSearchParams) {
     const queryParams: any = {};
     
     if (query.page && query.page > 1) {
@@ -92,11 +95,11 @@ export class ResenhasComponent implements OnInit {
     if (query.search_text && query.search_text.trim() !== '') {
       queryParams['search'] = query.search_text;
     }
-    if (query.minRate && query.minRate > 0) {
-      queryParams['rate'] = query.minRate;
+    if (query.rating && query.rating > 0) {
+      queryParams['rate'] = query.rating;
     }
-    if (query.categoryIds && query.categoryIds.length > 0) {
-      queryParams['categories'] = query.categoryIds.join(',');
+    if (query.category_ids && query.category_ids.length > 0) {
+      queryParams['categories'] = query.category_ids.join(',');
     }
 
     this.router.navigate([], {
@@ -145,7 +148,7 @@ export class ResenhasComponent implements OnInit {
 
   onPageChange(page: number) {
     this.searchQuery.update(currentSearch => {
-      const updated: PostQuery = {
+      const updated: ReviewSearchParams = {
         ...currentSearch,
         page: page
       }
@@ -157,7 +160,7 @@ export class ResenhasComponent implements OnInit {
     clearTimeout(this.searchDebouceTimeout);
     this.searchDebouceTimeout = setTimeout(() => {
       this.searchQuery.update(currentSearch => {
-        const updated: PostQuery = {
+        const updated: ReviewSearchParams = {
           ...currentSearch,
           search_text: search,
           page: 1 // reset to first page on new search
@@ -169,9 +172,9 @@ export class ResenhasComponent implements OnInit {
 
   private updateSearchCategories(categories: string[]) {
     this.searchQuery.update(currentSearch => {
-      const updated: PostQuery = {
+      const updated: ReviewSearchParams = {
         ...currentSearch,
-        categoryIds: categories,
+        category_ids: categories,
         page: 1 // reset to first page on new search
       }
       return updated
@@ -180,47 +183,56 @@ export class ResenhasComponent implements OnInit {
 
   private updateSearchRate(rate: number) {
     this.searchQuery.update(currentSearch => {
-      const updated: PostQuery = {
+      const updated: ReviewSearchParams = {
         ...currentSearch,
-        minRate: rate,
+        rating: rate,
         page: 1 // reset to first page on new search
       }
       return updated
     });
   }
 
-    private handlePosts(search: PostQuery) {
+  private handlePosts(search: ReviewSearchParams) {
+    console.log('Handling posts with search params:', search);
     const cachedPosts = this.getCachedQuery(search);
     if (cachedPosts) {
+      console.log('Using cached posts:', cachedPosts);
       const totalPages = cachedPosts.total_pages;
-      this.applySearch(cachedPosts, totalPages, search.minRate, search.categoryIds);
+      this.applySearch(cachedPosts, totalPages, search.rating, search.category_ids);
     } else {
+      console.log('Fetching posts from server...');
       this.fetchPosts(search);
     }
   }
   
-  private fetchPosts(query: PostQuery) {
-    this.posts.searchPostsPage(query).then( ({ data, error }) => {
+  private fetchPosts(query: ReviewSearchParams) {
+    console.log('Fetching posts with query:', query);
+    this.reviews.searchReviews(query).then( ({ data, error }) => {
       if (data) {
-        this.applySearch(data, data.total_pages, query.minRate, query.categoryIds);
-        this.addPostToCache(query, data);
+        console.log('Fetched posts:', data);
+        this.applySearch(data, data.total_pages, query.rating, query.category_ids);
+        this.addReviewToCache(query, data);
+      }
+      if (error) {
+        console.error('Error fetching posts:', error);
       }
     });
   }
 
-  private applySearch(paginatedPost: PaginatedPosts, totalPages: number, rate?: number, categories?: string[]) {
-    this.displayedPosts.set(paginatedPost.posts);
+  private applySearch(paginatedReviews: PaginatedReviews, totalPages: number, rate?: number, categories?: string[]) {
+    console.log('Reviews encontradas:', paginatedReviews);
+    this.dispslayedReviews.set(paginatedReviews.reviews);
     this.totalPages.set(totalPages);
     this.setDumbOptions(rate, categories);
   }
 
-  private getCachedQuery(search: PostQuery): PaginatedPosts | undefined {
+  private getCachedQuery(search: ReviewSearchParams): PaginatedReviews | undefined {
     const key = JSON.stringify(search);
     return this.postCache[key];
   }
 
-  private addPostToCache(search: PostQuery, posts: PaginatedPosts) {
+  private addReviewToCache(search: ReviewSearchParams, reviews: PaginatedReviews) {
     const key = JSON.stringify(search);
-    this.postCache[key] = posts;
+    this.postCache[key] = reviews;
   }
 }

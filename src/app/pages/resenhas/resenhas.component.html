@@ -30,17 +30,17 @@
   </div>
 
   <section class="flex flex-wrap gap-4 my-10">
-    @for (post of displayedPosts(); track post.id) {
-      <article app-card-review [routerLink]="'../resenha/' + ' /' + post.id"
+    @for (review of dispslayedReviews(); track review.id) {
+      <article app-card-review [routerLink]="'../resenha/' + ' /' + review.id"
       class="flex-[1_1_375px] hover:ring-1 hover:ring-primary/70 hover:scale-101 transition-all cursor-pointer"
-      [author_name]="post.short_name"
-      [author_avatar]="post.avatar_url || './icons/default_user.jpg'"
-      [title]="post.title"
-      [book_author]="post.book_author"
-      [content]="post.content"
-      [rating]="post.rate"
-      [tags]="post.categories"
-      [created_at]="post.created_at"
+      [author_name]="review.author.name"
+      [author_avatar]="review.author.avatar_url || './icons/default_user.jpg'"
+      [title]="review.title"
+      [book_author]="review.book.author"
+      [content]="review.content"
+      [rating]="review.rating"
+      [tags]="review.categories"
+      [created_at]="review.created_at"
       ></article>
     }
   </section>
