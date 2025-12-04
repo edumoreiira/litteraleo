@@ -217,7 +217,6 @@ export class UserPostsService {
       });
       return [];
     }
-
     return data as PostCategory[];
   }
 

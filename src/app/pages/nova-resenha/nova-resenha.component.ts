@@ -1,6 +1,6 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { PostEditorComponent } from "../../components/layout/post-editor/post-editor.component";
-import { Post, PostPreview } from 'app/models/post.interface';
+import { PostPreview } from 'app/models/post.interface';
 import { PostComponent } from 'app/components/layout/post/post.component';
 import { ButtonComponent } from 'app/components/base/Button/button.component';
 import { NgClass } from '@angular/common';

@@ -1,14 +1,14 @@
 import { FormControl } from "@angular/forms";
 import { ComboboxOption } from "app/components/shared/combobox/combobox.component";
 
-export interface PostForm {
-  title: FormControl<string>;
-  content: FormControl<string>;
-  book_author: FormControl<string>;
-  book_name: FormControl<string>;
-  rate: FormControl<number | null>;
-  categories: FormControl<ComboboxOption[]>;
-}
+// export interface PostForm {
+//   title: FormControl<string>;
+//   content: FormControl<string>;
+//   book_author: FormControl<string>;
+//   book_name: FormControl<string>;
+//   rate: FormControl<number | null>;
+//   categories: FormControl<ComboboxOption[]>;
+// }
 
 export interface Post {
   id: string;

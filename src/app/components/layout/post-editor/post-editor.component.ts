@@ -5,11 +5,13 @@ import { ButtonComponent } from 'app/components/base/Button/button.component';
 import { InputComponent } from 'app/components/base/input/input.component';
 import { ComboboxOption } from 'app/components/shared/combobox/combobox.component';
 import { ComboboxDirective } from 'app/components/shared/combobox/combobox.directive';
-import { Post, PostForm, PostPreview } from 'app/models/post.interface';
+import { PostPreview } from 'app/models/post.interface';
 import { UserPostsService } from 'app/services/posts/user-posts.service';
 import { QuillModule } from 'ngx-quill';
 import { RateComponent } from "../../shared/rate/rate.component";
 import { NgxMaskDirective } from 'ngx-mask';
+import { ReviewsService } from 'app/services/posts/reviews.service';
+import { CreateReviewDTO, ReviewForm } from 'app/models/review.interface';
 
 @Component({
   selector: 'app-post-editor',
@@ -20,38 +22,44 @@ import { NgxMaskDirective } from 'ngx-mask';
         <app-input size="base" class="w-full" label="Título" identifier="post-editor-title"
         placeholder="Título do seu post"
         formControlName="title" />
-        <div class="flex sm:flex-row flex-col items-end gap-4">
-          <app-input size="base" class="w-full" label="Livro" identifier="post-editor-book-author"
-          placeholder="Nome do Livro"
-          formControlName="book_name"
+        <div class="flex gap-4 justify-between flex-wrap">
+          <div class="flex gap-2 min-w-0">
+            <button app-button appCombobox size="base" type="button" variant="combobox" class="font-medium rounded-lg min-w-0"
+            [options]="categories()" [allowMultipleOptions]="true"
+            label="categorias"
+            (updatedLabel)="categoryLabel = $event"
+            (activeOptions)="updateFormCategories($event)"
+            >
+              <span class="max-w-[200px] w-fit whitespace-nowrap overflow-ellipsis overflow-hidden"> {{ categoryLabel }} </span>
+            </button>
+            <button app-button appCombobox size="base" type="button" variant="combobox" class="font-medium rounded-lg min-w-0"
+            [options]="books()" [allowMultipleOptions]="false"
+            label="livros"
+            (updatedLabel)="bookLabel = $event"
+            (activeOptions)="updateFormBook($event)"
+            >
+              <span class="max-w-[200px] w-fit whitespace-nowrap overflow-ellipsis overflow-hidden"> {{ bookLabel }} </span>
+            </button>
+
+            <button app-button size="base" variant="contained" aria-label="Configurar livros e categorias" type="button">
+              <i class="fi fi-sr-settings flex"></i>
+            </button>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2">
+          <app-rate class="xs:gap-2 gap-1 xs:text-2xl text-xl text-primary"
+          [canVote]="true" [maxStars]="5" [rating]="form.get('rating')?.value || 0"
+          (ratingChange)="updateFormRating($event)"
           />
-          <app-input size="base" class="w-full" label="Autor" identifier="post-editor-book-author"
-          placeholder="Nome do autor do livro"
-          formControlName="book_author"
+          <input class="w-10 text-center outline-none placeholder:text-muted-fg border-b-2 border-b-border
+          focus:border-b-primary transition-colors"
+          type="text"
+          placeholder="(0-5)"
+          formControlName="rating"
+          mask="separator.1"
           />
         </div>
-        <div class="flex gap-4 justify-between">
-          <div class="flex items-center gap-2">
-            <app-rate class="xs:gap-2 gap-1 xs:text-2xl text-xl text-primary"
-            [canVote]="true" [maxStars]="5" [rating]="form.get('rate')?.value || 0"
-            (ratingChange)="updateFormRate($event)"
-            />
-            <input class="w-10 text-center outline-none placeholder:text-muted-fg border-b-2 border-b-border
-            focus:border-b-primary transition-colors"
-            type="text"
-            placeholder="(0-5)"
-            formControlName="rate"
-            mask="separator.1"
-            />
-          </div>
-          <button app-button appCombobox size="base" type="button" variant="combobox" class="font-medium rounded-lg min-w-0"
-          [options]="categories()" [allowMultipleOptions]="true"
-          label="categorias"
-          (updatedLabel)="categoryLabel = $event"
-          (activeOptions)="updateFormCategories($event)"
-          >
-            <span class="max-w-[200px] w-fit whitespace-nowrap overflow-ellipsis overflow-hidden"> {{ categoryLabel }} </span>
-          </button>
+
         </div>
       </div>
       <quill-editor
@@ -76,11 +84,14 @@ import { NgxMaskDirective } from 'ngx-mask';
 })
 export class PostEditorComponent implements OnInit {
   post = inject(UserPostsService);
+  private review = inject(ReviewsService);
   // 
-  form: FormGroup<PostForm>;
+  form: FormGroup<ReviewForm>;
   preview = output<PostPreview>();
   categories = signal<ComboboxOption[]>([]);
+  books = signal<ComboboxOption[]>([]);
   categoryLabel = '';
+  bookLabel = '';
 
   editorModules = {
     toolbar: [
@@ -97,16 +108,15 @@ export class PostEditorComponent implements OnInit {
     this.form = this.fb.group({
       title: this.fb.control('', { nonNullable: true, validators: [Validators.required] }),
       content: this.fb.control('', { nonNullable: true, validators: [Validators.required] }),
-      categories: this.fb.control<ComboboxOption[]>([], { nonNullable: true, validators: [Validators.required] }),
-      book_author: this.fb.control('', { nonNullable: true, validators: [Validators.required] }),
-      rate: this.fb.control<number | null>(3.5, { validators: [Validators.min(0), Validators.max(5)] }),
-      book_name: this.fb.control('', { nonNullable: true, validators: [Validators.required] }),
+      categories: this.fb.control<string[]>([], { nonNullable: true, validators: [Validators.required] }),
+      rating: this.fb.control<number | null>(3.5, { validators: [Validators.min(0), Validators.max(5)] }),
+      book: this.fb.control<number | null>(null, { nonNullable: true, validators: [Validators.required] }),
     });
     this.form.valueChanges.subscribe(() => console.log(this.form.value, this.form));
   }
 
   ngOnInit(): void {
-    this.getCategories();
+    this.fetchBooksAndCategories();
   }
 
   onPreview() {
@@ -114,35 +124,55 @@ export class PostEditorComponent implements OnInit {
       return;
     }
     const { title, content, categories } = this.form.value;
-    const post: PostPreview = { title: title as string, content: content as string, categories: categories! };
+    const post: PostPreview = { title: title as string, content: content as string, categories: [] };
     this.preview.emit(post);
   }
 
-  async getCategories() {
-    await this.post.getAllCategories().then(data => {
-      this.categories.set(data.map(category => ({
-        value: category.id,
-        label: category.name,
-      })));
-    })
+  private fetchBooksAndCategories() {
+    this.review.getAllBooksAndCategories().then(({ data, error }) => {
+      if (data) {
+        console.log('Books and Categories:', data);
+        this.categories.set(data.categories.map(category => ({
+          value: category.id,
+          label: category.name,
+        })));
+        this.books.set(data.books.map(book => ({
+          value: book.id.toString(),
+          label: `${book.title} - ${book.author}`
+        })));
+      }
+    });
+  }
+    
+
+  protected updateFormCategories(categories: ComboboxOption[]) {
+    const categoryIds = categories.map(category => category.value);
+    this.form.patchValue({ categories: categoryIds });
   }
 
-  updateFormCategories(categories: ComboboxOption[]) {
-    this.form.patchValue({ categories });
+  protected updateFormBook(book: ComboboxOption[]) {
+    this.form.patchValue({ book: parseInt(book[0].value, 10) }); // convert string to number
   }
 
-  updateFormRate(rate: number) {
-    this.form.patchValue({ rate });
+  protected updateFormRating(rating: number) {
+    this.form.patchValue({ rating });
   }
 
   async submitPost() {
     if (this.form.invalid) {
       return;
     }
-    const { title, content, categories, book_author, rate, book_name } = this.form.value;
-    const categoriesId = categories?.map(category => category.value) || [];
+    const { title, content, categories, rating, book } = this.form.value;
 
-    await this.post.createPost(title!, '', content!, categoriesId, rate!, book_author!, book_name!).then(({ data, error }) => {
+    const reviewData: CreateReviewDTO = {
+      title: title!,
+      content: content!,
+      rating: rating!,
+      book_id: book!,
+      category_ids: categories!,
+    }
+
+    await this.review.createReview(reviewData).then(({ data, error }) => {
       if (!error) this.form.reset();
     });
   }

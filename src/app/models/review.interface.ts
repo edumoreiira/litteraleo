@@ -1,3 +1,22 @@
+import { FormControl } from "@angular/forms";
+import { ComboboxOption } from "app/components/shared/combobox/combobox.component";
+
+export interface ReviewForm {
+  title: FormControl<string>;
+  content: FormControl<string>;
+  book: FormControl<number | null>;
+  rating: FormControl<number | null>;
+  categories: FormControl<string[]>;
+}
+
+export interface CreateReviewDTO {
+  title: string;
+  content: string;
+  rating: number;
+  book_id: number;
+  category_ids: string[];
+}
+
 export interface Review {
   id: string;
   slug: string;
@@ -13,10 +32,7 @@ export interface Review {
     author: string;
     cover_image_url: string;
   }
-  categories: {
-    id: string;
-    name: string;
-  }[];
+  categories: ReviewCategory[];
   created_at: Date;
   updated_at: Date | null;
 }
@@ -33,4 +49,26 @@ export interface ReviewSearchParams {
   category_ids?: string[];
   page: number;
   page_size?: number;
+}
+
+export interface ReviewCategory {
+  "id": string;
+  "name": string;
+}
+
+export interface SimpleBook {
+  id: string;
+  title: string;
+  author: string;
+  cover_image_url: string;
+}
+
+export interface Book extends SimpleBook {
+  publication_year: number;
+  pages: number;
+}
+
+export interface BooksAndCategories {
+  books: SimpleBook[];
+  categories: ReviewCategory[];
 }
