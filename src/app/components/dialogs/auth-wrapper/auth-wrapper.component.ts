@@ -1,6 +1,6 @@
 import { ApplicationRef, ChangeDetectionStrategy, Component, computed, inject, input, OnInit, signal } from '@angular/core';
-import { SignInFormComponent } from '../sign-in-form/sign-in-form.component';
-import { SignUpFormComponent } from '../sign-up-form/sign-up-form.component';
+import { SignInFormComponent } from '../../forms/sign-in-form/sign-in-form.component';
+import { SignUpFormComponent } from '../../forms/sign-up-form/sign-up-form.component';
 import { ButtonComponent } from 'app/components/base/Button/button.component';
 import { createAnimation } from 'app/angular-animations/animations.utils';
 import { AuthService } from 'app/services/auth/auth.service';

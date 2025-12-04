@@ -68,7 +68,6 @@ export class ResenhasComponent implements OnInit {
   }
 
   private searchPost() {
-    console.log('Search query changed, performing search...');
     const query = this.searchQuery(); // Get the current search query and track signal changes
     const treatedQuery: ReviewSearchParams = {
       page: query.page,
@@ -193,23 +192,18 @@ export class ResenhasComponent implements OnInit {
   }
 
   private handlePosts(search: ReviewSearchParams) {
-    console.log('Handling posts with search params:', search);
     const cachedPosts = this.getCachedQuery(search);
     if (cachedPosts) {
-      console.log('Using cached posts:', cachedPosts);
       const totalPages = cachedPosts.total_pages;
       this.applySearch(cachedPosts, totalPages, search.rating, search.category_ids);
     } else {
-      console.log('Fetching posts from server...');
       this.fetchPosts(search);
     }
   }
   
   private fetchPosts(query: ReviewSearchParams) {
-    console.log('Fetching posts with query:', query);
     this.reviews.searchReviews(query).then( ({ data, error }) => {
       if (data) {
-        console.log('Fetched posts:', data);
         this.applySearch(data, data.total_pages, query.rating, query.category_ids);
         this.addReviewToCache(query, data);
       }
@@ -220,7 +214,6 @@ export class ResenhasComponent implements OnInit {
   }
 
   private applySearch(paginatedReviews: PaginatedReviews, totalPages: number, rate?: number, categories?: string[]) {
-    console.log('Reviews encontradas:', paginatedReviews);
     this.dispslayedReviews.set(paginatedReviews.reviews);
     this.totalPages.set(totalPages);
     this.setDumbOptions(rate, categories);

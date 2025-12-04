@@ -12,6 +12,8 @@ import { RateComponent } from "../../shared/rate/rate.component";
 import { NgxMaskDirective } from 'ngx-mask';
 import { ReviewsService } from 'app/services/posts/reviews.service';
 import { CreateReviewDTO, ReviewForm } from 'app/models/review.interface';
+import { ModalService } from 'app/services/ui/modal.service';
+import { LibraryManagerComponent } from 'app/components/dialogs/library-manager/library-manager.component';
 
 @Component({
   selector: 'app-post-editor',
@@ -41,7 +43,8 @@ import { CreateReviewDTO, ReviewForm } from 'app/models/review.interface';
               <span class="max-w-[200px] w-fit whitespace-nowrap overflow-ellipsis overflow-hidden"> {{ bookLabel }} </span>
             </button>
 
-            <button app-button size="base" variant="contained" aria-label="Configurar livros e categorias" type="button">
+            <button app-button size="base" variant="contained" aria-label="Configurar livros e categorias" type="button"
+            (click)="openLibraryManagerModal()">
               <i class="fi fi-sr-settings flex"></i>
             </button>
         </div>
@@ -85,6 +88,7 @@ import { CreateReviewDTO, ReviewForm } from 'app/models/review.interface';
 export class PostEditorComponent implements OnInit {
   post = inject(UserPostsService);
   private review = inject(ReviewsService);
+  private modalService = inject(ModalService);
   // 
   form: FormGroup<ReviewForm>;
   preview = output<PostPreview>();
@@ -112,7 +116,6 @@ export class PostEditorComponent implements OnInit {
       rating: this.fb.control<number | null>(3.5, { validators: [Validators.min(0), Validators.max(5)] }),
       book: this.fb.control<number | null>(null, { nonNullable: true, validators: [Validators.required] }),
     });
-    this.form.valueChanges.subscribe(() => console.log(this.form.value, this.form));
   }
 
   ngOnInit(): void {
@@ -131,7 +134,6 @@ export class PostEditorComponent implements OnInit {
   private fetchBooksAndCategories() {
     this.review.getAllBooksAndCategories().then(({ data, error }) => {
       if (data) {
-        console.log('Books and Categories:', data);
         this.categories.set(data.categories.map(category => ({
           value: category.id,
           label: category.name,
@@ -175,5 +177,11 @@ export class PostEditorComponent implements OnInit {
     await this.review.createReview(reviewData).then(({ data, error }) => {
       if (!error) this.form.reset();
     });
+  }
+
+  protected openLibraryManagerModal() {
+    this.modalService.open(LibraryManagerComponent,
+      { role: 'dialog' }
+    )
   }
 }

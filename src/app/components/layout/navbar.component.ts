@@ -4,7 +4,7 @@ import { SearchbarComponent } from "../shared/searchbar/searchbar.component";
 import { DocumentListenerService } from '../../services/platform/document-listener.service';
 import { RouterLink } from '@angular/router';
 import { ModalService } from '../../services/ui/modal.service';
-import { AuthWrapperComponent } from '../forms/auth-wrapper/auth-wrapper.component';
+import { AuthWrapperComponent } from '../dialogs/auth-wrapper/auth-wrapper.component';
 import { AuthService } from 'app/services/auth/auth.service';
 import { UserIconComponent } from "./user-icon/user-icon.component";
 
