@@ -29,10 +29,20 @@ export class ModalService {
         // connect angular view tree
         this.appRef.attachView(modalCompRef.hostView);
         
-        
         // renders on DOM
         const domElem = (modalCompRef.hostView as any).rootNodes[0] as HTMLElement;
-        this.document.body.appendChild(domElem);
+        
+        // find the cdk-overlay-container to determine injection position
+        const overlayContainer = this.document.querySelector('.cdk-overlay-container');
+
+        // if the container exists and is a direct child of body, insert before it.
+        // otherwise, append to the end of body.
+        // this ensures modals appear above cdk overlays.
+        if (overlayContainer && overlayContainer.parentNode === this.document.body) {
+            this.document.body.insertBefore(domElem, overlayContainer);
+        } else {
+            this.document.body.appendChild(domElem);
+        }
         
         modalCompRef.changeDetectorRef.detectChanges();
 
