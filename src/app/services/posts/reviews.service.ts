@@ -82,7 +82,8 @@ export class ReviewsService {
    return data; // Retorna o objeto da review criada
   }
 
-  public async createBook(bookData: Partial<Book>, bookCover: File) {
+  public async createBook(bookData: Partial<Book>, bookCover: File)
+  : Promise<Book> {
     let uploadedPath: string | null = null;
 
     try {
@@ -128,7 +129,7 @@ export class ReviewsService {
         variant: 'success',
         message: 'Livro criado com sucesso!',
       });
-      return data;
+      return data as Book;
 
     } catch (error) {
       // 5. ROLLBACK MANUAL (A Mágica da Transação)
@@ -153,7 +154,7 @@ export class ReviewsService {
   public async updateBook(
     bookData: Partial<Book>,
     bookCover?: File | null
-  ) {
+  ): Promise<Book> {
     let uploadedPath: string | null = null;
     let oldCoverUrl: string | null = null;
 
@@ -226,7 +227,7 @@ export class ReviewsService {
         variant: 'success',
         message: 'Livro atualizado com sucesso!',
       });
-      return data;
+      return data as Book;
 
     } catch (error) {
       // ROLLBACK DA NOVA IMAGEM
@@ -304,6 +305,8 @@ export class ReviewsService {
       throw error;
     }
   }
+
+
   // --- MÉTODOS AUXILIARES ---
 
   /**

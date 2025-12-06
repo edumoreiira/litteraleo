@@ -4,7 +4,7 @@ $modal-fg: var(--color-popover-fg);
 $close-btn: var(--color-muted-fg);
 $close-btn-hover: var(--color-primary);
 $close-btn-active: var(--color-primary-400);
-$radius: var(--radius);
+$radius: 0.9rem;
 
 
 :host { // host with modal class

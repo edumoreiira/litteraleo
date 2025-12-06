@@ -56,19 +56,17 @@ export interface ReviewCategory {
   "name": string;
 }
 
-export interface SimpleBook {
+
+export interface Book {
   id: string;
   title: string;
   author: string;
   cover_image_url: string;
-}
-
-export interface Book extends SimpleBook {
   publication_year: number;
   pages: number;
 }
 
 export interface BooksAndCategories {
-  books: SimpleBook[];
+  books: Book[];
   categories: ReviewCategory[];
 }

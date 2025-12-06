@@ -1,1 +1,69 @@
-<p>library-manager works!</p>
+<h1 class="text-xl font-semibold">Editar Livros e Categorias</h1>
+<div class="flex gap-2">
+  <button
+  app-button
+  size="base"
+  variant="combobox"
+  appCombobox
+  [options]="library().books.comboboxOptions"
+  label="selecione um livro"
+  (updatedLabel)="bookLabel = $event"
+  (activeOptions)="onBookSelect($event)"
+  class="font-medium rounded-lg min-w-0">
+    <span>{{ bookLabel }}</span>
+  </button>
+  <div class="flex">
+    <button class="bg-green-100/40 rounded-lg rounded-r-none text-green-600 px-3
+    hover:bg-green-100 transition-colors"
+    (click)="createBookDialog()">
+      <i class="fi fi-rr-plus flex"></i>
+    </button>
+    <button class="bg-amber-100/40 text-amber-600 px-3
+    enabled:hover:bg-amber-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+    [disabled]="!(library().books.selectedId)"
+    (click)="updateBookDialog()"
+    >
+      <i class="fi fi-rr-pencil flex"></i>
+    </button>
+    <button class="bg-red-100/40 rounded-lg rounded-l-none text-red-600 px-3
+    enabled:hover:bg-red-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+    [disabled]="!(library().books.selectedId)"
+    (click)="deleteBook()"
+    >
+      <i class="fi fi-rr-trash flex"></i>
+    </button>
+  </div>
+</div>
+<div class="flex gap-2">
+  <button
+  app-button
+  size="base"
+  variant="combobox"
+  appCombobox
+  [options]="library().categories.comboboxOptions"
+  label="selecione uma categoria"
+  (updatedLabel)="categoryLabel = $event"
+  (activeOptions)="onCategorySelect($event)"
+  class="font-medium rounded-lg min-w-0">
+    <span>{{ categoryLabel }}</span>
+  </button>
+  <div class="flex">
+    <button class="bg-green-100/40 rounded-lg rounded-r-none text-green-600 px-3
+    enabled:hover:bg-green-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+    >
+      <i class="fi fi-rr-plus flex"></i>
+    </button>
+    <button class="bg-amber-100/40 text-amber-600 px-3
+    enabled:hover:bg-amber-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+    [disabled]="!(library().categories.selectedId)"
+    >
+      <i class="fi fi-rr-pencil flex"></i>
+    </button>
+    <button class="bg-red-100/40 rounded-lg rounded-l-none text-red-600 px-3
+    enabled:hover:bg-red-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+    [disabled]="!(library().categories.selectedId)"
+    >
+      <i class="fi fi-rr-trash flex"></i>
+    </button>
+  </div>
+</div>
