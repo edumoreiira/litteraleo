@@ -1,1 +1,16 @@
-<p>manage-category-form works!</p>
+<h1 class="text-xl font-semibold">
+  {{ mode() === 'create' ? 'Nova Categoria' : 'Editar Categoria' }}
+</h1>
+<form class="flex gap-2 items-start" [formGroup]="categoryForm">
+  <app-input
+  identifier="category_name"
+  label="Nome da Categoria"
+  placeholder="Ficção Científica"
+  formControlName="name"
+  />
+  <button app-button class="px-3 py-2 self-end rounded-lg" type="submit"
+  [disabled]="!categoryForm.valid"
+  (click)="onSubmit()">
+    {{ mode() === 'create' ? 'Criar Categoria' : 'Salvar Alterações' }}
+  </button>
+</form>

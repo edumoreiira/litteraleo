@@ -34,7 +34,7 @@
     }
   </div>
 
-  <div class="flex flex-col justify-between gap-4" [formGroup]="bookForm">
+  <form class="flex flex-col justify-between gap-4" [formGroup]="bookForm">
     <app-input 
     identifier="book_name"
     label="Título" 
@@ -65,9 +65,9 @@
       formControlName="pages"
       ></app-input>
     </div>
-  </div>
+  </form>
 </div>
-<button app-button class="self-end mt-4 px-5 py-2"
+<button app-button class="self-end mt-4 px-5 py-2" type="submit"
 [disabled]="!bookForm.valid || (!coverImageFile && !bookHoverUrl())"
 (click)="onSubmit()"
 >{{ mode() === 'create' ? 'Criar Livro' : 'Salvar Alterações' }}</button>

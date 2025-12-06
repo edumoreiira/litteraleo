@@ -1,12 +1,14 @@
 import { Component, inject, signal } from '@angular/core';
 import { ButtonComponent } from 'app/components/base/Button/button.component';
 import { ManageBookFormComponent } from 'app/components/forms/manage-book-form/manage-book-form.component';
+import { ManageCategoryFormComponent } from 'app/components/forms/manage-category-form/manage-category-form.component';
 import { ComboboxOption } from 'app/components/shared/combobox/combobox.component';
 import { ComboboxDirective } from 'app/components/shared/combobox/combobox.directive';
 import { ModalRef } from 'app/models/modal.interface';
 import { Book, ReviewCategory } from 'app/models/review.interface';
 import { ReviewsService } from 'app/services/posts/reviews.service';
 import { ModalService } from 'app/services/ui/modal.service';
+import { CdkObserveContent } from "@angular/cdk/observers";
 
 interface LibraryData {
   books: {
@@ -26,7 +28,7 @@ interface LibraryData {
   host: {
     class: 'flex flex-col gap-4'
   },
-  imports: [ComboboxDirective, ButtonComponent],
+  imports: [ComboboxDirective, ButtonComponent, CdkObserveContent],
   templateUrl: './library-manager.component.html',
 })
 export class LibraryManagerComponent {
@@ -105,10 +107,47 @@ export class LibraryManagerComponent {
     });
   }
 
-  private updateLibraryAndCloseModal(modalRef: ModalRef<ManageBookFormComponent>){
-    modalRef.componentRef.instance.onBookManage.subscribe(() => {
-      this.updateLibraryData();
-      modalRef.close();
-    })
+  
+  protected createCategoryDialog() {
+    const modalRef = this.modal.open(ManageCategoryFormComponent, { role: 'dialog', componentInputs: { mode: 'create' } });
+    this.updateLibraryAndCloseModal(modalRef);
   }
-}
+  
+  protected updateCategoryDialog() {
+    if (!this.library().categories.selectedId) return;
+    const selectedCategory = this.library().categories.data.find(category => category.id === this.library().categories.selectedId);
+    if (!selectedCategory) return;
+    const modalRef = this.modal.open(ManageCategoryFormComponent, 
+      { 
+        role: 'dialog', 
+        componentInputs: { 
+          mode: 'edit',
+          category: selectedCategory
+        } 
+      }
+    )
+    this.updateLibraryAndCloseModal(modalRef);
+  }
+
+  protected deleteCategory() {
+    if (!this.library().categories.selectedId) return;
+    this.reviews.deleteCategory(this.library().categories.selectedId!).then(() => {
+      this.updateLibraryData();
+    });
+  }
+
+  private updateLibraryAndCloseModal(modalRef: ModalRef<ManageBookFormComponent | ManageCategoryFormComponent>) {
+    if( modalRef.componentRef.instance instanceof ManageCategoryFormComponent ) {
+      modalRef.componentRef.instance.onCategoryManage.subscribe(() => {
+        this.updateLibraryData();
+        modalRef.close();
+      });
+    } else if( modalRef.componentRef.instance instanceof ManageBookFormComponent ) {
+      modalRef.componentRef.instance.onBookManage.subscribe(() => {
+        this.updateLibraryData();
+        modalRef.close();
+      });
+    }
+  }
+  
+} 

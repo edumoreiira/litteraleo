@@ -3,7 +3,7 @@ import { SupabaseService } from '../supabase/supabase.service';
 import { AuthService } from '../auth/auth.service';
 import { ToastService } from '../ui/toast.service';
 import { PostgrestError } from '@supabase/supabase-js';
-import { Book, BooksAndCategories, CreateReviewDTO, PaginatedReviews, ReviewSearchParams } from 'app/models/review.interface';
+import { Book, BooksAndCategories, CreateReviewDTO, PaginatedReviews, ReviewCategory, ReviewSearchParams } from 'app/models/review.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -304,6 +304,79 @@ export class ReviewsService {
       });
       throw error;
     }
+  }
+
+  // --- CATEGORIES ---
+
+  async createCategory(payload: Pick<ReviewCategory, 'name'>): Promise<ReviewCategory> {
+    const { data, error } = await this.supabase
+      .from('categories')
+      .insert(payload)
+      .select()
+      .single();
+
+    if (error) {
+      this.toast.create({
+        variant: 'error',
+        message: 'Ocorreu um erro ao criar a categoria.',
+      });
+      // Postgres error code 23505 is for unique violation
+      if (error.code === '23505') {
+        throw new Error('A category with this name already exists.');
+      }
+      throw error;
+    }
+    this.toast.create({
+      variant: 'success',
+      message: 'Categoria criada com sucesso!',
+    });
+    return data as ReviewCategory;
+  }
+
+  async updateCategory(category: ReviewCategory): Promise<ReviewCategory> {
+    const { data, error } = await this.supabase
+      .from('categories')
+      .update({ name: category.name })
+      .eq('id', category.id)
+      .select()
+      .single();
+
+    if (error) {
+      this.toast.create({
+        variant: 'error',
+        message: 'Ocorreu um erro ao atualizar a categoria.',
+      });
+      // Postgres error code 23505 is for unique violation
+      if (error.code === '23505') {
+        throw new Error('A category with this name already exists.');
+      }
+      throw error;
+    }
+
+    this.toast.create({
+      variant: 'success',
+      message: 'Categoria atualizada com sucesso!',
+    });
+    return data as ReviewCategory;
+  }
+
+  async deleteCategory(id: string): Promise<void> {
+    const { error } = await this.supabase
+      .from('categories')
+      .delete()
+      .eq('id', id);
+
+    if (error) {
+      this.toast.create({
+        variant: 'error',
+        message: 'Ocorreu um erro ao deletar a categoria.',
+      });
+      throw error;
+    }
+    this.toast.create({
+      variant: 'success',
+      message: 'Categoria deletada com sucesso!',
+    });
   }
 
 
