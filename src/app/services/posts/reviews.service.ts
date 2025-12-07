@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { SupabaseService } from '../supabase/supabase.service';
 import { AuthService } from '../auth/auth.service';
 import { ToastService } from '../ui/toast.service';
@@ -12,6 +12,20 @@ export class ReviewsService {
   private supabase = inject(SupabaseService).client;
   private auth = inject(AuthService);
   private toast = inject(ToastService);
+  // 
+  private booksAndCategories = signal<BooksAndCategories | null>(null);
+  $booksAndCategories = this.booksAndCategories.asReadonly();
+
+
+  public async updateBooksAndCategories() {
+    const { data, error } = await this.getAllBooksAndCategories();
+    if (error) throw error;
+    this.booksAndCategories.set(data);
+    return data;
+  }
+
+  // --- CRUD ---
+  // --- REVIEWS ---
 
   public async searchReviews(params: ReviewSearchParams)
   : Promise<{ data: PaginatedReviews; error: PostgrestError | null }>

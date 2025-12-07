@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, OnInit, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, OnInit, output, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonComponent } from 'app/components/base/Button/button.component';
 import { InputComponent } from 'app/components/base/input/input.component';
@@ -11,7 +11,7 @@ import { QuillModule } from 'ngx-quill';
 import { RateComponent } from "../../shared/rate/rate.component";
 import { NgxMaskDirective } from 'ngx-mask';
 import { ReviewsService } from 'app/services/posts/reviews.service';
-import { CreateReviewDTO, ReviewForm } from 'app/models/review.interface';
+import { BooksAndCategories, CreateReviewDTO, ReviewForm } from 'app/models/review.interface';
 import { ModalService } from 'app/services/ui/modal.service';
 import { LibraryManagerComponent } from 'app/components/dialogs/library-manager/library-manager.component';
 
@@ -85,9 +85,9 @@ import { LibraryManagerComponent } from 'app/components/dialogs/library-manager/
    RateComponent, NgxMaskDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PostEditorComponent implements OnInit {
+export class PostEditorComponent {
   post = inject(UserPostsService);
-  private review = inject(ReviewsService);
+  private reviews = inject(ReviewsService);
   private modalService = inject(ModalService);
   // 
   form: FormGroup<ReviewForm>;
@@ -96,6 +96,10 @@ export class PostEditorComponent implements OnInit {
   books = signal<ComboboxOption[]>([]);
   categoryLabel = '';
   bookLabel = '';
+
+  private syncBooksAndCategories = effect(() => {
+    this.fetchBooksAndCategories();
+  });
 
   editorModules = {
     toolbar: [
@@ -118,10 +122,6 @@ export class PostEditorComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-    this.fetchBooksAndCategories();
-  }
-
   onPreview() {
     if (this.form.invalid) {
       return;
@@ -132,18 +132,24 @@ export class PostEditorComponent implements OnInit {
   }
 
   private fetchBooksAndCategories() {
-    this.review.getAllBooksAndCategories().then(({ data, error }) => {
-      if (data) {
-        this.categories.set(data.categories.map(category => ({
-          value: category.id,
-          label: category.name,
-        })));
-        this.books.set(data.books.map(book => ({
-          value: book.id.toString(),
-          label: `${book.title} - ${book.author}`
-        })));
-      }
-    });
+    const data = this.reviews.$booksAndCategories();
+    if (data) {
+      this.populateBooksAndCategories(data);
+    } else {
+      this.reviews.updateBooksAndCategories();
+    }
+    this.form.patchValue({ book: null, categories: [] }); // reset selections
+  }
+
+  private populateBooksAndCategories(data: BooksAndCategories) {
+    this.categories.set(data.categories.map(category => ({
+      value: category.id,
+      label: category.name,
+    })));
+    this.books.set(data.books.map(book => ({
+      value: book.id.toString(),
+      label: `${book.title} - ${book.author}`
+    })));
   }
     
 
@@ -174,7 +180,7 @@ export class PostEditorComponent implements OnInit {
       category_ids: categories!,
     }
 
-    await this.review.createReview(reviewData).then(({ data, error }) => {
+    await this.reviews.createReview(reviewData).then(({ data, error }) => {
       if (!error) this.form.reset();
     });
   }

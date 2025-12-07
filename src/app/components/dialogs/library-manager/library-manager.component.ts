@@ -1,14 +1,13 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, effect, inject, signal } from '@angular/core';
 import { ButtonComponent } from 'app/components/base/Button/button.component';
 import { ManageBookFormComponent } from 'app/components/forms/manage-book-form/manage-book-form.component';
 import { ManageCategoryFormComponent } from 'app/components/forms/manage-category-form/manage-category-form.component';
 import { ComboboxOption } from 'app/components/shared/combobox/combobox.component';
 import { ComboboxDirective } from 'app/components/shared/combobox/combobox.directive';
 import { ModalRef } from 'app/models/modal.interface';
-import { Book, ReviewCategory } from 'app/models/review.interface';
+import { Book, BooksAndCategories, ReviewCategory } from 'app/models/review.interface';
 import { ReviewsService } from 'app/services/posts/reviews.service';
 import { ModalService } from 'app/services/ui/modal.service';
-import { CdkObserveContent } from "@angular/cdk/observers";
 
 interface LibraryData {
   books: {
@@ -28,7 +27,7 @@ interface LibraryData {
   host: {
     class: 'flex flex-col gap-4'
   },
-  imports: [ComboboxDirective, ButtonComponent, CdkObserveContent],
+  imports: [ComboboxDirective, ButtonComponent],
   templateUrl: './library-manager.component.html',
 })
 export class LibraryManagerComponent {
@@ -41,9 +40,11 @@ export class LibraryManagerComponent {
   bookLabel = '';
   categoryLabel = '';
 
-  constructor() {
-    this.updateLibraryData();
-  }
+  private syncLibraryData = effect(() => {
+    this.loadLibraryData();
+    console.log('Library data synced');
+  })
+
 
   protected createBookDialog() {
     const modalRef = this.modal.open(ManageBookFormComponent, { role: 'dialog', componentInputs: { mode: 'create' } });
@@ -69,7 +70,7 @@ export class LibraryManagerComponent {
   protected deleteBook() {
     if (!this.library().books.selectedId) return;
     this.reviews.deleteBook(this.library().books.selectedId!).then(() => {
-      this.updateLibraryData();
+      this.loadLibraryData();
     });
   }
 
@@ -87,24 +88,29 @@ export class LibraryManagerComponent {
     }));
   }
 
-  private updateLibraryData(){
-    this.reviews.getAllBooksAndCategories().then(({ data, error }) => { // Populate library data
-      if (data) {
-        const newLibraryData: LibraryData = {
-          books: {
-            comboboxOptions: data.books.map(book => ({ label: book.title, value: book.id })),
-            data: data.books,
-            selectedId: null
-          },
-          categories: {
-            comboboxOptions: data.categories.map(category => ({ label: category.name, value: category.id })),
-            data: data.categories,
-            selectedId: null
-          }
-        };
-        this.library.set(newLibraryData);
+  private loadLibraryData(){
+    const data = this.reviews.$booksAndCategories();
+    if (data) {
+      this.populateLibrary(data);
+    } else {
+      this.reviews.updateBooksAndCategories();
+    }
+  }
+
+  private populateLibrary(data: BooksAndCategories) {
+    const newLibraryData: LibraryData = {
+      books: {
+        comboboxOptions: data.books.map(book => ({ label: book.title, value: book.id })),
+        data: data.books,
+        selectedId: null
+      },
+      categories: {
+        comboboxOptions: data.categories.map(category => ({ label: category.name, value: category.id })),
+        data: data.categories,
+        selectedId: null
       }
-    });
+    };
+    this.library.set(newLibraryData);
   }
 
   
@@ -132,19 +138,19 @@ export class LibraryManagerComponent {
   protected deleteCategory() {
     if (!this.library().categories.selectedId) return;
     this.reviews.deleteCategory(this.library().categories.selectedId!).then(() => {
-      this.updateLibraryData();
+      this.reviews.updateBooksAndCategories();
     });
   }
 
   private updateLibraryAndCloseModal(modalRef: ModalRef<ManageBookFormComponent | ManageCategoryFormComponent>) {
     if( modalRef.componentRef.instance instanceof ManageCategoryFormComponent ) {
       modalRef.componentRef.instance.onCategoryManage.subscribe(() => {
-        this.updateLibraryData();
+        this.reviews.updateBooksAndCategories();
         modalRef.close();
       });
     } else if( modalRef.componentRef.instance instanceof ManageBookFormComponent ) {
       modalRef.componentRef.instance.onBookManage.subscribe(() => {
-        this.updateLibraryData();
+        this.reviews.updateBooksAndCategories();
         modalRef.close();
       });
     }
