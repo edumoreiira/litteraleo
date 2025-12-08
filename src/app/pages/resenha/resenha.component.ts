@@ -1,14 +1,14 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PostComponent } from 'app/components/layout/post/post.component';
-import { RateComponent } from 'app/components/shared/rate/rate.component';
-import { TitleDirective } from 'app/directives/ui/title.directive';
+import { ReviewComponent } from 'app/components/layout/post/review.component';
 import { Post } from 'app/models/post.interface';
+import { Review } from 'app/models/review.interface';
+import { ReviewsService } from 'app/services/posts/reviews.service';
 import { UserPostsService } from 'app/services/posts/user-posts.service';
 
 @Component({
   selector: 'app-resenha',
-  imports: [PostComponent],
+  imports: [ReviewComponent],
   templateUrl: './resenha.component.html',
   styleUrl: './resenha.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -16,8 +16,8 @@ import { UserPostsService } from 'app/services/posts/user-posts.service';
 export class ResenhaComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
-  private postService = inject(UserPostsService);
-  post = signal<Post | null | undefined>(undefined);
+  private reviewService = inject(ReviewsService);
+  review = signal<Review | null | undefined>(undefined);
 
   categories = ['Ficção', 'Fantasia', 'Aventura','Clássico'];
 
@@ -25,25 +25,25 @@ export class ResenhaComponent implements OnInit {
     this.fetchPost();
   }
 
-  private async handleRouter(postId: string) {
-    if(this.post()) {
-      const title = this.sanitizeText(this.post()!.title);
-      this.router.navigate(['/resenha', title, postId], {
+  private async handleRouter(slug: string) {
+    if(this.review()) {
+      // const title = this.sanitizeText(this.post()!.title);
+      this.router.navigate(['/resenha', slug], {
         replaceUrl: true // substitui a URL atual no histórico
       });
     }
   }
 
   private async fetchPost() {
-    const postId = this.route.snapshot.paramMap.get('id');
-    if(postId) {
-      this.postService.getPostById(postId).then(data => {
+    const postSlug = this.route.snapshot.paramMap.get('slug');
+    if(postSlug) {
+      this.reviewService.getReviewBySlug(postSlug).then(({data, error}) => {
         if (data) {
-          this.post.set(data)
-          this.handleRouter(postId); // Atualiza a rota com o título formatado
+          this.review.set(data)
+          this.handleRouter(data.slug); // Atualiza a rota com o título formatado
         } else {
           console.error('Post not found');
-          this.post.set(null);
+          this.review.set(null);
         }
       }).catch(error => {
         console.error('Error fetching post:', error);

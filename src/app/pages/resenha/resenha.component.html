@@ -1,14 +1,14 @@
-@if (post()){
-  <article app-post
-  [postData]="post()!">
+@if (review()){
+  <article app-review
+  [reviewData]="review()!">
   </article>
-} @else if(post() === null){
+} @else if(review() === null){
   <section class="page-container--xs pt-50 flex items-center flex-col gap-2 text-center">
     <h1 class="text-primary font-bold text-4xl font-serif italic">Resenha não encontrada</h1>
     <p class="text-muted-fg">A resenha solicitada não está disponível ou o identificador informado é inválido.</p>
   </section>
 }
-@else if(post() === undefined) {
+@else if(review() === undefined) {
   <section class="page-container--xs pt-50 flex items-center flex-col gap-2 text-center">
     <i class="fi fi-rr-spinner animate-spin text-4xl text-primary"></i>
     <p class="text-muted-fg mt-2">Carregando resenha...</p>

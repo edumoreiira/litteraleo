@@ -27,6 +27,7 @@ type InputTypes = 'text' | 'email' | 'password' | 'number' | 'tel' | 'url';
     [id]="identifier()"
     [type]="type()"
     [value]="value()"
+    [disabled]="disabled()"
     [placeholder]="placeholder()"
     (blur)="onBlur()"
     (input)="onInput($event)">
@@ -49,6 +50,7 @@ export class InputComponent implements ControlValueAccessor, OnInit, OnDestroy{
   placeholder = input<string>('');
   type = input<InputTypes>('text');
   size = input<'sm' | 'base' | 'lg'>('sm');
+  disabled = input<boolean>(false);
   // signals
   value = signal('');
   invalid = signal(false);

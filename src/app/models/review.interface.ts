@@ -24,7 +24,8 @@ export interface Review {
   rating: number;
   content: string;
   author: {
-    name: string;
+    short_name: string;
+    full_name: string;
     avatar_url: string;
   }
   book: {
@@ -32,6 +33,7 @@ export interface Review {
     author: string;
     cover_image_url: string;
   }
+  likes_count: number;
   categories: ReviewCategory[];
   created_at: Date;
   updated_at: Date | null;

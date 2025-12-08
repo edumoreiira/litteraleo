@@ -3,7 +3,7 @@ import { SupabaseService } from '../supabase/supabase.service';
 import { AuthService } from '../auth/auth.service';
 import { ToastService } from '../ui/toast.service';
 import { PostgrestError } from '@supabase/supabase-js';
-import { Book, BooksAndCategories, CreateReviewDTO, PaginatedReviews, ReviewCategory, ReviewSearchParams } from 'app/models/review.interface';
+import { Book, BooksAndCategories, CreateReviewDTO, PaginatedReviews, Review, ReviewCategory, ReviewSearchParams } from 'app/models/review.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -57,6 +57,7 @@ export class ReviewsService {
     }
     return { data, error }
   }
+
   public async getAllBooksAndCategories()
   : Promise<{ data: BooksAndCategories; error: PostgrestError | null }>
   {
@@ -95,6 +96,15 @@ export class ReviewsService {
 
    return data; // Retorna o objeto da review criada
   }
+
+  public async getReviewBySlug(slug: string) {
+    const { data, error } = await this.supabase
+    .rpc('get_review_by_slug', { p_slug: slug })
+
+    return { data: data as Review, error}
+  }
+
+  // --- BOOKS ---
 
   public async createBook(bookData: Partial<Book>, bookCover: File)
   : Promise<Book> {

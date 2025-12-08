@@ -1,12 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, effect, inject, OnInit, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, output, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonComponent } from 'app/components/base/Button/button.component';
 import { InputComponent } from 'app/components/base/input/input.component';
 import { ComboboxOption } from 'app/components/shared/combobox/combobox.component';
 import { ComboboxDirective } from 'app/components/shared/combobox/combobox.directive';
 import { PostPreview } from 'app/models/post.interface';
-import { UserPostsService } from 'app/services/posts/user-posts.service';
 import { QuillModule } from 'ngx-quill';
 import { RateComponent } from "../../shared/rate/rate.component";
 import { NgxMaskDirective } from 'ngx-mask';
@@ -16,13 +15,13 @@ import { ModalService } from 'app/services/ui/modal.service';
 import { LibraryManagerComponent } from 'app/components/dialogs/library-manager/library-manager.component';
 
 @Component({
-  selector: 'app-post-editor',
+  selector: 'app-review-editor',
   template: `
   <section class="page-container--xs pt-20">
     <form [formGroup]="form" (ngSubmit)="submitPost()">
       <div class="flex flex-col gap-4">
         <app-input size="base" class="w-full" label="Título" identifier="post-editor-title"
-        placeholder="Título do seu post"
+        placeholder="Sherlock Holmes e o Mistério da Biblioteca"
         formControlName="title" />
         <div class="flex gap-4 justify-between flex-wrap">
           <div class="flex gap-2 min-w-0">
@@ -70,7 +69,7 @@ import { LibraryManagerComponent } from 'app/components/dialogs/library-manager/
         [theme]="'snow'"
         formControlName="content"
         [modules]="editorModules"
-        placeholder="Escreva seu post aqui...">
+        placeholder="Escreva sua review aqui...">
       </quill-editor>
       <div class="flex justify-end mt-4 gap-2">
         <button app-button size="base" class="font-medium" variant="text" type="button"
@@ -80,13 +79,12 @@ import { LibraryManagerComponent } from 'app/components/dialogs/library-manager/
     </form>
   </section>
   `,
-  styleUrls: ['./post-editor.component.scss'],
+  styleUrls: ['./review-editor.component.scss'],
   imports: [CommonModule, ReactiveFormsModule, QuillModule, ButtonComponent, InputComponent, ComboboxDirective,
    RateComponent, NgxMaskDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PostEditorComponent {
-  post = inject(UserPostsService);
+export class ReviewEditorComponent {
   private reviews = inject(ReviewsService);
   private modalService = inject(ModalService);
   // 
