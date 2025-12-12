@@ -27,7 +27,7 @@
     <h1 appTitle>Últimas Resenhas</h1>
     <app-card-slider>
       @for (post of latestPosts(); track $index) {
-        <article
+        <!-- <article
         [class]="$index === 0 ? 'snap-start'
         : ($index === latestPosts().length - 1
         ? 'snap-end' : 'snap-center')"
@@ -40,7 +40,7 @@
         [rating]="post.rate"
         [created_at]="post.created_at"
         [url]="['/resenha/', post.title, post.id]"
-        app-card-review layout="minimal" class="flex-1 min-w-[389px]"></article>
+        app-card-review layout="minimal" class="flex-1 min-w-[389px]"></article> -->
       }
       <!-- <article #card app-card-review layout="minimal" class="flex-1 snap-start min-w-[389px]"></article>
       <article app-card-review layout="minimal" class="flex-1 snap-center min-w-[389px]"></article>

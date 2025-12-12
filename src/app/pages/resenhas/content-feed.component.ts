@@ -11,6 +11,10 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { take } from 'rxjs';
 import { ReviewsService } from 'app/services/posts/reviews.service';
 import { ReviewCategory } from 'app/models/review.interface';
+import { EmButtonToggleGroupComponent } from 'app/components/base/button-toggle/em-button-toggle-group.component';
+import { EmButtonToggleDirective } from 'app/components/base/button-toggle/em-button-toggle.directive';
+import { EmButtonToggleAnimationDirective } from 'app/components/base/button-toggle/em-button-toggle-animation.directive';
+import { FormsModule } from '@angular/forms';
 
 interface FeedCard {
   type: 'post' | 'review';
@@ -42,7 +46,9 @@ const RATE_OPTIONS: ComboboxOption[] = [
 @Component({
   selector: 'app-content-feed',
   standalone: true,
-  imports: [ButtonComponent, ComboboxDirective, SearchbarComponent, CardReviewComponent, PaginatorComponent, RouterLink],
+  imports: [ButtonComponent, ComboboxDirective, SearchbarComponent, CardReviewComponent, PaginatorComponent, RouterLink,
+    EmButtonToggleGroupComponent, EmButtonToggleDirective, EmButtonToggleAnimationDirective, FormsModule
+  ],
   templateUrl: './content-feed.component.html',
   animations: [createAnimation('popUp', { animateY: true, transform: 'scale(.95)' })],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -52,6 +58,7 @@ export class ContentFeedComponent implements OnInit {
   private content = inject(ContentService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+  // 
   private searchDebouceTimeout: any;
   private postCache: { [searchKey: string]: Feed } = {};
   private isInitializing = true;
@@ -59,8 +66,9 @@ export class ContentFeedComponent implements OnInit {
   labelAvaliacoes = signal('');
   categoryOptions = signal<ComboboxOption[]>([]);
   rateOptions = signal<ComboboxOption[]>(RATE_OPTIONS);
+  filterOptions = signal<'reviews' | 'posts' | 'both'>('reviews');
   totalPages = signal(0);
-  searchQuery = signal<FeedSearchParams>({ page: 1, page_size: 8, search_type: 'both' });
+  searchQuery = signal<FeedSearchParams>({ page: 1, page_size: 8, search_type: this.filterOptions() });
   displayedFeed = signal<FeedCard[]>([]);
   private search = effect(() => { this.searchPost(); });
   protected paginator = viewChild.required(PaginatorComponent);
@@ -80,7 +88,7 @@ export class ContentFeedComponent implements OnInit {
         search_text: params['search'] || undefined,
         rating: params['rate'] ? parseInt(params['rate'], 10) : undefined,
         category_ids: params['categories'] ? params['categories'].split(',') : undefined,
-        search_type: 'both'
+        search_type: params['search_type'] || 'both'
       };
       this.searchQuery.set(query);
       this.isInitializing = false;
@@ -95,7 +103,7 @@ export class ContentFeedComponent implements OnInit {
       search_text: query.search_text || '',
       rating: query.rating === 0 ? undefined : query.rating,
       category_ids: query.category_ids && query.category_ids.length > 0 ? query.category_ids : undefined,
-      search_type: 'both'
+      search_type: query.search_type || 'both'
     };
     untracked(() => { // Untrack this effect to avoid infinite loops
       this.handlePosts(treatedQuery);
@@ -157,6 +165,12 @@ export class ContentFeedComponent implements OnInit {
     this.updateSearchCategories(activeOptions.map(option => option.value));
   }
 
+  searchFilterOption(option:any) {
+    if (option === 'posts' || option === 'reviews' || option === 'both') {
+      this.updateSearchType(option);
+    }
+  }
+
   async loadCategories() {
     await this.reviews.getAllCategories().then(categories => {
       this.categoryOptions.set(
@@ -190,6 +204,17 @@ export class ContentFeedComponent implements OnInit {
         return updated
       })
     }, 500);
+  }
+
+  private updateSearchType(type: 'posts' | 'reviews' | 'both') {
+    this.searchQuery.update(currentSearch => {
+      const updated: FeedSearchParams = {
+        ...currentSearch,
+        search_type: type,
+        page: 1 // reset to first page on new search
+      }
+      return updated
+    });
   }
 
   private updateSearchCategories(categories: string[]) {
@@ -227,7 +252,7 @@ export class ContentFeedComponent implements OnInit {
   private fetchPosts(query: FeedSearchParams) {
     this.content.searchContent(query).then( ({ data, error }) => {
       if (data) {
-        this.applySearch(data, data.total_pages, query.rating, query.category_ids);
+        this.applySearch(data, data.total_pages, query.rating, query.category_ids, query.search_type);
         this.cacheFeed(query, data);
       }
       if (error) {
@@ -236,10 +261,11 @@ export class ContentFeedComponent implements OnInit {
     });
   }
 
-  private applySearch(feed: Feed, totalPages: number, rate?: number, categories?: string[]) {
+  private applySearch(feed: Feed, totalPages: number, rate?: number, categories?: string[], searchType?: 'posts' | 'reviews' | 'both') {
     this.displayFeed(feed);
     this.totalPages.set(totalPages);
     this.setDumbOptions(rate, categories);
+    this.filterOptions.set(searchType || 'both');
   }
 
   private displayFeed(feed: Feed) {

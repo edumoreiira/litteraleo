@@ -1,8 +1,36 @@
 <main class="page-container pt-12 md:pt-22 h-[1600px]">
-  <div class="flex md:flex-row flex-col gap-4 justify-between">
-    <app-searchbar class="flex md:w-[500px] w-full"
-    (valueChange)="updateSearchBar($event)"
-    placeholder="Pesquisar pelo título, autor ou palavra-chave..."/>
+  <div class="flex lg:flex-row flex-col gap-4 justify-between">
+    <div class="flex gap-x-2 gap-y-4 sm:flex-row flex-col-reverse sm:items-stretch items-start">
+      <app-searchbar class="flex lg:w-[400px] w-full"
+      [value]="searchQuery().search_text || ''"
+      (valueChange)="updateSearchBar($event)"
+      placeholder="Pesquisar pelo título, autor ou palavra-chave..."/>
+      <em-button-toggle-group
+      name="content-feed-filter"
+      class="font-serif italic font-light shadow-xs shrink-0"
+      aria-label="Filtro de busca"
+      variant="contained"
+      em-button-toggle-animation
+      [(ngModel)]="filterOptions"
+      (change)="searchFilterOption($event)"
+      >
+        <button 
+        em-button-toggle 
+        value="reviews"
+        active="text-primary-50"
+        >reviews</button>
+        <button 
+        em-button-toggle
+        value="posts"
+        active="text-primary-50"
+        >artigos</button>
+        <button
+        em-button-toggle
+        value="both"
+        active="text-primary-50"
+        >ambos</button>
+      </em-button-toggle-group>
+    </div>
     
     <div class="flex gap-2 overflow-hidden">
       <button class="flex items-center justify-between gap-1 flex-1 md:flex-auto min-w-0" size="base"

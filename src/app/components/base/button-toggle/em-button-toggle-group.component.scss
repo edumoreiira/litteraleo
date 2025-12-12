@@ -1,0 +1,27 @@
+
+:host.em-button-toggle-group-animation {
+  --top: -150%;
+  // --left: -100%;
+  &::before {
+    content: '';
+    z-index: 1;
+    position: absolute;
+    top: var(--top);
+    left: var(--left);
+    height: var(--height);
+    width: var(--width);
+    border-radius: .5rem;
+    pointer-events: none;
+    opacity: 1;
+    transition: all 0.3s ease-out;
+  }
+  
+  &.btn-outlined::before {
+    border: 1px solid var(--color-primary-600);
+  }
+
+  &.btn-contained::before {
+    background-color: (var(--color-primary-500));
+  }
+
+}
