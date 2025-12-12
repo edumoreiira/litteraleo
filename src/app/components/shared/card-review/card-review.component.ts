@@ -2,9 +2,9 @@ import { AfterViewInit, Component, inject, input } from '@angular/core';
 import { TextDirective } from '../../../directives/ui/text.directive';
 import { RateComponent } from "../rate/rate.component";
 import { DatePipe } from '@angular/common';
-import { PostCategory } from 'app/models/post.interface';
 import { StripHtmlPipe } from 'app/pipes/strip-html.pipe';
 import { RouterLink } from "@angular/router";
+import { ReviewCategory } from 'app/models/review.interface';
 
 @Component({
   selector: 'article[app-card-review]',
@@ -16,7 +16,7 @@ import { RouterLink } from "@angular/router";
 })
 export class CardReviewComponent {
   layout = input<'minimal' | 'default'>('default');
-  tags = input<PostCategory[]>([]);
+  tags = input<ReviewCategory[]>([]);
   title = input<string>('');
   content = input<string>('');
   rating = input<number>(0);
@@ -25,4 +25,5 @@ export class CardReviewComponent {
   author_name = input<string>('');
   author_avatar = input<string>('');
   url = input<string[]>();
+  type = input<'post' | 'review'>('review');
 }

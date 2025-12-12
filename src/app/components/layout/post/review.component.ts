@@ -5,7 +5,7 @@ import { TitleDirective } from 'app/directives/ui/title.directive';
 import { Post } from 'app/models/post.interface';
 import { Review } from 'app/models/review.interface';
 import { SafeHtmlPipe } from 'app/pipes/safe-html.pipe';
-import { UserPostsService } from 'app/services/posts/user-posts.service';
+import { ContentService } from 'app/services/posts/content.service';
 import { QuillModule } from 'ngx-quill';
 
 @Component({
@@ -83,7 +83,7 @@ import { QuillModule } from 'ngx-quill';
   imports: [QuillModule, CommonModule, SafeHtmlPipe, RateComponent, TitleDirective]
 })
 export class ReviewComponent {
-  private postService = inject(UserPostsService);
+  private postService = inject(ContentService);
 
   reviewData = model.required<Review>();
 

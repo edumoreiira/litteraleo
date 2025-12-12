@@ -20,16 +20,25 @@
   } @else {
     <div>
       <div class="flex gap-2 flex-wrap items-start">
-        @for (tag of tags(); track $index) {
-          <span class="inline-block px-2 py-[.1rem] border border-zinc-300 text-zinc-500 rounded-lg text-xs font-[Lora]
-          text-light italic">{{ tag.name }}</span>
+        @if(type() === 'review'){
+          @for (tag of tags(); track $index) {
+            <span class="inline-block px-2 py-[.1rem] border border-zinc-300 text-zinc-500 rounded-lg text-xs font-[Lora]
+            text-light italic">{{ tag.name }}</span>
+          }
+        }@else if(type() === 'post'){ 
+          <span class="inline-block px-2 py-[.1rem] border border-primary-400 bg-primary-400/5 text-primary-400 rounded-lg text-xs font-[Lora]
+          text-light italic">Artigo</span>
         }
       </div>
       <div class="flex items-center justify-between">
         <h1 class="font-semibold text-md line-clamp-1"> {{ title() }} </h1>
-        <app-rate [rating]="rating()" [canVote]="false" class="text-primary gap-1"></app-rate>
+        @if(type() === 'review'){
+          <app-rate [rating]="rating()" [canVote]="false" class="text-primary gap-1"></app-rate>
+        }
       </div>
-      <span class="block text-sm text-muted-fg opacity-70">de {{ book_author() }}</span>
+      @if(type() === 'review'){
+        <span class="block text-sm text-muted-fg opacity-70">de {{ book_author() }}</span>
+      }
       <p appText size="sm" class="my-2 line-clamp-3">{{ content() | stripHtml }}</p>
     </div>
     <div class="flex items-center gap-2 justify-between">

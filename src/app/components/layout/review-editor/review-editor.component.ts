@@ -5,7 +5,6 @@ import { ButtonComponent } from 'app/components/base/Button/button.component';
 import { InputComponent } from 'app/components/base/input/input.component';
 import { ComboboxOption } from 'app/components/shared/combobox/combobox.component';
 import { ComboboxDirective } from 'app/components/shared/combobox/combobox.directive';
-import { PostPreview } from 'app/models/post.interface';
 import { QuillModule } from 'ngx-quill';
 import { RateComponent } from "../../shared/rate/rate.component";
 import { NgxMaskDirective } from 'ngx-mask';
@@ -89,7 +88,7 @@ export class ReviewEditorComponent {
   private modalService = inject(ModalService);
   // 
   form: FormGroup<ReviewForm>;
-  preview = output<PostPreview>();
+  // preview = output<PostPreview>();
   categories = signal<ComboboxOption[]>([]);
   books = signal<ComboboxOption[]>([]);
   categoryLabel = '';
@@ -124,9 +123,9 @@ export class ReviewEditorComponent {
     if (this.form.invalid) {
       return;
     }
-    const { title, content, categories } = this.form.value;
-    const post: PostPreview = { title: title as string, content: content as string, categories: [] };
-    this.preview.emit(post);
+    // const { title, content, categories } = this.form.value;
+    // const post: PostPreview = { title: title as string, content: content as string, categories: [] };
+    // this.preview.emit(post);
   }
 
   private fetchBooksAndCategories() {

@@ -4,7 +4,7 @@ import { ReviewComponent } from 'app/components/layout/post/review.component';
 import { Post } from 'app/models/post.interface';
 import { Review } from 'app/models/review.interface';
 import { ReviewsService } from 'app/services/posts/reviews.service';
-import { UserPostsService } from 'app/services/posts/user-posts.service';
+import { ContentService } from 'app/services/posts/content.service';
 
 @Component({
   selector: 'app-resenha',

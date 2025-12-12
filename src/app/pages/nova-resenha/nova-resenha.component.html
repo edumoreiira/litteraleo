@@ -1,5 +1,5 @@
   <app-review-editor [ngClass]="{'hidden': state() === 'preview'}"
-  (preview)="onPreviewState($event)"
+  (preview)="onPreviewState()"
   />
   <section class="page-container--xs" [ngClass]="{'hidden': state() !== 'preview'}">
     <!-- <article app-post

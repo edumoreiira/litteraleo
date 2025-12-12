@@ -332,6 +332,21 @@ export class ReviewsService {
 
   // --- CATEGORIES ---
 
+  async getAllCategories(): Promise<ReviewCategory[]> {
+    const { data, error } = await this.supabase
+      .from('categories')
+      .select('*')
+      .order('name', { ascending: true });
+    if (error) {
+      this.toast.create({
+        variant: 'error',
+        message: 'Ocorreu um erro ao buscar as categorias.',
+      });
+      throw error;
+    }
+    return data as ReviewCategory[];
+  }
+
   async createCategory(payload: Pick<ReviewCategory, 'name'>): Promise<ReviewCategory> {
     const { data, error } = await this.supabase
       .from('categories')

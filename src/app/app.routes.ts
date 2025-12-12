@@ -5,7 +5,7 @@ import { MainLayoutComponent } from './layout/main-layout/main-layout.component'
 export const routes: Routes = [
     { path: '', component: MainLayoutComponent, children: [
         { path: '', component: HomeComponent },
-        { path: 'resenhas', loadComponent: () => import('./pages/resenhas/resenhas.component').then(m => m.ResenhasComponent) },
+        { path: 'resenhas', loadComponent: () => import('./pages/resenhas/content-feed.component').then(m => m.ContentFeedComponent) },
         { path: 'nova-resenha', loadComponent: () => import('./pages/nova-resenha/nova-resenha.component').then(m => m.NovaResenhaComponent) },
         { path: 'resenha/:slug', loadComponent: () => import('./pages/resenha/resenha.component').then(m => m.ResenhaComponent) }
     ] }
