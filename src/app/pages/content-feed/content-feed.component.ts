@@ -7,7 +7,7 @@ import { ComboboxDirective } from 'app/components/shared/combobox/combobox.direc
 import { SearchbarComponent } from "../../components/shared/searchbar/searchbar.component";
 import { CardReviewComponent } from 'app/components/shared/card-review/card-review.component';
 import PaginatorComponent from "../../components/shared/paginator/paginator.component";
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { take } from 'rxjs';
 import { ReviewsService } from 'app/services/posts/reviews.service';
 import { ReviewCategory } from 'app/models/review.interface';
@@ -46,7 +46,7 @@ const RATE_OPTIONS: ComboboxOption[] = [
 @Component({
   selector: 'app-content-feed',
   standalone: true,
-  imports: [ButtonComponent, ComboboxDirective, SearchbarComponent, CardReviewComponent, PaginatorComponent, RouterLink,
+  imports: [ButtonComponent, ComboboxDirective, SearchbarComponent, CardReviewComponent, PaginatorComponent,
     EmButtonToggleGroupComponent, EmButtonToggleDirective, EmButtonToggleAnimationDirective, FormsModule
   ],
   templateUrl: './content-feed.component.html',
@@ -306,5 +306,10 @@ export class ContentFeedComponent implements OnInit {
   private cacheFeed(search: FeedSearchParams, feed: Feed) {
     const key = JSON.stringify(search);
     this.postCache[key] = feed;
+  }
+
+  navigateToContent(type: 'post' | 'review', slug: string) {
+    const basePath = type === 'post' ? '../post/' : '../resenha/';
+    this.router.navigate([basePath + slug], { relativeTo: this.route });
   }
 }

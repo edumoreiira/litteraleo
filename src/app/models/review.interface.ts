@@ -35,6 +35,7 @@ export interface Review {
   }
   likes_count: number;
   categories: ReviewCategory[];
+  is_liked?: boolean;
   created_at: Date;
   updated_at: Date | null;
 }

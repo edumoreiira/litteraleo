@@ -1,0 +1,63 @@
+
+
+@if(contentType() === 'post') {
+  @switch(content()!.status) {
+    @case('loading') {
+      <ng-container *ngTemplateOutlet="loadingPost"></ng-container>
+    }
+    @case('error') {
+      <ng-container *ngTemplateOutlet="errorPost"></ng-container>
+    }
+    @case('loaded') {
+      <article app-post
+      [postData]="content()!.post!">
+      </article>
+    }
+  }
+} @else if(contentType() === 'review') {
+  @switch(content()!.status) {
+    @case('loading') {
+      <ng-container *ngTemplateOutlet="loadingReview"></ng-container>
+    }
+    @case('error') {
+      <ng-container *ngTemplateOutlet="errorReview"></ng-container>
+    }
+    @case('loaded') {
+      <article app-review
+      [reviewData]="content()!.review!">
+      </article>
+    }
+  }
+}
+
+
+
+
+
+<ng-template #errorReview>
+  <section class="page-container--xs pt-50 flex items-center flex-col gap-2 text-center">
+    <h1 class="text-primary font-bold text-4xl font-serif italic">Resenha não encontrada</h1>
+    <p class="text-muted-fg">A resenha solicitada não está disponível ou o identificador informado é inválido.</p>
+  </section>
+</ng-template>
+
+<ng-template #loadingReview>
+  <section class="page-container--xs pt-50 flex items-center flex-col gap-2 text-center">
+    <i class="fi fi-rr-spinner animate-spin text-4xl text-primary"></i>
+    <p class="text-muted-fg mt-2">Carregando resenha...</p>
+  </section>
+</ng-template>
+
+<ng-template #errorPost>
+  <section class="page-container--xs pt-50 flex items-center flex-col gap-2 text-center">
+    <h1 class="text-primary font-bold text-4xl font-serif italic">Post não encontrado</h1>
+    <p class="text-muted-fg">O post solicitado não está disponível ou o identificador informado é inválido.</p>
+  </section>
+</ng-template>
+
+<ng-template #loadingPost>
+  <section class="page-container--xs pt-50 flex items-center flex-col gap-2 text-center">
+    <i class="fi fi-rr-spinner animate-spin text-4xl text-primary"></i>
+    <p class="text-muted-fg mt-2">Carregando post...</p>
+  </section>
+</ng-template>

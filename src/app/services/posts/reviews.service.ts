@@ -101,6 +101,10 @@ export class ReviewsService {
     const { data, error } = await this.supabase
     .rpc('get_review_by_slug', { p_slug: slug })
 
+    if (!data) {
+      return { data: null, error: new Error('Review not found') };
+    }
+
     return { data: data as Review, error}
   }
 

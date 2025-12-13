@@ -7,6 +7,7 @@ export interface Post {
   content: string;
   likes_count: number;
   slug: string;
+  is_liked?: boolean;
   author: {
     full_name: string;
     short_name: string;
