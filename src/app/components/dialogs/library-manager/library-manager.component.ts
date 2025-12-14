@@ -7,6 +7,7 @@ import { ComboboxDirective } from 'app/components/shared/combobox/combobox.direc
 import { ModalRef } from 'app/models/modal.interface';
 import { Book, BooksAndCategories, ReviewCategory } from 'app/models/review.interface';
 import { ReviewsService } from 'app/services/posts/reviews.service';
+import { DialogService } from 'app/services/ui/dialog.service';
 import { ModalService } from 'app/services/ui/modal.service';
 
 interface LibraryData {
@@ -33,6 +34,8 @@ interface LibraryData {
 export class LibraryManagerComponent {
   private reviews = inject(ReviewsService);
   private modal = inject(ModalService);
+  private dialog = inject(DialogService);
+  // 
   library = signal<LibraryData>({
     books: { comboboxOptions: [], data: [], selectedId: null },
     categories: { comboboxOptions: [], data: [], selectedId: null }
@@ -67,10 +70,26 @@ export class LibraryManagerComponent {
     this.updateLibraryAndCloseModal(modalRef);
   }
 
-  protected deleteBook() {
+  protected onDeleteBook() {
+    const bookTitle = this.library().books.data.find(book => book.id === this.library().books.selectedId)?.title ?? 'unknown';
+    this.dialog.openConfirmationDialog(
+      {
+        title: 'Confirmar exclusão',
+        message: `Tem certeza que deseja excluir o livro ${bookTitle}? Esta ação não pode ser desfeita.`,
+        confirmText: 'Excluir',
+        cancelText: 'Cancelar',
+        variant: 'destructive'
+      },
+      {
+        onConfirm: () => { this.deleteBook(); },
+      }
+    );
+  }
+
+  private deleteBook() {
     if (!this.library().books.selectedId) return;
     this.reviews.deleteBook(this.library().books.selectedId!).then(() => {
-      this.loadLibraryData();
+      this.reviews.updateBooksAndCategories();
     });
   }
 
@@ -135,7 +154,22 @@ export class LibraryManagerComponent {
     this.updateLibraryAndCloseModal(modalRef);
   }
 
-  protected deleteCategory() {
+  protected onDeleteCategory() {
+    const categoryName = this.library().categories.data.find(cat => cat.id === this.library().categories.selectedId)?.name ?? 'unknown';
+    this.dialog.openConfirmationDialog(
+      {
+        title: 'Confirmar exclusão',
+        message: `Tem certeza que deseja excluir a categoria ${categoryName}? Esta ação não pode ser desfeita.`,
+        confirmText: 'Excluir',
+        cancelText: 'Cancelar',
+        variant: 'destructive'
+      },
+      {
+        onConfirm: () => { this.deleteCategory(); },
+      }
+    );
+  }
+  private deleteCategory() {
     if (!this.library().categories.selectedId) return;
     this.reviews.deleteCategory(this.library().categories.selectedId!).then(() => {
       this.reviews.updateBooksAndCategories();

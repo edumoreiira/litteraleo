@@ -43,6 +43,10 @@ const RATE_OPTIONS: ComboboxOption[] = [
   { label: '5 Estrelas', value: '5' }
 ];
 
+// if someone is looking at this code, sorry for the mess :D
+// I built a monster here
+// i call it... the content feed component :O
+
 @Component({
   selector: 'app-content-feed',
   standalone: true,
