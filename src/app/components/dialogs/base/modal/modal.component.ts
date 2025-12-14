@@ -14,7 +14,10 @@ import { ModalSizeUnit } from '../../../../models/modal.interface';
   <div class="modal__content" @popUp focusTrap
     style="view-transition-name: modal-content;
     max-width: calc(100% - 1.5rem);"
-    [ngStyle]="{'min-width': 'min(' + minWidth() + ', calc(100% - 1.5rem))'}"
+    [ngStyle]="{
+      'min-width': 'min(' + minWidth() + ', calc(100% - 1.5rem))',
+      'max-width': maxWidth() ? 'min(' + maxWidth() + ', calc(100% - 1.5rem))' : 'none'
+      }"
     [attr.role]="role()" [attr.aria-labelledby]="ariaLabelledBy()" [attr.aria-describedby]="ariaDescribedBy()"
     [attr.aria-label]="ariaLabel()" aria-modal="true"> 
     <button #ModalCloseButton class="close-sr-only" aria-label="Close Modal" (keydown)="onKeydownClose($event)"></button>
@@ -44,6 +47,7 @@ export class ModalComponent<T> implements AfterViewInit {
   // modal controls
   onCloseModal = output();
   minWidth = input<ModalSizeUnit>('350px');
+  maxWidth = input<ModalSizeUnit | undefined>(undefined);
   role = input.required<string>();
   ariaLabelledBy = input<string>();
   ariaDescribedBy = input<string>();

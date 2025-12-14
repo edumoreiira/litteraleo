@@ -73,6 +73,7 @@ export class ModalService {
         modalRef.setInput('componentInputs', config.componentInputs ?? {});
         modalRef.setInput('role', config.role);
         if (config.minWidth)       modalRef.setInput('minWidth', config.minWidth);
+        if (config.maxWidth)       modalRef.setInput('maxWidth', config.maxWidth);
         if (config.ariaLabelledBy) modalRef.setInput('ariaLabelledBy', config.ariaLabelledBy);
         if (config.ariaDescribedBy)modalRef.setInput('ariaDescribedBy', config.ariaDescribedBy);
         if (config.ariaLabel)      modalRef.setInput('ariaLabel', config.ariaLabel);

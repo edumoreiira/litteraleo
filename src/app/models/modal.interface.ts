@@ -26,6 +26,7 @@ export interface ModalConfig<T = unknown> {
     
     role: string,
     minWidth?: ModalSizeUnit,
+    maxWidth?: ModalSizeUnit
     ariaLabelledBy?: string,
     ariaDescribedBy?: string,
     ariaLabel?: string
