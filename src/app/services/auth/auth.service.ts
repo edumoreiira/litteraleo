@@ -1,6 +1,14 @@
 import { computed, inject, Injectable, signal } from "@angular/core";
 import { SupabaseService } from "../supabase/supabase.service";
 import { CurrentUser } from "app/models/user.interface";
+import { jwtDecode } from 'jwt-decode'
+import { Session } from "@supabase/supabase-js";
+
+interface CustomJwtPayload {
+  user_role: JwtUserRoles;
+}
+
+type JwtUserRoles = 'anon' | 'user' | 'writer' | 'admin';
 
 @Injectable({
   providedIn: 'root'
@@ -9,8 +17,10 @@ export class AuthService {
   private supabase = inject(SupabaseService).client;
   private supabaseUrl = inject(SupabaseService).url;
   private currentUser = signal<CurrentUser | undefined>(undefined);
+  private role = signal<JwtUserRoles>('anon');
   $userId = computed(() => this.currentUser()?.id);
   $currentUser = this.currentUser.asReadonly();
+  $role = this.role.asReadonly();
   isLoggedIn = computed(() => !!this.currentUser());
 
   async signInWithEmail(email: string, password: string) {
@@ -36,19 +46,22 @@ export class AuthService {
 
   async load() {
     const data = (await this.supabase.auth.getSession()).data;
+    this.refreshRole(data.session ?? undefined);
     if (!data.session) return;
     const user = data.session.user;
     this.currentUser.set(user as unknown as CurrentUser);
     this.handleAuthStateChange();
   }
 
-  handleAuthStateChange() {
+  private handleAuthStateChange() {
   this.supabase.auth.onAuthStateChange((event, session) => {
     if (event === 'SIGNED_IN') {
       const user = session?.user;
       this.currentUser.set(user! as unknown as CurrentUser);
+      this.refreshRole(session!);
     } else if (event === 'SIGNED_OUT') {
       this.currentUser.set(undefined);
+      this.refreshRole(undefined);
     }
 })
   }
@@ -66,4 +79,10 @@ export class AuthService {
       this.currentUser.set(undefined);
     }
   }
+
+  private refreshRole(session?: Session) {
+    const role = session ? jwtDecode<CustomJwtPayload>(session.access_token).user_role ?? 'anon' : 'anon';
+    this.role.set(role);
+  }
+  
 }
