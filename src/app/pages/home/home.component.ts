@@ -6,16 +6,21 @@ import { CardSlider } from "../../components/shared/card-slider/card-slider.comp
 import { CardReviewComponent } from '../../components/shared/card-review/card-review.component';
 import { RecommendationCardComponent } from "../../components/layout/recommendation-card/recommendation-card.component";
 import { ContentService } from 'app/services/posts/content.service';
-import { Post } from 'app/models/post.interface';
+import { ReviewsService } from 'app/services/posts/reviews.service';
+import { Review } from 'app/models/review.interface';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-home',
-  imports: [ButtonComponent, TitleDirective, TextDirective, CardSlider, CardReviewComponent, RecommendationCardComponent],
+  imports: [ButtonComponent, TitleDirective, TextDirective, CardSlider, CardReviewComponent, RecommendationCardComponent,
+    RouterLink
+  ],
   templateUrl: './home.component.html',
 })
 export class HomeComponent implements OnInit{
   private posts = inject(ContentService);
-  protected latestPosts = signal<Post[]>([]);
+  private reviews = inject(ReviewsService);
+  protected latestReviews = signal<Review[]>([]);
 
   ngOnInit(): void {
     this.getLatestPosts();
@@ -27,6 +32,11 @@ export class HomeComponent implements OnInit{
     //     this.latestPosts.set(data.posts);
     //   }
     // })
+    this.reviews.searchReviews({ page: 1, page_size: 5 }).then(({ data, error }) => {
+      if(data) {
+        this.latestReviews.set(data.reviews);
+      }
+    })
   }
 
 }

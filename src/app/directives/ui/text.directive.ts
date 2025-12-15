@@ -8,7 +8,7 @@ import { Directive, input } from "@angular/core";
 })
 export class TextDirective {
   base = 'text-muted-fg';
-  size = input<'sm' | 'base' | 'lg'>("base");
+  size = input<'sm' | 'base' | 'lg' | 'xs'>("base");
 
   getClass() {
     switch (this.size()) {
@@ -18,6 +18,8 @@ export class TextDirective {
         return `${this.base} text-base sm:text-lg`;
       case 'sm':
         return `${this.base} text-sm sm:text-base`;
+      case 'xs':
+        return `${this.base} text-xs sm:text-sm`; 
     }
   }
 }

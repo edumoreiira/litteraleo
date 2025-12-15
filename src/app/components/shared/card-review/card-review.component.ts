@@ -9,7 +9,7 @@ import { ReviewCategory } from 'app/models/review.interface';
 @Component({
   selector: 'article[app-card-review]',
   host: {
-    class: 'flex flex-col justify-between bg-card text-card-fg rounded p-6'
+    class: 'flex flex-col justify-between bg-card text-card-fg rounded'
   },
   imports: [TextDirective, RateComponent, DatePipe, StripHtmlPipe, RouterLink],
   templateUrl: './card-review.component.html',
@@ -22,6 +22,7 @@ export class CardReviewComponent {
   rating = input<number>(0);
   created_at = input<Date>();
   book_author = input<string>('');
+  book_cover = input<string>('');
   author_name = input<string>('');
   author_avatar = input<string>('');
   url = input<string[]>();
