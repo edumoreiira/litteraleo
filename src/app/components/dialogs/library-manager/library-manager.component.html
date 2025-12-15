@@ -25,7 +25,8 @@
     >
       <i class="fi fi-rr-pencil flex"></i>
     </button>
-    <button class="bg-red-100/40 rounded-lg rounded-l-none text-red-600 px-3
+    <button *appHasRole="['admin']"
+    class="bg-red-100/40 rounded-lg rounded-l-none text-red-600 px-3
     enabled:hover:bg-red-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
     [disabled]="!(library().books.selectedId)"
     (click)="onDeleteBook()"
@@ -61,7 +62,8 @@
     >
       <i class="fi fi-rr-pencil flex"></i>
     </button>
-    <button class="bg-red-100/40 rounded-lg rounded-l-none text-red-600 px-3
+    <button *appHasRole="['admin']"
+    class="bg-red-100/40 rounded-lg rounded-l-none text-red-600 px-3
     enabled:hover:bg-red-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
     (click)="onDeleteCategory()"
     [disabled]="!(library().categories.selectedId)"

@@ -1,14 +1,8 @@
 import { computed, inject, Injectable, signal } from "@angular/core";
 import { SupabaseService } from "../supabase/supabase.service";
-import { CurrentUser } from "app/models/user.interface";
+import { CurrentUser, CustomJwtPayload, JwtUserRoles } from "app/models/user.interface";
 import { jwtDecode } from 'jwt-decode'
 import { Session } from "@supabase/supabase-js";
-
-interface CustomJwtPayload {
-  user_role: JwtUserRoles;
-}
-
-type JwtUserRoles = 'anon' | 'user' | 'writer' | 'admin';
 
 @Injectable({
   providedIn: 'root'

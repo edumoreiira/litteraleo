@@ -15,7 +15,9 @@
                 href="#">Sobre</a></li>
         </ul>
 
-        <a app-button variant="contained" class="font-sans! font-bold! not-italic!" routerLink="/nova-resenha">+</a>
+        <a *appHasRole="['admin', 'writer']"
+        aria-label="Criar Resenha"
+        app-button variant="contained" class="font-sans! font-bold! not-italic!" routerLink="/nova-resenha">+</a>
 
         <app-searchbar class="sm:block sm:w-[210px]" [mobileView]="640"/>
         @if(!isUserLoggedIn()) {

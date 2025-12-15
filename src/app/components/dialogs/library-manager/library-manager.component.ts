@@ -4,6 +4,7 @@ import { ManageBookFormComponent } from 'app/components/forms/manage-book-form/m
 import { ManageCategoryFormComponent } from 'app/components/forms/manage-category-form/manage-category-form.component';
 import { ComboboxOption } from 'app/components/shared/combobox/combobox.component';
 import { ComboboxDirective } from 'app/components/shared/combobox/combobox.directive';
+import { HasRoleDirective } from 'app/directives/auth/has-role.directive';
 import { ModalRef } from 'app/models/modal.interface';
 import { Book, BooksAndCategories, ReviewCategory } from 'app/models/review.interface';
 import { ReviewsService } from 'app/services/posts/reviews.service';
@@ -28,7 +29,7 @@ interface LibraryData {
   host: {
     class: 'flex flex-col gap-4'
   },
-  imports: [ComboboxDirective, ButtonComponent],
+  imports: [ComboboxDirective, ButtonComponent, HasRoleDirective],
   templateUrl: './library-manager.component.html',
 })
 export class LibraryManagerComponent {

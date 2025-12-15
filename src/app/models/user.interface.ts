@@ -18,3 +18,9 @@ export interface CurrentUser {
     avatar_url?: string;
   }
 }
+
+export interface CustomJwtPayload {
+  user_role: JwtUserRoles;
+}
+
+export type JwtUserRoles = 'anon' | 'user' | 'writer' | 'admin';

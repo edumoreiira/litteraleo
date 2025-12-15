@@ -7,6 +7,7 @@ import { ModalService } from '../../services/ui/modal.service';
 import { AuthWrapperComponent } from '../dialogs/auth-wrapper/auth-wrapper.component';
 import { AuthService } from 'app/services/auth/auth.service';
 import { UserIconComponent } from "./user-icon/user-icon.component";
+import { HasRoleDirective } from 'app/directives/auth/has-role.directive';
 
 @Component({
   selector: 'app-navbar',
@@ -16,7 +17,7 @@ import { UserIconComponent } from "./user-icon/user-icon.component";
     '[class.bg-extreme]': 'sm() ? scrollFromTop() > 60 : scrollFromTop() > 30',
   },
   templateUrl: './navbar.component.html',
-  imports: [ButtonComponent, SearchbarComponent, RouterLink, UserIconComponent],
+  imports: [ButtonComponent, SearchbarComponent, RouterLink, UserIconComponent, HasRoleDirective],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NavbarComponent implements AfterViewInit {
