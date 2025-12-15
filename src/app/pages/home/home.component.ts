@@ -9,11 +9,12 @@ import { ContentService } from 'app/services/posts/content.service';
 import { ReviewsService } from 'app/services/posts/reviews.service';
 import { Review } from 'app/models/review.interface';
 import { RouterLink } from '@angular/router';
+import { HeroComponent } from 'app/components/layout/hero/hero.component';
 
 @Component({
   selector: 'app-home',
   imports: [ButtonComponent, TitleDirective, TextDirective, CardSlider, CardReviewComponent, RecommendationCardComponent,
-    RouterLink
+    RouterLink, HeroComponent
   ],
   templateUrl: './home.component.html',
 })

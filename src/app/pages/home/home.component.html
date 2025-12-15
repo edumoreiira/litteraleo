@@ -1,25 +1,9 @@
 <!-- variables -->
-@let paddingFirst = 'pt-14 lg:pt-24 pb-12 lg:pb-20';
+@let paddingFirst = 'pt-20 lg:pt-30 pb-20 lg:pb-24';
 @let padding = 'lg:py-20 py-12';
 <!-- variables -->
 <main class="page-container {{ paddingFirst }}">
-  <div class="grid sm:grid-cols-2 items-center gap-3 lg:gap-6">
-    <div class="flex flex-col items-center sm:items-start gap-3 lg:gap-4 sm:text-left text-center">
-      <h1 appTitle size="lg">
-        Lorem ipsum dolor sit amet consectetur
-      </h1>
-      <p class="sm:px-0 px-8 font-light" appText size="lg">
-        lorem ipsum dolor sit amet consectetur adipisicing elit. Et blanditiis
-        facilis nam soluta ex alias exercitationem fuga mollitia hic distinctio.
-      </p>
-      <button app-button variant="contained" size="xl">lorem ipsum</button>
-    </div>
-    <img
-      src="./images/computer.png"
-      alt="Imagem de um jóvem no computador"
-      class="max-w-[300px] sm:max-w-[270px] md:max-w-[300px] lg:max-w-[400px] xl:max-w-[430px] justify-self-center"
-    />
-  </div>
+<app-hero/>
 </main>
 
 <section class="page-container {{ padding }}">
@@ -50,6 +34,7 @@
       size="lg"
       class="flex items-center gap-2"
       routerLink="/resenhas"
+      [queryParams]="{ search_type: 'posts' }"
     >
     <i class="fi fi-sr-feedback-alt text-sm"></i>
     Ver todas as resenhas

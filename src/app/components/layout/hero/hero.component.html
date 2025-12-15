@@ -1,0 +1,25 @@
+  <div class="flex flex-col items-center justify-center gap-6">
+    <div class="flex flex-col items-center lg:items-start gap-3 lg:gap-4  text-center max-w-[700px]">
+      <h1 appTitle size="lg">
+        Pensar a literatura é reler o mundo
+      </h1>
+      <p class="lg:px-0 px-8 font-light" appText size="lg">
+        Resenhas e artigos escritos para quem gosta de ler sem pressa,
+        descobrir novos livros e enxergar cada história com outros olhos.
+      </p>
+      <!-- <button app-button variant="contained" size="xl">lorem ipsum</button> -->
+    </div>
+    <div class="border border-border shadow-xs rounded-2xl sm:h-[50px] h-[45px] flex overflow-hidden w-[calc(min(100%-4rem,500px))]">
+      <input #myInput
+      class="sm:mx-6 mx-4 w-full outline-0 placeholder:text-neutral-400"
+      placeholder="Procurar resenhas e artigos..."
+      type="text"
+      (keyup.enter)="onSubmit(myInput.value)">
+       <button class="bg-primary text-primary-50 sm:px-5 px-4 h-full flex items-center justify-center gap-2 hover:opacity-75 transition-all"
+       (click)="onSubmit(myInput.value)">
+         <i class="fi fi-br-search flex text-sm"></i>
+         <span class="xs:block hidden font-serif italic lowercase font-semibold"
+         >Buscar</span>
+       </button>
+    </div>
+  </div>
