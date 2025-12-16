@@ -12,9 +12,11 @@ import { HasRoleDirective } from 'app/directives/auth/has-role.directive';
 @Component({
   selector: 'app-navbar',
   host: {
-    class: 'sticky block top-[0] left-[0] w-full z-50 px-4 sm:px-6 md:px-12 py-4 flex items-center justify-between transition-colors',
+    class: 'sticky block top-[0] left-[0] w-full z-50 px-4 sm:px-6 md:px-12 py-4 flex items-center justify-between transition-colors border-b',
     '[attr.style]': '"transform: translateY(-" + navbarOffset() + "px);"',
     '[class.bg-extreme]': 'sm() ? scrollFromTop() > 60 : scrollFromTop() > 30',
+    '[class.border-b-border/40]': 'scrollFromTop() > 20',
+    '[class.border-b-transparent]': 'scrollFromTop() <= 20',
   },
   templateUrl: './navbar.component.html',
   imports: [ButtonComponent, SearchbarComponent, RouterLink, UserIconComponent, HasRoleDirective],
