@@ -17,6 +17,19 @@ export interface CreateReviewDTO {
   category_ids: string[];
 }
 
+export interface CreateReviewResponseDTO {
+  id: string;
+  book_id: number;
+  author_id: string;
+  title: string;
+  slug: string;
+  rating: number;
+  content: string;
+  created_at: string;
+  updated_at: string | null;
+  likes_count: number;
+}
+
 export interface Review {
   id: string;
   slug: string;

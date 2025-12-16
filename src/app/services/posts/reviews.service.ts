@@ -3,7 +3,7 @@ import { SupabaseService } from '../supabase/supabase.service';
 import { AuthService } from '../auth/auth.service';
 import { ToastService } from '../ui/toast.service';
 import { PostgrestError } from '@supabase/supabase-js';
-import { Book, BooksAndCategories, CreateReviewDTO, PaginatedReviews, Review, ReviewCategory, ReviewSearchParams } from 'app/models/review.interface';
+import { Book, BooksAndCategories, CreateReviewDTO, CreateReviewResponseDTO, PaginatedReviews, Review, ReviewCategory, ReviewSearchParams } from 'app/models/review.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -85,6 +85,10 @@ export class ReviewsService {
      });
 
    if (error) {
+    this.toast.create({
+      variant: 'error',
+      message: 'Não foi possível criar a resenha.',
+    });
      console.error('Erro ao criar review:', error);
      throw error;
    }
@@ -94,7 +98,7 @@ export class ReviewsService {
      message: 'Resenha criada com sucesso!',
    });
 
-   return data; // Retorna o objeto da review criada
+   return data as CreateReviewResponseDTO; // Retorna o objeto da review criada
   }
 
   public async getReviewBySlug(slug: string) {

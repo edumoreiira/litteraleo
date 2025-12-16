@@ -12,6 +12,7 @@ import { ReviewsService } from 'app/services/posts/reviews.service';
 import { BooksAndCategories, CreateReviewDTO, ReviewForm } from 'app/models/review.interface';
 import { ModalService } from 'app/services/ui/modal.service';
 import { LibraryManagerComponent } from 'app/components/dialogs/library-manager/library-manager.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-review-editor',
@@ -86,6 +87,7 @@ import { LibraryManagerComponent } from 'app/components/dialogs/library-manager/
 export class ReviewEditorComponent {
   private reviews = inject(ReviewsService);
   private modalService = inject(ModalService);
+  private router = inject(Router);
   // 
   form: FormGroup<ReviewForm>;
   // preview = output<PostPreview>();
@@ -177,8 +179,9 @@ export class ReviewEditorComponent {
       category_ids: categories!,
     }
 
-    await this.reviews.createReview(reviewData).then(({ data, error }) => {
-      if (!error) this.form.reset();
+    await this.reviews.createReview(reviewData).then((data) => {
+      this.form.reset();
+      this.router.navigate(['/resenha', data.slug]);
     });
   }
 
