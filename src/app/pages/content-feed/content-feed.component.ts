@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, effect, inject, OnInit, signal, untracked, viewChild } from '@angular/core';
 import { ContentService, Feed, FeedSearchParams } from 'app/services/posts/content.service';
+import { ContentCacheService } from 'app/services/platform/content-cache.service';
 import { ComboboxOption } from "../../components/shared/combobox/combobox.component";
 import { ButtonComponent } from 'app/components/base/Button/button.component';
 import { createAnimation } from 'app/angular-animations/animations.utils';
@@ -60,11 +61,11 @@ const RATE_OPTIONS: ComboboxOption[] = [
 export class ContentFeedComponent implements OnInit {
   private reviews = inject(ReviewsService);
   private content = inject(ContentService);
+  private contentCache = inject(ContentCacheService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   // 
   private searchDebouceTimeout: any;
-  private postCache: { [searchKey: string]: Feed } = {};
   private isInitializing = true;
   labelCategorias = signal('');
   labelAvaliacoes = signal('');
@@ -244,7 +245,7 @@ export class ContentFeedComponent implements OnInit {
   }
 
   private handlePosts(search: FeedSearchParams) {
-    const cachedPosts = this.getCachedQuery(search);
+    const cachedPosts = this.contentCache.get(search);
     if (cachedPosts) {
       const totalPages = cachedPosts.total_pages;
       this.applySearch(cachedPosts, totalPages, search.rating, search.category_ids);
@@ -257,7 +258,7 @@ export class ContentFeedComponent implements OnInit {
     this.content.searchContent(query).then( ({ data, error }) => {
       if (data) {
         this.applySearch(data, data.total_pages, query.rating, query.category_ids, query.search_type);
-        this.cacheFeed(query, data);
+        this.contentCache.set(query, data);
       }
       if (error) {
         console.error('Error fetching posts:', error);
@@ -298,18 +299,6 @@ export class ContentFeedComponent implements OnInit {
     ].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 
     this.displayedFeed.set(combined);
-  }
-
-
-
-  private getCachedQuery(search: FeedSearchParams): Feed | undefined {
-    const key = JSON.stringify(search);
-    return this.postCache[key];
-  }
-
-  private cacheFeed(search: FeedSearchParams, feed: Feed) {
-    const key = JSON.stringify(search);
-    this.postCache[key] = feed;
   }
 
   navigateToContent(type: 'post' | 'review', slug: string) {
