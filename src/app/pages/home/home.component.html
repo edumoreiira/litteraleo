@@ -6,6 +6,10 @@
 <app-hero/>
 </main>
 
+
+
+<!--  -->
+
 <section class="page-container {{ padding }}">
   <div class="flex flex-col items-center lg:gap-8 sm:gap-6 gap-4">
     <h1 appTitle>Últimas Resenhas</h1>
@@ -34,7 +38,7 @@
       size="lg"
       class="flex items-center gap-2"
       routerLink="/resenhas"
-      [queryParams]="{ search_type: 'posts' }"
+      [queryParams]="{ search_type: 'reviews' }"
     >
     <i class="fi fi-sr-feedback-alt text-sm"></i>
     Ver todas as resenhas
@@ -50,4 +54,12 @@
   </div>
 </section>
 
-<div class="h-[2000px]"></div>
+<!-- <section class="page-container {{  padding }}">
+  <div class="bg-primary-100 rounded-3xl h-[400px] grid grid-cols-4 grid-rows-2 p-6 gap-6">
+    <div class="bg-primary-50 col-span-2 row-span-2 rounded-3xl"></div>
+    <div class="bg-primary-50 rounded-3xl"></div>
+    <div class="bg-primary-50 rounded-3xl"></div>
+    <div class="bg-primary-50 rounded-3xl"></div>
+    <div class="bg-primary-50 rounded-3xl"></div>
+  </div>
+</section> -->

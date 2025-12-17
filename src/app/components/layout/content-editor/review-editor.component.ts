@@ -13,11 +13,12 @@ import { BooksAndCategories, CreateReviewDTO, ReviewForm } from 'app/models/revi
 import { ModalService } from 'app/services/ui/modal.service';
 import { LibraryManagerComponent } from 'app/components/dialogs/library-manager/library-manager.component';
 import { Router } from '@angular/router';
+import { EDITOR_MODULES } from 'app/config/quill-config';
+import { ContentCacheService } from 'app/services/platform/content-cache.service';
 
 @Component({
   selector: 'app-review-editor',
   template: `
-  <section class="page-container--xs pt-20">
     <form [formGroup]="form" (ngSubmit)="submitPost()">
       <div class="flex flex-col gap-4">
         <app-input size="base" class="w-full" label="Título" identifier="post-editor-title"
@@ -25,7 +26,7 @@ import { Router } from '@angular/router';
         formControlName="title" />
         <div class="flex gap-4 justify-between flex-wrap">
           <div class="flex gap-2 min-w-0">
-            <button app-button appCombobox size="base" type="button" variant="combobox" class="font-medium rounded-lg min-w-0"
+            <button app-button appCombobox size="base" type="button" variant="combobox" class="font-light rounded-lg min-w-0"
             [options]="categories()" [allowMultipleOptions]="true"
             label="categorias"
             (updatedLabel)="categoryLabel = $event"
@@ -33,7 +34,7 @@ import { Router } from '@angular/router';
             >
               <span class="max-w-[200px] w-fit whitespace-nowrap overflow-ellipsis overflow-hidden"> {{ categoryLabel }} </span>
             </button>
-            <button app-button appCombobox size="base" type="button" variant="combobox" class="font-medium rounded-lg min-w-0"
+            <button app-button appCombobox size="base" type="button" variant="combobox" class="font-light rounded-lg min-w-0"
             [options]="books()" [allowMultipleOptions]="false"
             label="livros"
             (updatedLabel)="bookLabel = $event"
@@ -77,7 +78,6 @@ import { Router } from '@angular/router';
         <button app-button size="base" type="submit" [disabled]="this.form.invalid">Publicar</button>
       </div>
     </form>
-  </section>
   `,
   styleUrls: ['./review-editor.component.scss'],
   imports: [CommonModule, ReactiveFormsModule, QuillModule, ButtonComponent, InputComponent, ComboboxDirective,
@@ -88,6 +88,7 @@ export class ReviewEditorComponent {
   private reviews = inject(ReviewsService);
   private modalService = inject(ModalService);
   private router = inject(Router);
+  private contentCache = inject(ContentCacheService);
   // 
   form: FormGroup<ReviewForm>;
   // preview = output<PostPreview>();
@@ -100,16 +101,7 @@ export class ReviewEditorComponent {
     this.fetchBooksAndCategories();
   });
 
-  editorModules = {
-    toolbar: [
-      ['bold', 'italic', 'underline'],
-      [{ 'background': [] }, { 'color': [] }],
-      [{ 'align': [] }, { 'header': [1, 2, 3, false] }],
-      ['blockquote', { 'list': 'ordered' }, { 'list': 'bullet' }],
-      ['link', 'image'],
-      ['clean'], // remove formatting
-    ]
-  };
+  editorModules = EDITOR_MODULES; // imported from quill-config.ts
 
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group({
@@ -181,6 +173,7 @@ export class ReviewEditorComponent {
 
     await this.reviews.createReview(reviewData).then((data) => {
       this.form.reset();
+      this.contentCache.clear();
       this.router.navigate(['/resenha', data.slug]);
     });
   }

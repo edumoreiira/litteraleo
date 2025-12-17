@@ -1,10 +1,44 @@
-  <app-review-editor [ngClass]="{'hidden': state() === 'preview'}"
+<section class="page-container--xs pt-20">
+  <div>
+    <em-button-toggle-group
+    em-button-toggle-animation
+    variant="contained"
+    name="content-type"
+    class="font-serif italic shadow-xs"
+    [(ngModel)]="contentType"
+    >
+    <button 
+    em-button-toggle
+    value="review"
+    active="text-primary-50"
+    >
+    resenha
+    </button>
+    <button 
+    em-button-toggle
+    value="post"
+    active="text-primary-50"
+    >
+    artigo
+    </button>
+    </em-button-toggle-group>
+  </div>
+  <hr class="my-5 border-border">
+  <app-review-editor
+  [class.hidden]="state() !== 'edit'"
+  [class.hidden]="contentType() !== 'review'"
   (preview)="onPreviewState()"
   />
-  <section class="page-container--xs" [ngClass]="{'hidden': state() !== 'preview'}">
-    <!-- <article app-post
+  <app-post-editor
+  [class.hidden]="state() !== 'edit'"
+  [class.hidden]="contentType() !== 'post'"
+  />
+</section>
 
-    /> -->
-    <button app-button variant="outline"
-    (click)="setEditState()">Voltar para edição</button>
-  </section>
+<section class="page-container--xs" [ngClass]="{'hidden': state() !== 'preview'}">
+  <!-- <article app-post
+
+  /> -->
+  <button app-button variant="outline"
+  (click)="setEditState()">Voltar para edição</button>
+</section>

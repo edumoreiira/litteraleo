@@ -26,7 +26,6 @@ export interface Feed {
 })
 export class ContentService {
   private supabase = inject(SupabaseService).client;
-  private auth = inject(AuthService);
   private toast = inject(ToastService);
 
   async searchContent(params: FeedSearchParams) {
