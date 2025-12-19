@@ -32,6 +32,14 @@ import { QuillModule } from 'ngx-quill';
             text-light italic">{{ category.name }}</span>
           }
         </div>
+        <div class="text-muted-fg flex items-center gap-2" title="Número de páginas">
+          <i class="fi fi-sr-book-open-cover flex"></i>
+          <span class="text-sm">{{ review.book.pages }} páginas</span>
+        </div>
+        <div class="text-muted-fg flex items-center gap-2" title="Ano de publicação">
+          <i class="fi fi-sr-calendar-lines-pen flex"></i>
+          <span class="text-sm">{{ review.book.publication_year }}</span>
+        </div>
       </div>
     </div>
     <div class="flex flex-col gap-8 min-w-0 w-full">

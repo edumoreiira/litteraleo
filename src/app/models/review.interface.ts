@@ -45,6 +45,8 @@ export interface Review {
     title: string;
     author: string;
     cover_image_url: string;
+    pages: number;
+    publication_year: number;
   }
   likes_count: number;
   categories: ReviewCategory[];
