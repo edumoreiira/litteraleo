@@ -16,7 +16,7 @@ import { HeroComponent } from 'app/components/layout/hero/hero.component';
   imports: [ButtonComponent, TitleDirective, TextDirective, CardSlider, CardReviewComponent, RecommendationCardComponent,
     RouterLink, HeroComponent
   ],
-  templateUrl: './home.component.html',
+  templateUrl: './home-page.component.html',
 })
 export class HomeComponent implements OnInit{
   private posts = inject(ContentService);

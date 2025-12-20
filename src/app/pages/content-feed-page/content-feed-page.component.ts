@@ -54,7 +54,7 @@ const RATE_OPTIONS: ComboboxOption[] = [
   imports: [ButtonComponent, ComboboxDirective, SearchbarComponent, CardReviewComponent, PaginatorComponent,
     EmButtonToggleGroupComponent, EmButtonToggleDirective, EmButtonToggleAnimationDirective, FormsModule
   ],
-  templateUrl: './content-feed.component.html',
+  templateUrl: './content-feed-page.component.html',
   animations: [createAnimation('popUp', { animateY: true, transform: 'scale(.95)' })],
   changeDetection: ChangeDetectionStrategy.OnPush
 })

@@ -10,7 +10,7 @@ import { PostEditorComponent } from 'app/components/layout/content-editor/post-e
 
 @Component({
   selector: 'app-nova-resenha',
-  templateUrl: './nova-resenha.component.html',
+  templateUrl: './nova-resenha-page.component.html',
   imports: [ReviewEditorComponent, ButtonComponent, NgClass, EmButtonToggleGroupComponent, EmButtonToggleDirective,
     EmButtonToggleAnimationDirective, FormsModule, PostEditorComponent]
 })
