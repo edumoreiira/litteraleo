@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, inject, input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { TextDirective } from '../../../directives/ui/text.directive';
 import { RateComponent } from "../rate/rate.component";
 import { DatePipe } from '@angular/common';

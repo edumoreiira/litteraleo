@@ -14,7 +14,7 @@
           </div>
           <div class="flex flex-col items-start gap-1">
             <app-rate [rating]="rating()" [canVote]="false" class="text-primary gap-1 text-sm"></app-rate>
-            <h1 class="font-semibold text-lg leading-none mb-0.5 truncate">{{ title() }}</h1>
+            <h1 class="font-semibold text-lg leading-none mb-0.5 truncate overflow-ellipsis max-w-full">{{ title() }}</h1>
           </div>
           <span class="block text-sm text-muted-fg mb-2 opacity-70">por {{ author_name() }}</span>
           <p appText size="xs" class="line-clamp-2 overflow-ellipsis"> {{ content() | stripHtml}} </p>
