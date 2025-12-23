@@ -73,6 +73,8 @@
       [created_at]="feed.created_at"
       (click)="navigateToContent(feed.type, feed.slug)"
       ></article>
+    } @empty {
+      <div class="font-serif italic font-semibold text-2xl text-primary text-center mx-auto py-20">nenhum conteúdo encontrado...</div>
     }
   </section>
 

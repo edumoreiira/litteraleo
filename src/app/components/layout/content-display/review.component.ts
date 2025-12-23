@@ -10,7 +10,7 @@ import { QuillModule } from 'ngx-quill';
 @Component({
   selector: 'article[app-review]',
   host: {
-    class: 'page-container--sm pt-20 flex gap-8 items-start'
+    class: 'page-container--sm py-20 flex gap-8 items-start'
   },
   template: `
   @let review = reviewData();

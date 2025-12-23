@@ -10,7 +10,7 @@ import { QuillModule } from 'ngx-quill';
 @Component({
   selector: 'article[app-post]',
   host: {
-    class: 'page-container--xs pt-20'
+    class: 'page-container--xs py-20'
   },
   template: `
   @let post = postData();

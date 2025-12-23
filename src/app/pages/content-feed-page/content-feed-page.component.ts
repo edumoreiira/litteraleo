@@ -51,6 +51,9 @@ const RATE_OPTIONS: ComboboxOption[] = [
 @Component({
   selector: 'app-content-feed',
   standalone: true,
+  host: {
+    class: 'grow'
+  },
   imports: [ButtonComponent, ComboboxDirective, SearchbarComponent, CardReviewComponent, PaginatorComponent,
     EmButtonToggleGroupComponent, EmButtonToggleDirective, EmButtonToggleAnimationDirective, FormsModule
   ],
