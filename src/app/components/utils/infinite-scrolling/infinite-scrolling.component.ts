@@ -9,6 +9,7 @@ import { AfterContentInit, ChangeDetectionStrategy, Component, computed, content
     '[class.vertical]': 'direction() === "vertical"',
     '[class.horizontal]': 'direction() === "horizontal"',
     '[style]': 'sliderStyles()',
+    '(window:resize)': 'updateSliderParams()'
   },
   imports: [],
   template: `
@@ -83,7 +84,7 @@ export class InfiniteScrollingComponent implements AfterContentInit{
     `
   }
 
-  private updateSliderParams() {
+  protected updateSliderParams() {
     const sliderEl = this.slider.nativeElement;
     const styles = this.getSliderParams();
     this.renderer.setAttribute(sliderEl, 'style', styles);

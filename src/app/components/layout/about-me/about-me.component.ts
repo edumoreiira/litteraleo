@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { SOCIALS } from 'app/constants/app.constants';
 import { TextDirective } from 'app/directives/ui/text.directive';
 import { TitleDirective } from 'app/directives/ui/title.directive';
 
@@ -11,9 +12,5 @@ import { TitleDirective } from 'app/directives/ui/title.directive';
   templateUrl: './about-me.component.html'
 })
 export class AboutMeComponent {
-  socials = [
-    { name: 'Instagram', icon: 'fi-brands-instagram', url: 'https://www.instagram.com/@litteraleo/' },
-    { name: 'Youtube', icon: 'fi-brands-youtube', url: 'https://www.youtube.com/@litteraleo' },
-    { name: 'Medium', icon: 'fi-brands-medium', url: 'https://litteraleo.medium.com/' },
-  ]
+  socials = SOCIALS;
 }

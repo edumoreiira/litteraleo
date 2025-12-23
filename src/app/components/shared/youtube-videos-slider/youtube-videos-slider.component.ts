@@ -4,7 +4,7 @@ import { SafeHtmlPipe } from 'app/pipes/safe-html.pipe';
 
 @Component({
   selector: 'app-youtube-videos-slider',
-  imports: [InfiniteScrollingComponent, SafeHtmlPipe],
+  imports: [InfiniteScrollingComponent],
   templateUrl: './youtube-videos-slider.component.html',
 })
 export class YoutubeVideosSliderComponent {
