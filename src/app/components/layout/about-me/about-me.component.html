@@ -1,0 +1,29 @@
+<!-- <div class="flex lg:flex-row flex-col lg:text-start text-center items-center lg:gap-12 gap-6"> -->
+  <h1 appTitle size="lg" class="lg:hidden">Sobre Mim</h1>
+  <div class="bg-primary-200 lg:size-[320px] size-[240px] rounded-4xl shrink-0 overflow-hidden">
+    <img class="h-full object-cover"
+    src="https://cdn.naturettl.com/wp-content/uploads/2019/06/27085016/black-white-wildlife-photography-2.jpg" alt="">
+  </div>
+  <div class="flex flex-col justify-center lg:gap-6 gap-4">
+    <h1 appTitle size="lg" class="lg:block hidden">Sobre Mim</h1>
+    <p class="font-semibold text-2xl">Leonardo Moreira</p>
+    <p appText size="lg">
+      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vel, quibusdam officiis quia voluptatem magnam, veritatis totam perspiciatis in, eveniet consectetur optio! Explicabo, sunt expedita? Velit quaerat possimus sunt earum temporibus ipsa ratione.
+    </p>
+    <ul class="flex items-center gap-12 lg:justify-start justify-center">
+      @for(social of socials; track $index) {
+        <li>
+          <a
+            [href]="social.url"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-3xl text-primary-500 hover:opacity-70 transition-opacity"
+            attr.aria-label="{{ social.name }}"
+          >
+            <i class="fi flex {{ social.icon }}"></i>
+          </a>
+        </li>
+      }
+    </ul>
+  </div>
+<!-- </div> -->
