@@ -1,0 +1,71 @@
+:host {
+  display: block;
+  // border: 1px solid red;
+  overflow: hidden;
+  &.horizontal.fade-corner {
+    mask-image: linear-gradient( //fade corners
+        to right,
+        transparent,
+        #000 10% 90%,
+        transparent
+    );
+  }
+  &.vertical.fade-corner {
+    mask-image: linear-gradient( //fade corners
+        to bottom,
+        transparent,
+        #000 10% 90%,
+        transparent
+    );
+  }
+  &.pause-on-hover:hover {
+    ::ng-deep.list .item {
+      animation-play-state: paused;
+    }
+  }
+
+  &::ng-deep.list {
+    position: relative;
+    display: flex;
+  }
+  &.vertical::ng-deep.list {
+    height: 100%;
+    min-height: calc((var(--item-height) + var(--gap)) * var(--quantity));
+    flex-direction: column;
+    .item {
+      position: absolute;
+      top: 100%;
+      animation: autoRunVertical var(--animation-duration) linear infinite;
+      animation-direction: var(--animation-direction);
+      animation-delay: calc( (var(--animation-duration) / var(--quantity)) * var(--position) - var(--animation-duration))!important;
+    }
+    @keyframes autoRunVertical{
+      from {
+          top: 100%;
+      } to {
+          top: calc(var(--item-height) * -1);
+      }
+    }
+  }
+  
+  &.horizontal::ng-deep.list {
+    height: var(--item-height); 
+    width: 100%;
+    min-width: calc((var(--item-width) + var(--gap)) * var(--quantity));
+    .item {
+    position: absolute;
+    left: 100%;
+    animation: autoRunHorizontal var(--animation-duration) linear infinite;
+    animation-direction: var(--animation-direction);
+    animation-delay: calc( (var(--animation-duration) / var(--quantity)) * var(--position) - var(--animation-duration))!important;
+    }
+    @keyframes autoRunHorizontal{
+      from {
+          left: 100%;
+      } to {
+          left: calc(var(--item-width) * -1);
+      }
+    }
+  }
+  
+}

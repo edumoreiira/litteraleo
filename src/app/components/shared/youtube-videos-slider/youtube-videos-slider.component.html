@@ -1,0 +1,20 @@
+<div class="flex gap-3 sm:gap-6 items-center">
+  <i class="flex fi fi-brands-youtube text-[3rem] sm:text-[5rem] text-red-400"></i>
+  <app-infinite-scrolling
+  speed="40"
+  >
+    @for(video of youtubeMockData; track $index) {
+      <div 
+      #item
+      class="flex flex-col gap-2 shrink-0 w-[180px] sm:w-[270px] aspect-video bg-primary-200 rounded-3xl overflow-hidden relative group cursor-pointer"
+      >
+      <div class="rounded-full p-4 bg-primary absolute left-1/2 top-1/2 -translate-1/2 opacity-80
+      group-hover:opacity-100 group-hover:scale-110 transition-all">
+        <i class="fi fi-sr-play flex text-primary-50"></i>
+      </div>
+      <img class="w-full h-full"
+      [src]="video.urlImg" alt="">
+      </div>
+    }
+  </app-infinite-scrolling>
+</div>
