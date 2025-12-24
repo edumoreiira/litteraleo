@@ -1,6 +1,6 @@
 import { inject, Injectable } from "@angular/core";
 import { SupabaseService } from "../supabase/supabase.service";
-import { CreatePostDTO, CreatePostResponse, Post } from "app/models/post.interface";
+import { CreatePostDTO, CreatePostResponse, LikeResponse, Post } from "app/models/post.interface";
 import { ToastService } from "../ui/toast.service";
 import { AuthService } from "../auth/auth.service";
 
@@ -49,5 +49,14 @@ export class PostService {
         });
       }
     return { data: data as CreatePostResponse, error };
+  }
+
+  async toggleLike(postId: string) {
+    const { data, error } = await this.supabase
+      .rpc('toggle_post_like', {
+        p_post_id: postId
+      })
+    if (error) throw error;
+    return data as LikeResponse;
   }
 }

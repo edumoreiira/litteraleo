@@ -5,6 +5,7 @@ import { TitleDirective } from 'app/directives/ui/title.directive';
 import { Review } from 'app/models/review.interface';
 import { SafeHtmlPipe } from 'app/pipes/safe-html.pipe';
 import { ContentService } from 'app/services/posts/content.service';
+import { ReviewsService } from 'app/services/posts/reviews.service';
 import { QuillModule } from 'ngx-quill';
 
 @Component({
@@ -57,9 +58,9 @@ import { QuillModule } from 'ngx-quill';
           </div>
           <div class="flex items-center gap-4">
             <button class="flex items-center gap-1 hover:text-primary cursor-pointer"
-            [ngClass]="false ? 'text-primary' : 'text-muted-fg'"
-            (click)="toggle_like()">
-              @if(false) {
+            [ngClass]="review.is_liked ? 'text-primary' : 'text-muted-fg'"
+            (click)="toggleLike()">
+              @if(review.is_liked) {
                 <i class="fi fi-sr-heart"></i>
               } @else {
                 <i class="fi fi-rr-heart"></i>
@@ -111,17 +112,19 @@ import { QuillModule } from 'ngx-quill';
   imports: [QuillModule, CommonModule, SafeHtmlPipe, RateComponent, TitleDirective]
 })
 export class ReviewComponent {
-  private postService = inject(ContentService);
+  private reviewService = inject(ReviewsService);
 
   reviewData = model.required<Review>();
 
-  toggle_like() {
-    // const post_id = this.reviewData().id;
-    // this.postService.toggle_post_like(post_id).then(data => {
-    //   if(data) {
-    //     const new_count = data.likes_count;
-    //     const new_has_liked = data.user_liked;
-    //   }
-    // })
+  protected toggleLike() {
+    this.reviewService.toggleLike(this.reviewData().id).then(data => {
+      this.reviewData.update(current => {
+        return {
+          ...current,
+          likes_count: data.likes_count,
+          is_liked: data.is_liked
+        }
+      })
+    })
   }
 }

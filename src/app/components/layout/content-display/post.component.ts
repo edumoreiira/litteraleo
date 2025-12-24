@@ -5,6 +5,7 @@ import { TitleDirective } from 'app/directives/ui/title.directive';
 import { Post } from 'app/models/post.interface';
 import { SafeHtmlPipe } from 'app/pipes/safe-html.pipe';
 import { ContentService } from 'app/services/posts/content.service';
+import { PostService } from 'app/services/posts/post.service';
 import { QuillModule } from 'ngx-quill';
 
 @Component({
@@ -29,9 +30,9 @@ import { QuillModule } from 'ngx-quill';
           </div>
           <div class="flex items-center gap-4">
             <button class="flex items-center gap-1 hover:text-primary cursor-pointer"
-            [ngClass]="false ? 'text-primary' : 'text-muted-fg'"
-            (click)="toggle_like()">
-              @if(false) {
+            [ngClass]="post.is_liked ? 'text-primary' : 'text-muted-fg'"
+            (click)="toggleLike()">
+              @if(post.is_liked) {
                 <i class="fi fi-sr-heart"></i>
               } @else {
                 <i class="fi fi-rr-heart"></i>
@@ -56,17 +57,19 @@ import { QuillModule } from 'ngx-quill';
   imports: [QuillModule, CommonModule, SafeHtmlPipe, TitleDirective]
 })
 export class PostComponent {
-  private postService = inject(ContentService);
+  private postService = inject(PostService);
 
   postData = model.required<Post>();
 
-  toggle_like() {
-    // const post_id = this.reviewData().id;
-    // this.postService.toggle_post_like(post_id).then(data => {
-    //   if(data) {
-    //     const new_count = data.likes_count;
-    //     const new_has_liked = data.user_liked;
-    //   }
-    // })
+  protected toggleLike() {
+    this.postService.toggleLike(this.postData().id).then(data => {
+      this.postData.update(current => {
+        return {
+          ...current,
+          likes_count: data.likes_count,
+          is_liked: data.is_liked
+        }
+      })
+    })
   }
 }

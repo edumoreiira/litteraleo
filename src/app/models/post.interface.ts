@@ -37,3 +37,8 @@ export interface Post {
   created_at: Date;
   updated_at: Date | null;
 }
+
+export interface LikeResponse {
+  likes_count: number;
+  is_liked: boolean;
+}

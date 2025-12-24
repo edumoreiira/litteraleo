@@ -4,6 +4,7 @@ import { AuthService } from '../auth/auth.service';
 import { ToastService } from '../ui/toast.service';
 import { PostgrestError } from '@supabase/supabase-js';
 import { Book, BooksAndCategories, CreateReviewDTO, CreateReviewResponseDTO, PaginatedReviews, Review, ReviewCategory, ReviewSearchParams } from 'app/models/review.interface';
+import { LikeResponse } from 'app/models/post.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -110,6 +111,15 @@ export class ReviewsService {
     }
 
     return { data: data as Review, error}
+  }
+
+  async toggleLike(reviewId: string) {
+    const { data, error } = await this.supabase
+      .rpc('toggle_review_like', {
+        p_review_id: reviewId
+      })
+    if (error) throw error;
+    return data as LikeResponse;
   }
 
   // --- BOOKS ---
