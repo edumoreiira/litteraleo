@@ -33,6 +33,7 @@ interface FeedCard {
   categories?: ReviewCategory[];
   book?: {
     author: string;
+    cover_image_url: string;
   }
 }
 
@@ -297,7 +298,7 @@ export class ContentFeedComponent implements OnInit {
         author: review.author,
         rating: review.rating,
         categories: review.categories,
-        book: { author: review.book.author }
+        book: { author: review.book.author, cover_image_url: review.book.cover_image_url }
       }))
     ].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 
