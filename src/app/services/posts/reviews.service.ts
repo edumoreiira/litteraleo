@@ -122,6 +122,27 @@ export class ReviewsService {
     return data as LikeResponse;
   }
 
+  async deleteReview(reviewId: string) {
+    const { error } = await this.supabase
+      .from('reviews')
+      .delete()
+      .eq('id', reviewId)
+      .select()
+      .single();
+    if (error) {
+      this.toast.create({
+        message: 'Erro ao deletar a resenha.',
+        variant: 'error'
+      });
+      throw error;
+    } else {
+      this.toast.create({
+        message: 'Resenha deletada com sucesso!',
+        variant: 'success'
+      });
+    }
+  }
+
   // --- BOOKS ---
 
   public async createBook(bookData: Partial<Book>, bookCover: File)

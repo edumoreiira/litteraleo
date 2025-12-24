@@ -64,19 +64,21 @@ export class PostService {
     const { error } = await this.supabase
       .from('posts')
       .delete()
-      .eq('id', postId);
+      .eq('id', postId)
+      .select()
+      .single();
     if (error) {
       this.toast.create({
-        message: 'Erro ao deletar o texto. ' + error.message,
+        message: 'Erro ao deletar a postagem.',
         variant: 'error'
       });
-      console.error('Erro ao deletar o texto:', error);
+      throw error;
     } else {
       this.toast.create({
-        message: 'Texto deletado com sucesso!',
+        message: 'Postagem deletada com sucesso!',
         variant: 'success'
       });
     }
-    return { error };
+    return true;
   }
 }

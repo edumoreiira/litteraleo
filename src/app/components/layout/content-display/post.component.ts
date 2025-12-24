@@ -1,11 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, input, model, OnInit } from '@angular/core';
-import { RateComponent } from 'app/components/shared/rate/rate.component';
+import { Router } from '@angular/router';
+import { EditContentDropdownComponent } from 'app/components/shared/edit-content-dropdown/edit-content-dropdown.component';
+import { HasRoleDirective } from 'app/directives/auth/has-role.directive';
 import { TitleDirective } from 'app/directives/ui/title.directive';
 import { Post } from 'app/models/post.interface';
 import { SafeHtmlPipe } from 'app/pipes/safe-html.pipe';
-import { ContentService } from 'app/services/posts/content.service';
+import { ContentCacheService } from 'app/services/platform/content-cache.service';
 import { PostService } from 'app/services/posts/post.service';
+import { DialogService } from 'app/services/ui/dialog.service';
 import { QuillModule } from 'ngx-quill';
 
 @Component({
@@ -42,6 +45,9 @@ import { QuillModule } from 'ngx-quill';
             <button class="flex items-center gap-1 text-muted-fg hover:text-primary cursor-pointer">
               <i class="fi fi-rr-arrow-up-right-from-square"></i>
             </button>
+            <app-edit-content-dropdown *appHasRole="['admin', 'writer']"
+            (delete)="onDelete()"
+            />
           </div>
         </div>
         <hr class="border-border/50">
@@ -54,11 +60,14 @@ import { QuillModule } from 'ngx-quill';
   styles: `
   .no-padding { padding: 0 !important; }
   `,
-  imports: [QuillModule, CommonModule, SafeHtmlPipe, TitleDirective]
+  imports: [QuillModule, CommonModule, SafeHtmlPipe, TitleDirective, EditContentDropdownComponent, HasRoleDirective]
 })
 export class PostComponent {
   private postService = inject(PostService);
-
+  private dialog = inject(DialogService);
+  private contentCache = inject(ContentCacheService);
+  private router = inject(Router);
+  // 
   postData = model.required<Post>();
 
   protected toggleLike() {
@@ -72,4 +81,25 @@ export class PostComponent {
       })
     })
   }
+  
+  protected onDelete() {
+    this.dialog.openConfirmationDialog({
+      title: 'Excluir postagem',
+      message: `Tem certeza que deseja excluir a postagem: "${this.postData().title}"? Esta ação não pode ser desfeita.`,
+      variant: 'destructive',
+      confirmText: 'Excluir',
+      cancelText: 'Cancelar'
+    },
+    {
+      onConfirm: () => {
+        this.postService.deletePost(this.postData().id).then(() => {
+          this.contentCache.clear();
+          this.router.navigate(['/resenhas']);
+        });
+      }
+    });
+  }
+  
+
+
 }

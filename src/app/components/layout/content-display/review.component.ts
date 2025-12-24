@@ -1,11 +1,16 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, input, model, OnInit } from '@angular/core';
+import { Component, inject, model } from '@angular/core';
+import { Router } from '@angular/router';
+import { EditContentDropdownComponent } from 'app/components/shared/edit-content-dropdown/edit-content-dropdown.component';
 import { RateComponent } from 'app/components/shared/rate/rate.component';
+import { HasRoleDirective } from 'app/directives/auth/has-role.directive';
 import { TitleDirective } from 'app/directives/ui/title.directive';
 import { Review } from 'app/models/review.interface';
 import { SafeHtmlPipe } from 'app/pipes/safe-html.pipe';
+import { ContentCacheService } from 'app/services/platform/content-cache.service';
 import { ContentService } from 'app/services/posts/content.service';
 import { ReviewsService } from 'app/services/posts/reviews.service';
+import { DialogService } from 'app/services/ui/dialog.service';
 import { QuillModule } from 'ngx-quill';
 
 @Component({
@@ -70,6 +75,9 @@ import { QuillModule } from 'ngx-quill';
             <button class="flex items-center gap-1 text-muted-fg hover:text-primary cursor-pointer">
               <i class="fi fi-rr-arrow-up-right-from-square"></i>
             </button>
+            <app-edit-content-dropdown *appHasRole="['admin', 'writer']"
+            (delete)="onDelete()"
+            />
           </div>
         </div>
         <hr class="border-border/50">
@@ -109,10 +117,13 @@ import { QuillModule } from 'ngx-quill';
   styles: `
   .no-padding { padding: 0 !important; }
   `,
-  imports: [QuillModule, CommonModule, SafeHtmlPipe, RateComponent, TitleDirective]
+  imports: [QuillModule, CommonModule, SafeHtmlPipe, RateComponent, TitleDirective, HasRoleDirective, EditContentDropdownComponent]
 })
 export class ReviewComponent {
   private reviewService = inject(ReviewsService);
+  private dialog = inject(DialogService);
+  private contentCache = inject(ContentCacheService);
+  private router = inject(Router);
 
   reviewData = model.required<Review>();
 
@@ -126,5 +137,23 @@ export class ReviewComponent {
         }
       })
     })
+  }
+
+  protected onDelete() {
+    this.dialog.openConfirmationDialog({
+      title: 'Excluir resenha',
+      message: `Tem certeza que deseja excluir a resenha: "${this.reviewData().title}"? Esta ação não pode ser desfeita.`,
+      variant: 'destructive',
+      confirmText: 'Excluir',
+      cancelText: 'Cancelar'
+    },
+    {
+      onConfirm: () => {
+        this.reviewService.deleteReview(this.reviewData().id).then(() => {
+          this.contentCache.clear();
+          this.router.navigate(['/resenhas']);
+        });
+      }
+    });
   }
 }

@@ -48,7 +48,7 @@ export class PostEditorComponent {
 
   editorModules = EDITOR_MODULES; // imported from quill-config.ts
 
-  submitPost() {
+  protected submitPost() {
     if (this.form.valid) {
       const postFormValues = this.form.value as { title: string; content: string };
       this.form.disable(); // prevent multiple submissions

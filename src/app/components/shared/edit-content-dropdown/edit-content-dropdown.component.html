@@ -11,7 +11,7 @@ class="text-muted-fg hover:text-primary transition-colors cursor-pointer">
     <li role="none" class="p-1 pb-0">
       <button type="button" role="menuitem"
       class="flex w-full items-center gap-2 rounded-lg px-3 py-1.5 hover:bg-accent focus:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-      (click)="edit.emit()">
+      (click)="onEdit()">
         <i class="fi fi-rr-pencil flex" aria-hidden="true"></i>
         Editar
       </button>
@@ -19,7 +19,7 @@ class="text-muted-fg hover:text-primary transition-colors cursor-pointer">
     <li role="none" class="p-1 pt-0">
       <button type="button" role="menuitem"
       class="flex w-full items-center text-destructive gap-2 rounded-lg px-3 py-1.5 hover:bg-accent focus:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-      (click)="delete.emit()">
+      (click)="onDelete()">
         <i class="fi fi-rr-trash flex" aria-hidden="true"></i>
         Excluir
       </button>
