@@ -37,14 +37,14 @@ export class PostService {
 
       if(error) {
         this.toast.create({
-          message: 'Erro ao criar o artigo. ' + error.message,
+          message: 'Erro ao criar o texto. ' + error.message,
           variant: 'error'
         });
-        console.error('Erro ao criar o artigo:', error);
+        console.error('Erro ao criar o texto:', error);
       }
       if(data) {
         this.toast.create({
-          message: 'Artigo criado com sucesso!',
+          message: 'Texto criado com sucesso!',
           variant: 'success'
         });
       }

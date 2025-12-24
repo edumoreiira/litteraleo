@@ -15,14 +15,14 @@ import { QuillModule } from "ngx-quill";
   template: `
     <form [formGroup]="form" (ngSubmit)="submitPost()">
       <app-input size="base" class="w-full" label="Título" identifier="post-editor-title"
-      placeholder="Meu artigo incrível"
+      placeholder="Meu texto incrível"
       formControlName="title" />
       <quill-editor
         class="w-full h-[400px] my-4 rounded"
         [theme]="'snow'"
         formControlName="content"
         [modules]="editorModules"
-        placeholder="Escreva seu artigo aqui...">
+        placeholder="Escreva seu texto aqui...">
       </quill-editor>
       <div class="flex justify-end mt-4 gap-2">
         <button app-button size="base" class="font-medium" variant="text" type="button"
