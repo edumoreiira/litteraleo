@@ -252,7 +252,7 @@ export class ContentFeedComponent implements OnInit {
     const cachedPosts = this.contentCache.get(search);
     if (cachedPosts) {
       const totalPages = cachedPosts.total_pages;
-      this.applySearch(cachedPosts, totalPages, search.rating, search.category_ids);
+      this.applySearch(cachedPosts, totalPages, search.rating, search.category_ids, search.search_type);
     } else {
       this.fetchPosts(search);
     }
