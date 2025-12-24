@@ -31,6 +31,7 @@ export class SignInFormComponent {
     if(this.loginForm.invalid) {
       return;
     }
+    this.loginForm.disable(); // prevent multiple submissions
     const { email, password } = this.loginForm.value;
     await this.auth.signInWithEmail(email!, password!).then(res => {
       if (res.error) {
@@ -39,6 +40,7 @@ export class SignInFormComponent {
       }
       if (res.data.session) {
         this.toast.create({ variant: 'success', message: 'Login realizado com sucesso!' });
+        this.loginForm.enable();
       }
     })
   }

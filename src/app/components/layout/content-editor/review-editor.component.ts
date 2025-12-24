@@ -170,9 +170,10 @@ export class ReviewEditorComponent {
       book_id: book!,
       category_ids: categories!,
     }
-
+    this.form.disable(); // prevent multiple submissions
     await this.reviews.createReview(reviewData).then((data) => {
       this.form.reset();
+      this.form.enable();
       this.contentCache.clear();
       this.router.navigate(['/resenha', data.slug]);
     });

@@ -37,11 +37,12 @@ export class SignUpFormComponent {
       return;
     }
     const { name, email, password } = this.signUpForm.value;
-
+    this.signUpForm.disable(); // prevent multiple submissions
     await this.auth.signUpWithEmail(name!, email!, password!).then(res => {
       if(res.error) {
-        this.toast.create({ variant: 'error', message: res.error.message || 'Erro ao tentar realizar cadastro' });
+        this.toast.create({ variant: 'error', message: res.error.message || 'Erro ao tentar criar uma conta' });
       } else if(res.data.session) {
+        this.signUpForm.enable();
         this.toast.create({ variant: 'success', message: 'Cadastro realizado com sucesso!' });
       }
       

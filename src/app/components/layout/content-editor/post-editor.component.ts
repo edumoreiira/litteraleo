@@ -51,9 +51,11 @@ export class PostEditorComponent {
   submitPost() {
     if (this.form.valid) {
       const postFormValues = this.form.value as { title: string; content: string };
+      this.form.disable(); // prevent multiple submissions
       this.post.createPost(postFormValues).then(({data, error}) => {
         if (data) {
           this.form.reset();
+          this.form.enable();
           this.contentCache.clear();
           this.router.navigate(['/post', data.slug]);
         }

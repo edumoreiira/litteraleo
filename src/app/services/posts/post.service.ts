@@ -59,4 +59,24 @@ export class PostService {
     if (error) throw error;
     return data as LikeResponse;
   }
+
+  async deletePost(postId: string) {
+    const { error } = await this.supabase
+      .from('posts')
+      .delete()
+      .eq('id', postId);
+    if (error) {
+      this.toast.create({
+        message: 'Erro ao deletar o texto. ' + error.message,
+        variant: 'error'
+      });
+      console.error('Erro ao deletar o texto:', error);
+    } else {
+      this.toast.create({
+        message: 'Texto deletado com sucesso!',
+        variant: 'success'
+      });
+    }
+    return { error };
+  }
 }
