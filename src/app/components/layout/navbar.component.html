@@ -4,28 +4,32 @@
         <a routerLink="/" 
         class="block text-3xl font-bold text-primary font-[Abril_Fatface]">litteraleo</a>
     </div>
-
     
-    <div class="flex items-center gap-3 lg:gap-4">
-        <ul class="hidden lg:flex items-center gap-8 text-muted-fg font-medium mr-8">
-            <li><a class="hover:text-primary transition-colors" 
-                routerLink="/">Home</a></li>
-            <li><a class="hover:text-primary transition-colors" 
-                routerLink="/resenhas">Resenhas</a></li>
-            <li><a class="hover:text-primary transition-colors" 
-                href="#">Sobre</a></li>
-        </ul>
-
+    <!-- always shows if viewport > 640px -->
+    @if((navBarOpen() && !sm()) || sm()) {
+        <div @popNavbar
+        class="sm:flex-row flex-col items-center gap-3 lg:gap-4
+        sm:static absolute right-[3px] shadow-xs sm:shadow-none top-full px-16 sm:px-0 py-8 sm:py-0 rounded-2xl
+        border border-border bg-white sm:border-0 sm:bg-transparent">
+            <ul class="flex sm:flex-row flex-col items-center gap-8 text-muted-fg font-medium mx-auto">
+                <li><a class="hover:text-primary transition-colors" 
+                    routerLink="/">Home</a></li>
+                <li><a class="hover:text-primary transition-colors" 
+                    routerLink="/resenhas">Resenhas</a></li>
+                <li><a class="hover:text-primary transition-colors" 
+                    href="#about-me-section">Sobre</a></li>
+            </ul>
+        </div>
+    }
+    <div class="flex items-center gap-4">
         <a *appHasRole="['admin', 'writer']"
         aria-label="Criar Resenha"
         app-button variant="contained" class="font-sans! font-bold! not-italic!" routerLink="/novo-post">+</a>
-
-        <app-searchbar class="sm:block sm:w-[210px]" [mobileView]="640"/>
         @if(!isUserLoggedIn()) {
             <div class="flex items-center gap-2">
-                <button app-button size="base"
-                (click)="openLoginModal()">Login</button>
                 <button app-button size="base" variant="text" class="font-medium"
+                (click)="openLoginModal()">Login</button>
+                <button app-button size="base"
                 (click)="openSignUpModal()">Registrar</button>
             </div>
         } @else {
@@ -33,6 +37,8 @@
             (logout)="logout()"
             />
         }
+        <i class="fi fi-br-menu-burger text-3xl text-muted-fg sm:hidden! cursor-pointer"
+        (click)="toggleNavBar()"></i>
     </div>
 
 <!-- </div> -->

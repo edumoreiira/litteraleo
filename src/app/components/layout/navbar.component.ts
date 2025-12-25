@@ -1,42 +1,42 @@
-import { AfterViewChecked, AfterViewInit, ChangeDetectionStrategy, Component, computed, ElementRef, HostBinding, HostListener, inject, signal } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, computed, ElementRef, HostListener, inject, signal } from '@angular/core';
 import { ButtonComponent } from '../base/Button/button.component';
-import { SearchbarComponent } from "../shared/searchbar/searchbar.component";
 import { DocumentListenerService } from '../../services/platform/document-listener.service';
 import { RouterLink } from '@angular/router';
-import { ModalService } from '../../services/ui/modal.service';
-import { AuthWrapperComponent } from '../dialogs/auth-wrapper/auth-wrapper.component';
 import { AuthService } from 'app/services/auth/auth.service';
 import { UserIconComponent } from "./user-icon/user-icon.component";
 import { HasRoleDirective } from 'app/directives/auth/has-role.directive';
 import { AuthModalService } from 'app/services/ui/auth-modal.service';
+import { createAnimation } from 'app/angular-animations/animations.utils';
 
 @Component({
   selector: 'app-navbar',
   host: {
-    class: 'sticky block top-[0] left-[0] w-full z-50 px-4 sm:px-6 md:px-12 py-4 flex items-center justify-between transition-colors border-b',
+    class: 'sticky block top-[0] left-[0] w-full z-50 px-4 sm:px-6 md:px-12 py-4 flex items-center justify-between transition-colors border-b relative',
     '[attr.style]': '"transform: translateY(-" + navbarOffset() + "px);"',
     '[class.bg-extreme]': 'sm() ? scrollFromTop() > 60 : scrollFromTop() > 30',
     '[class.border-b-border/40]': 'scrollFromTop() > 20',
     '[class.border-b-transparent]': 'scrollFromTop() <= 20',
   },
   templateUrl: './navbar.component.html',
-  imports: [ButtonComponent, SearchbarComponent, RouterLink, UserIconComponent, HasRoleDirective],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  imports: [ButtonComponent, RouterLink, UserIconComponent, HasRoleDirective],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [createAnimation('popNavbar', { transform: 'scale(.95)', duration: '100ms' })]
 })
 export class NavbarComponent implements AfterViewInit {
   protected documentListener = inject(DocumentListenerService);
   private el = inject(ElementRef);
-  private modal = inject(ModalService);
   private auth = inject(AuthService);
   private authModal = inject(AuthModalService);
+  // 
   protected isUserLoggedIn = computed(() => !!this.auth.$currentUser());
   //
-  user = computed(() => this.auth.$currentUser());
-  navbarOffset = signal(0);
-  lastScrollTop = 0;
-  maxOffset = 90;
-  scrollFromTop = computed(() => this.documentListener.scrollFromTop$());
-  sm = computed(() => this.documentListener.isSm());
+  protected navBarOpen = signal(false);
+  protected user = computed(() => this.auth.$currentUser());
+  protected navbarOffset = signal(0);
+  protected lastScrollTop = 0;
+  protected maxOffset = 90;
+  protected scrollFromTop = computed(() => this.documentListener.scrollFromTop$());
+  protected sm = computed(() => this.documentListener.isSm());
 
   ngAfterViewInit(): void {
     this.maxOffset = this.el.nativeElement.offsetHeight; // update maxOffset based on the navbar height
@@ -45,7 +45,7 @@ export class NavbarComponent implements AfterViewInit {
     }
   }
 
-  handleNavbarOffset() {
+  private handleNavbarOffset() {
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop; 
     const delta = scrollTop - this.lastScrollTop;
     const isAboveThreshold = this.sm() ? scrollTop > 150 : scrollTop > 60;
@@ -54,6 +54,7 @@ export class NavbarComponent implements AfterViewInit {
       this.navbarOffset.update(offset => 
         Math.min(Math.max(offset + delta, 0), this.maxOffset)
       );
+      console.log('Navbar Offset:', this.navbarOffset());
     } else {
       this.navbarOffset.set(0); //reset navbar offset if scrolled above threshold
     }
@@ -67,9 +68,14 @@ export class NavbarComponent implements AfterViewInit {
     this.authModal.openSignUpModal();
   }
 
-  async logout() {
+  protected async logout() {
     await this.auth.logout();
   }
+
+  protected toggleNavBar() {
+    this.navBarOpen.update(open => !open);
+  }
+  
 
   //host listeners
   @HostListener('window:scroll')
