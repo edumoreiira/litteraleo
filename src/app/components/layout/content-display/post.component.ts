@@ -6,8 +6,10 @@ import { HasRoleDirective } from 'app/directives/auth/has-role.directive';
 import { TitleDirective } from 'app/directives/ui/title.directive';
 import { Post } from 'app/models/post.interface';
 import { SafeHtmlPipe } from 'app/pipes/safe-html.pipe';
+import { AuthService } from 'app/services/auth/auth.service';
 import { ContentCacheService } from 'app/services/platform/content-cache.service';
 import { PostService } from 'app/services/posts/post.service';
+import { AuthModalService } from 'app/services/ui/auth-modal.service';
 import { DialogService } from 'app/services/ui/dialog.service';
 import { QuillModule } from 'ngx-quill';
 
@@ -34,7 +36,7 @@ import { QuillModule } from 'ngx-quill';
           <div class="flex items-center gap-4">
             <button class="flex items-center gap-1 hover:text-primary cursor-pointer"
             [ngClass]="post.is_liked ? 'text-primary' : 'text-muted-fg'"
-            (click)="toggleLike()">
+            (click)="handleLike()">
               @if(post.is_liked) {
                 <i class="fi fi-sr-heart"></i>
               } @else {
@@ -68,10 +70,17 @@ export class PostComponent {
   private dialog = inject(DialogService);
   private contentCache = inject(ContentCacheService);
   private router = inject(Router);
+  private authModal = inject(AuthModalService);
+  private auth = inject(AuthService);
   // 
   postData = model.required<Post>();
 
-  protected toggleLike() {
+  protected handleLike() {
+    const isUserLoggedIn = !!this.auth.isLoggedIn();
+    if(!isUserLoggedIn) {
+      this.openLoginModal();
+      return;
+    }
     this.postService.toggleLike(this.postData().id).then(data => {
       this.postData.update(current => {
         return {
@@ -101,8 +110,13 @@ export class PostComponent {
     });
   }
 
+
   protected onEdit() {
     this.router.navigate(['/editar-post', this.postData().slug]);
+  }
+
+  protected openLoginModal() {
+    this.authModal.openLoginModal();
   }
   
 

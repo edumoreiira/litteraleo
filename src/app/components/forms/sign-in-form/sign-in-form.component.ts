@@ -37,6 +37,8 @@ export class SignInFormComponent {
       if (res.error) {
         const msg = res.error.code === 'invalid_credentials' ? 'Email ou senha inválidos' : res.error.message;
         this.toast.create({ variant: 'error', message: msg || 'Erro ao tentar realizar login' });
+        this.loginForm.enable();
+        return;
       }
       if (res.data.session) {
         this.toast.create({ variant: 'success', message: 'Login realizado com sucesso!' });

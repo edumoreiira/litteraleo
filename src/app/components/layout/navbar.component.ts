@@ -8,6 +8,7 @@ import { AuthWrapperComponent } from '../dialogs/auth-wrapper/auth-wrapper.compo
 import { AuthService } from 'app/services/auth/auth.service';
 import { UserIconComponent } from "./user-icon/user-icon.component";
 import { HasRoleDirective } from 'app/directives/auth/has-role.directive';
+import { AuthModalService } from 'app/services/ui/auth-modal.service';
 
 @Component({
   selector: 'app-navbar',
@@ -27,6 +28,7 @@ export class NavbarComponent implements AfterViewInit {
   private el = inject(ElementRef);
   private modal = inject(ModalService);
   private auth = inject(AuthService);
+  private authModal = inject(AuthModalService);
   protected isUserLoggedIn = computed(() => !!this.auth.$currentUser());
   //
   user = computed(() => this.auth.$currentUser());
@@ -58,17 +60,11 @@ export class NavbarComponent implements AfterViewInit {
     this.lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
   }
 
-  openLoginModal() {
-    const modalRef = this.modal.open(AuthWrapperComponent, 
-      { role: 'dialog', componentInputs: {
-        initialMode: 'sign-in'
-      } })
+  protected openLoginModal() {
+    this.authModal.openLoginModal();
   }
-  openSignUpModal() {
-    const modalRef = this.modal.open(AuthWrapperComponent, 
-      { role: 'dialog', componentInputs: {
-        initialMode: 'sign-up'
-      } })
+  protected openSignUpModal() {
+    this.authModal.openSignUpModal();
   }
 
   async logout() {

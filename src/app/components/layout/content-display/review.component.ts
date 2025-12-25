@@ -7,21 +7,23 @@ import { HasRoleDirective } from 'app/directives/auth/has-role.directive';
 import { TitleDirective } from 'app/directives/ui/title.directive';
 import { Review } from 'app/models/review.interface';
 import { SafeHtmlPipe } from 'app/pipes/safe-html.pipe';
+import { AuthService } from 'app/services/auth/auth.service';
 import { ContentCacheService } from 'app/services/platform/content-cache.service';
 import { ContentService } from 'app/services/posts/content.service';
 import { ReviewsService } from 'app/services/posts/reviews.service';
+import { AuthModalService } from 'app/services/ui/auth-modal.service';
 import { DialogService } from 'app/services/ui/dialog.service';
 import { QuillModule } from 'ngx-quill';
 
 @Component({
   selector: 'article[app-review]',
   host: {
-    class: 'page-container--sm py-20 flex gap-8 items-start'
+    class: 'page-container--sm py-20 flex sm:flex-row flex-col gap-8 items-start'
   },
   template: `
   @let review = reviewData();
-    <div class="bg-muted rounded w-[185px] shrink-0 flex flex-col">
-      <div class="w-full aspect-5/8 rounded p-1">
+    <div class="bg-muted rounded sm:w-[185px] w-full shrink-0 flex sm:flex-col flex-row">
+      <div class="sm:w-full w-[120px] shrink-0 aspect-5/8 rounded p-1">
         <img class="w-full h-full object-cover rounded"
         [src]="review.book.cover_image_url" alt="Foto do livro">
       </div>
@@ -64,7 +66,7 @@ import { QuillModule } from 'ngx-quill';
           <div class="flex items-center gap-4">
             <button class="flex items-center gap-1 hover:text-primary cursor-pointer"
             [ngClass]="review.is_liked ? 'text-primary' : 'text-muted-fg'"
-            (click)="toggleLike()">
+            (click)="handleLike()">
               @if(review.is_liked) {
                 <i class="fi fi-sr-heart"></i>
               } @else {
@@ -125,10 +127,17 @@ export class ReviewComponent {
   private dialog = inject(DialogService);
   private contentCache = inject(ContentCacheService);
   private router = inject(Router);
-
+  private authModal = inject(AuthModalService);
+  private auth = inject(AuthService);
+  //
   reviewData = model.required<Review>();
 
-  protected toggleLike() {
+  protected handleLike() {
+    const isUserLoggedIn = this.auth.isLoggedIn();
+    if(!isUserLoggedIn) {
+      this.authModal.openLoginModal();
+      return;
+    }
     this.reviewService.toggleLike(this.reviewData().id).then(data => {
       this.reviewData.update(current => {
         return {
