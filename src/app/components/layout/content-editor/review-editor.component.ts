@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, effect, inject, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, input, signal, untracked } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonComponent } from 'app/components/base/Button/button.component';
 import { InputComponent } from 'app/components/base/input/input.component';
@@ -9,7 +9,7 @@ import { QuillModule } from 'ngx-quill';
 import { RateComponent } from "../../shared/rate/rate.component";
 import { NgxMaskDirective } from 'ngx-mask';
 import { ReviewsService } from 'app/services/posts/reviews.service';
-import { BooksAndCategories, CreateReviewDTO, ReviewForm } from 'app/models/review.interface';
+import { BooksAndCategories, CreateReviewDTO, Review, ReviewForm, UpdateReviewDTO } from 'app/models/review.interface';
 import { ModalService } from 'app/services/ui/modal.service';
 import { LibraryManagerComponent } from 'app/components/dialogs/library-manager/library-manager.component';
 import { Router } from '@angular/router';
@@ -42,11 +42,12 @@ import { ContentCacheService } from 'app/services/platform/content-cache.service
             >
               <span class="max-w-[200px] w-fit whitespace-nowrap overflow-ellipsis overflow-hidden"> {{ bookLabel }} </span>
             </button>
-
-            <button app-button size="base" variant="contained" aria-label="Configurar livros e categorias" type="button"
-            (click)="openLibraryManagerModal()">
-              <i class="fi fi-sr-settings flex"></i>
-            </button>
+            @if(mode() === 'create') {
+              <button app-button size="base" variant="contained" aria-label="Configurar livros e categorias" type="button"
+              (click)="openLibraryManagerModal()">
+                <i class="fi fi-sr-settings flex"></i>
+              </button>
+            }
         </div>
 
         <div class="flex flex-wrap items-center gap-2">
@@ -75,7 +76,7 @@ import { ContentCacheService } from 'app/services/platform/content-cache.service
       <div class="flex justify-end mt-4 gap-2">
         <button app-button size="base" class="font-medium" variant="text" type="button"
         (click)="onPreview()">Pré Visualizar</button>
-        <button app-button size="base" type="submit" [disabled]="this.form.invalid">Publicar</button>
+        <button app-button size="base" type="submit" [disabled]="this.form.invalid">{{ mode() === 'create' ? 'Publicar' : 'Editar' }}</button>
       </div>
     </form>
   `,
@@ -85,33 +86,52 @@ import { ContentCacheService } from 'app/services/platform/content-cache.service
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReviewEditorComponent {
+  private fb = inject(FormBuilder);
   private reviews = inject(ReviewsService);
   private modalService = inject(ModalService);
   private router = inject(Router);
   private contentCache = inject(ContentCacheService);
   // 
-  form: FormGroup<ReviewForm>;
-  // preview = output<PostPreview>();
+  mode = input<'create' | 'edit'>('create');
+  review = input<Review | null>(null);
+  
+  form: FormGroup<ReviewForm> = this.fb.group({
+    title: this.fb.control('', { nonNullable: true, validators: [Validators.required] }),
+    content: this.fb.control('', { nonNullable: true, validators: [Validators.required] }),
+    categories: this.fb.control<string[]>([], { nonNullable: true, validators: [Validators.required] }),
+    rating: this.fb.control<number | null>(3.5, { validators: [Validators.min(0), Validators.max(5)] }),
+    book: this.fb.control<number | null>(null, { nonNullable: true, validators: [Validators.required] }),
+  });
+  isInitialFetchCompleted = false;
   categories = signal<ComboboxOption[]>([]);
   books = signal<ComboboxOption[]>([]);
   categoryLabel = '';
   bookLabel = '';
 
+  editorModules = EDITOR_MODULES; // imported from quill-config.ts
+
   private syncBooksAndCategories = effect(() => {
     this.fetchBooksAndCategories();
   });
 
-  editorModules = EDITOR_MODULES; // imported from quill-config.ts
-
-  constructor(private fb: FormBuilder) {
-    this.form = this.fb.group({
-      title: this.fb.control('', { nonNullable: true, validators: [Validators.required] }),
-      content: this.fb.control('', { nonNullable: true, validators: [Validators.required] }),
-      categories: this.fb.control<string[]>([], { nonNullable: true, validators: [Validators.required] }),
-      rating: this.fb.control<number | null>(3.5, { validators: [Validators.min(0), Validators.max(5)] }),
-      book: this.fb.control<number | null>(null, { nonNullable: true, validators: [Validators.required] }),
-    });
-  }
+  private populateFormOnEdit = effect(() => {
+    if (this.mode() === 'edit' && this.review()) {
+      const reviewData = this.review()!;
+      this.form.patchValue({
+        title: reviewData.title,
+        content: reviewData.content,
+        rating: reviewData.rating,
+        book: reviewData.book.id,
+        categories: reviewData.categories.map(c => c.id)
+      });
+    }
+    untracked(() => { 
+      const bookAndCategories = this.reviews.$booksAndCategories();
+      if (bookAndCategories) {
+        this.populateBooksAndCategories(this.reviews.$booksAndCategories()!) // populate combobox options
+      } 
+    })
+  });
 
   onPreview() {
     if (this.form.invalid) {
@@ -129,6 +149,8 @@ export class ReviewEditorComponent {
     } else {
       this.reviews.updateBooksAndCategories();
     }
+    
+    if(this.mode() === 'create')
     this.form.patchValue({ book: null, categories: [] }); // reset selections
   }
 
@@ -136,10 +158,12 @@ export class ReviewEditorComponent {
     this.categories.set(data.categories.map(category => ({
       value: category.id,
       label: category.name,
+      active: this.form.get('categories')?.value.includes(category.id)
     })));
     this.books.set(data.books.map(book => ({
       value: book.id.toString(),
-      label: `${book.title} - ${book.author}`
+      label: `${book.title} - ${book.author}`,
+      active: this.form.get('book')?.value === book.id
     })));
   }
     
@@ -157,25 +181,55 @@ export class ReviewEditorComponent {
     this.form.patchValue({ rating });
   }
 
-  async submitPost() {
+  protected submitPost() {
     if (this.form.invalid) {
       return;
     }
+
     const { title, content, categories, rating, book } = this.form.value;
 
-    const reviewData: CreateReviewDTO = {
-      title: title!,
-      content: content!,
-      rating: rating!,
-      book_id: book!,
-      category_ids: categories!,
-    }
     this.form.disable(); // prevent multiple submissions
-    await this.reviews.createReview(reviewData).then((data) => {
+
+    if (this.mode() === 'create') {
+      const reviewData: CreateReviewDTO = {
+        title: title!,
+        content: content!,
+        rating: rating!,
+        book_id: book!,
+        category_ids: categories!,
+      };
+      this.createReview(reviewData);
+    } else if (this.mode() === 'edit' && this.review()) {
+      const reviewData: UpdateReviewDTO = {
+        id: this.review()!.id,
+        title: title!,
+        content: content!,
+        rating: rating!,
+        book_id: book!,
+        category_ids: categories!,
+      };
+      this.updateReview(reviewData);
+    }
+  }
+
+  private createReview(reviewData: CreateReviewDTO) {
+    this.reviews.createReview(reviewData).then((data) => {
       this.form.reset();
       this.form.enable();
       this.contentCache.clear();
       this.router.navigate(['/resenha', data.slug]);
+    }).catch(() => {
+      this.form.enable(); // re-enable form on error
+    });
+  }
+
+  private updateReview(reviewData: UpdateReviewDTO) {
+    this.reviews.updateReview(reviewData).then((data) => {
+      this.form.enable();
+      this.contentCache.clear();
+      this.router.navigate(['/resenha', data.slug]);
+    }).catch(() => {
+      this.form.enable(); // re-enable form on error
     });
   }
 

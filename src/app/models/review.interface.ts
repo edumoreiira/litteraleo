@@ -9,13 +9,17 @@ export interface ReviewForm {
   categories: FormControl<string[]>;
 }
 
-export interface CreateReviewDTO {
-  title: string;
-  content: string;
-  rating: number;
-  book_id: number;
-  category_ids: string[];
+export interface UpdateReviewDTO {
+  id: string;
+  title?: string;
+  content?: string;
+  rating?: number;
+  book_id?: number;
+  category_ids?: string[];
 }
+export type CreateReviewDTO = Required<Omit<UpdateReviewDTO, 'id'>>;
+
+export type updateReviewDTO = Pick<Review, 'id'> & Partial<Pick<Review, 'title' | 'content' | 'rating'>>;
 
 export interface CreateReviewResponseDTO {
   id: string;
@@ -42,6 +46,7 @@ export interface Review {
     avatar_url: string;
   }
   book: {
+    id: number;
     title: string;
     author: string;
     cover_image_url: string;
@@ -70,13 +75,13 @@ export interface ReviewSearchParams {
 }
 
 export interface ReviewCategory {
-  "id": string;
-  "name": string;
+  id: string;
+  name: string;
 }
 
 
 export interface Book {
-  id: string;
+  id: number;
   title: string;
   author: string;
   cover_image_url: string;

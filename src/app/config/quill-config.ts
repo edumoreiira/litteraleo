@@ -29,7 +29,7 @@ export const EDITOR_MODULES = {
       registerImageTitleBlot: true,
       allowCompressor: true,
       compressorOptions: {
-        jpegQuality: 0.9, 
+        jpegQuality: 1, 
         maxWidth: 1000
       }
     },

@@ -8,11 +8,23 @@ export const routes: Routes = [
         { path: '', component: HomeComponent },
         { path: 'resenhas', loadComponent: () => import('./pages/content-feed-page/content-feed-page.component').then(m => m.ContentFeedComponent) },
         { 
-            path: 'nova-resenha', 
-            loadComponent: () => import('./pages/nova-resenha-page/nova-resenha-page.component').then(m => m.NovaResenhaComponent),
+            path: 'novo-post', 
+            loadComponent: () => import('./pages/novo-post-page/novo-post-page.component').then(m => m.NovoPostComponent),
             canMatch: [roleGuard],
             data: { roles: ['writer', 'admin'] }
-         },
+        },
+        {
+            path: 'editar-post/:slug',
+            loadComponent: () => import('./pages/edit-post-page/edit-post-page.component').then(m => m.EditPostPageComponent),
+            canMatch: [roleGuard],
+            data: { roles: ['writer', 'admin'], contentType: 'post' }
+        },
+        {
+            path: 'editar-resenha/:slug',
+            loadComponent: () => import('./pages/edit-post-page/edit-post-page.component').then(m => m.EditPostPageComponent),
+            canMatch: [roleGuard],
+            data: { roles: ['writer', 'admin'], contentType: 'review' }
+        },
         { 
             path: 'resenha/:slug', 
             loadComponent: () => import('./pages/content-page/content-page.component').then(m => m.contentPageComponent),

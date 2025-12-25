@@ -12,6 +12,8 @@ export interface CreatePostDTO {
   author_id: string;
 }
 
+export type UpdatePostDTO = Pick<Post, 'id'> & Partial<Pick<Post, 'title' | 'content'>>;
+
 export interface CreatePostResponse {
   title: string;
   content: string;

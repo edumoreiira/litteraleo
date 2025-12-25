@@ -1,11 +1,11 @@
 import { CommonModule } from "@angular/common";
-import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
+import { ChangeDetectionStrategy, Component, effect, inject, input } from "@angular/core";
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 import { ButtonComponent } from "app/components/base/Button/button.component";
 import { InputComponent } from "app/components/base/input/input.component";
 import { EDITOR_MODULES } from "app/config/quill-config";
-import { PostForm } from "app/models/post.interface";
+import { Post, PostForm, UpdatePostDTO } from "app/models/post.interface";
 import { ContentCacheService } from "app/services/platform/content-cache.service";
 import { PostService } from "app/services/posts/post.service";
 import { QuillModule } from "ngx-quill";
@@ -27,7 +27,7 @@ import { QuillModule } from "ngx-quill";
       <div class="flex justify-end mt-4 gap-2">
         <button app-button size="base" class="font-medium" variant="text" type="button"
         (click)="onPreview()">Pré Visualizar</button>
-        <button app-button size="base" type="submit" [disabled]="this.form.invalid">Publicar</button>
+        <button app-button size="base" type="submit" [disabled]="this.form.invalid">{{ mode() === 'create' ? 'Publicar' : 'Editar' }}</button>
       </div>
     </form>
   `,
@@ -37,9 +37,12 @@ import { QuillModule } from "ngx-quill";
 })
 export class PostEditorComponent {
   private fb = inject(FormBuilder);
-  private post = inject(PostService);
+  private postService = inject(PostService);
   private router = inject(Router);
   private contentCache = inject(ContentCacheService);
+  // 
+  mode = input<'create' | 'edit'>('create');
+  post = input<Post | null>(null);
 
   form: FormGroup<PostForm> = this.fb.group({
     title: ['', [Validators.required]],
@@ -48,23 +51,58 @@ export class PostEditorComponent {
 
   editorModules = EDITOR_MODULES; // imported from quill-config.ts
 
+  constructor(){
+    effect(() => {
+      if (this.mode() === 'edit' && this.post()) {
+        this.form.controls.title.setValue(this.post()!.title);
+        this.form.controls.content.setValue(this.post()!.content);
+      }
+    })
+  }
+
   protected submitPost() {
     if (this.form.valid) {
       const postFormValues = this.form.value as { title: string; content: string };
       this.form.disable(); // prevent multiple submissions
-      this.post.createPost(postFormValues).then(({data, error}) => {
-        if (data) {
-          this.form.reset();
-          this.form.enable();
-          this.contentCache.clear();
-          this.router.navigate(['/post', data.slug]);
+      if(this.mode() === 'create') {
+        this.createPost(postFormValues);
+      } else if(this.mode() === 'edit' && this.post()) {
+        const updateValues: UpdatePostDTO = {
+          id: this.post()!.id,
+          ...postFormValues
         }
-      })
+        this.updatePost(updateValues);
+      }
     }
   }
 
-  onPreview() {
+  private createPost(postValues: { title: string; content: string }) {
+    this.postService.createPost(postValues).then(({data, error}) => {
+      if (data) {
+        this.contentCache.clear();
+        this.router.navigate(['/post', data.slug]);
+      }
+      if (error) {
+        this.form.enable(); // re-enable form on error
+      }
+    })
+  }
 
+  private updatePost(postValues: UpdatePostDTO) {
+    this.postService.updatePost(postValues).then(({data, error}) => {
+      if (data) {
+        this.contentCache.clear();
+        this.router.navigate(['/post', data.slug]);
+      }
+      if (error) {
+        this.form.enable(); // re-enable form on error
+      }
+
+    })
+  }
+
+  onPreview() {
+    
   }
 
   

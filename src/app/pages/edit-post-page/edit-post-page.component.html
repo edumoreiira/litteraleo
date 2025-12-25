@@ -7,9 +7,12 @@
       <ng-container *ngTemplateOutlet="errorPost"></ng-container>
     }
     @case('loaded') {
-      <article app-post
-      [postData]="content()!.post!">
-      </article>
+      <section class="page-container--xs py-20">
+        <app-post-editor
+        [mode]="'edit'"
+        [post]="content().post!"
+        />
+      </section>
     }
   }
 } @else if(contentType() === 'review') {
@@ -21,9 +24,12 @@
       <ng-container *ngTemplateOutlet="errorReview"></ng-container>
     }
     @case('loaded') {
-      <article app-review
-      [reviewData]="content()!.review!">
-      </article>
+      <section class="page-container--xs py-20">
+        <app-review-editor
+        [mode]="'edit'"
+        [review]="content().review!"
+        />
+      </section>
     }
   }
 }

@@ -1,6 +1,6 @@
 import { inject, Injectable } from "@angular/core";
 import { SupabaseService } from "../supabase/supabase.service";
-import { CreatePostDTO, CreatePostResponse, LikeResponse, Post } from "app/models/post.interface";
+import { CreatePostDTO, CreatePostResponse, LikeResponse, Post, UpdatePostDTO } from "app/models/post.interface";
 import { ToastService } from "../ui/toast.service";
 import { AuthService } from "../auth/auth.service";
 
@@ -80,5 +80,32 @@ export class PostService {
       });
     }
     return true;
+  }
+
+  async updatePost(post: UpdatePostDTO) {
+    const { data, error } = await this.supabase
+      .from('posts')
+      .update({
+        title: post.title,
+        content: post.content
+      })
+      .eq('id', post.id)
+      .select()
+      .single();
+
+    if(error) {
+      this.toast.create({
+        message: 'Erro ao atualizar o post. ',
+        variant: 'error'
+      });
+      console.error('Erro ao atualizar o post:', error);
+    }
+    if(data) {
+      this.toast.create({
+        message: 'Post atualizado com sucesso!',
+        variant: 'success'
+      });
+    }
+    return { data: data as CreatePostResponse, error };
   }
 }

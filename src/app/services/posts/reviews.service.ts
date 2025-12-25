@@ -3,7 +3,7 @@ import { SupabaseService } from '../supabase/supabase.service';
 import { AuthService } from '../auth/auth.service';
 import { ToastService } from '../ui/toast.service';
 import { PostgrestError } from '@supabase/supabase-js';
-import { Book, BooksAndCategories, CreateReviewDTO, CreateReviewResponseDTO, PaginatedReviews, Review, ReviewCategory, ReviewSearchParams } from 'app/models/review.interface';
+import { Book, BooksAndCategories, CreateReviewDTO, CreateReviewResponseDTO, PaginatedReviews, Review, ReviewCategory, ReviewSearchParams, UpdateReviewDTO } from 'app/models/review.interface';
 import { LikeResponse } from 'app/models/post.interface';
 
 @Injectable({
@@ -143,6 +143,33 @@ export class ReviewsService {
     }
   }
 
+  async updateReview(review: UpdateReviewDTO) { 
+    const { data, error } = await this.supabase
+    .rpc('update_review', {
+      p_review_id: review.id,
+      p_title: review.title,
+      p_content: review.content,
+      p_rating: review.rating,
+      p_book_id: review.book_id,
+      p_category_ids: review.category_ids
+    });
+    if(error) {
+      this.toast.create({
+        message: 'Erro ao atualizar a resenha. ',
+        variant: 'error'
+      });
+      console.error('Erro ao atualizar a resenha:', error);
+      throw error;
+    }
+    if(data) {
+      this.toast.create({
+        message: 'Resenha atualizada com sucesso!',
+        variant: 'success'
+      });
+    }
+    return data as Review;
+  }
+
   // --- BOOKS ---
 
   public async createBook(bookData: Partial<Book>, bookCover: File)
@@ -276,7 +303,6 @@ export class ReviewsService {
       if (bookCover && oldCoverUrl) {
         const oldPath = this.extractPathFromUrl(oldCoverUrl);
         if (oldPath) {
-          console.log('Deletando imagem antiga:', oldPath);
           // Não precisamos de 'await' aqui se não quisermos travar a UI, 
           // pode ser "fire and forget", mas await é mais seguro para debug.
           await this.supabase.storage
@@ -340,7 +366,6 @@ export class ReviewsService {
         const path = this.extractPathFromUrl(book.cover_image_url);
         
         if (path) {
-          console.log('Removendo imagem associada:', path);
           const { error: storageError } = await this.supabase.storage
             .from('book-covers')
             .remove([path]);

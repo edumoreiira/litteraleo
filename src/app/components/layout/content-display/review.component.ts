@@ -77,6 +77,7 @@ import { QuillModule } from 'ngx-quill';
             </button>
             <app-edit-content-dropdown *appHasRole="['admin', 'writer']"
             (delete)="onDelete()"
+            (edit)="onEdit()"
             />
           </div>
         </div>
@@ -155,5 +156,9 @@ export class ReviewComponent {
         });
       }
     });
+  }
+
+  protected onEdit() {
+    this.router.navigate(['/editar-resenha', this.reviewData().slug]);
   }
 }

@@ -47,6 +47,7 @@ import { QuillModule } from 'ngx-quill';
             </button>
             <app-edit-content-dropdown *appHasRole="['admin', 'writer']"
             (delete)="onDelete()"
+            (edit)="onEdit()"
             />
           </div>
         </div>
@@ -98,6 +99,10 @@ export class PostComponent {
         });
       }
     });
+  }
+
+  protected onEdit() {
+    this.router.navigate(['/editar-post', this.postData().slug]);
   }
   
 

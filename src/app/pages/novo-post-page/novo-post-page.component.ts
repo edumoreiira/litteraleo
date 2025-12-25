@@ -9,12 +9,12 @@ import { FormsModule } from "@angular/forms";
 import { PostEditorComponent } from 'app/components/layout/content-editor/post-editor.component';
 
 @Component({
-  selector: 'app-nova-resenha',
-  templateUrl: './nova-resenha-page.component.html',
+  selector: 'app-novo-post',
+  templateUrl: './novo-post-page.component.html',
   imports: [ReviewEditorComponent, ButtonComponent, NgClass, EmButtonToggleGroupComponent, EmButtonToggleDirective,
     EmButtonToggleAnimationDirective, FormsModule, PostEditorComponent]
 })
-export class NovaResenhaComponent {
+export class NovoPostComponent {
   state = signal<'edit' | 'preview'>('edit');
   title = signal('');
   content = signal('');

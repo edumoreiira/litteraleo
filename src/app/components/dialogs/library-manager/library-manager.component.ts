@@ -46,7 +46,6 @@ export class LibraryManagerComponent {
 
   private syncLibraryData = effect(() => {
     this.loadLibraryData();
-    console.log('Library data synced');
   })
 
 
@@ -57,7 +56,7 @@ export class LibraryManagerComponent {
 
   protected updateBookDialog() {
     if (!this.library().books.selectedId) return;
-    const selectedBook = this.library().books.data.find(book => book.id === this.library().books.selectedId);
+    const selectedBook = this.library().books.data.find(book => book.id.toString() === this.library().books.selectedId);
     if (!selectedBook) return;
     const modalRef = this.modal.open(ManageBookFormComponent, 
       { 
@@ -72,7 +71,7 @@ export class LibraryManagerComponent {
   }
 
   protected onDeleteBook() {
-    const bookTitle = this.library().books.data.find(book => book.id === this.library().books.selectedId)?.title ?? 'unknown';
+    const bookTitle = this.library().books.data.find(book => book.id.toString() === this.library().books.selectedId)?.title ?? 'unknown';
     this.dialog.openConfirmationDialog(
       {
         title: 'Confirmar exclusão',
@@ -120,7 +119,7 @@ export class LibraryManagerComponent {
   private populateLibrary(data: BooksAndCategories) {
     const newLibraryData: LibraryData = {
       books: {
-        comboboxOptions: data.books.map(book => ({ label: book.title, value: book.id })),
+        comboboxOptions: data.books.map(book => ({ label: book.title, value: book.id.toString() })),
         data: data.books,
         selectedId: null
       },

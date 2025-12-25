@@ -7,7 +7,7 @@ import { ReviewsService } from 'app/services/posts/reviews.service';
 import { ToastService } from 'app/services/ui/toast.service';
 
 export interface BookFormData {
-  id?: string;
+  id?: number;
   title: string;
   author: string;
   publication_year: number;
@@ -15,7 +15,7 @@ export interface BookFormData {
 }
 
 export interface BookForm {
-  id: FormControl<string | null>;
+  id: FormControl<number | null>;
   title: FormControl<string | null>;
   author: FormControl<string | null>;
   publication_year: FormControl<number | null>;
@@ -43,7 +43,7 @@ export class ManageBookFormComponent {
   onBookManage = output<void>();
 
   bookForm: FormGroup<BookForm> = this.fb.group({
-    id: [''],
+    id: [null as number | null],
     title: ['', [Validators.required]],
     author: ['', [Validators.required]],
     publication_year: [null as number | null, [Validators.required, Validators.min(1)]],
@@ -89,7 +89,6 @@ export class ManageBookFormComponent {
           this.coverImageFile = undefined;
           this.bookHoverUrl.set('');
           this.onBookManage.emit();
-          console.log('book created',data);
         }
       });
     }
