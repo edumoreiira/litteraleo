@@ -1,13 +1,12 @@
 import { Component } from '@angular/core';
 import { SOCIALS } from 'app/constants/app.constants';
-import { TitleDirective } from 'app/directives/ui/title.directive';
 
 @Component({
   selector: 'footer[app-footer]',
   host: {
     class: 'py-8 px-12 sm:px-16 lg:px-20 text-primary-500 flex flex-col sm:flex-row justify-between items-center sm:gap-6 gap-4 border-t border-border/40 flex-wrap mt-auto'
   },
-  imports: [TitleDirective],
+  imports: [],
   templateUrl: './footer.component.html',
 })
 export class FooterComponent {

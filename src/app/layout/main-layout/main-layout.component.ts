@@ -6,7 +6,7 @@ import { FooterComponent } from 'app/components/layout/footer/footer.component';
 @Component({
   selector: 'app-main-layout',
   host: {
-    class: 'flex flex-col h-full'
+    class: 'flex flex-col flex-grow'
   },
   imports: [RouterOutlet, NavbarComponent, FooterComponent],
   templateUrl: './main-layout.component.html',
