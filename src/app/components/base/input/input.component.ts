@@ -1,37 +1,59 @@
-import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ElementRef, forwardRef, HostListener, inject, input, OnDestroy, OnInit, signal, viewChild } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, ElementRef, forwardRef, inject, input, OnDestroy, OnInit, signal, viewChild } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
-type InputTypes = 'text' | 'email' | 'password' | 'number' | 'tel' | 'url';
+type InputTypes = 'text' | 'email' | 'password' | 'number' | 'tel' | 'url' | 'textarea';
 @Component({
   selector: 'app-input',
-  imports: [NgClass],
+  imports: [],
   host: {
     class: 'inline-block'
   },
   template: `
     <label
     class="font-medium leading-none mb-2 block" 
-    [ngClass]="size() === 'sm' ? 'text-sm' : size() === 'lg' ? 'text-lg' : 'text-base'"
+    [class.text-sm]="size() === 'sm'"
+    [class.text-base]="size() === 'base'"
+    [class.text-lg]="size() === 'lg'"
     [for]="identifier()"> 
       {{ label() }}
     </label>
-    <input 
-    [attr.aria-invalid]="invalid() ? 'true' : 'false'"
-    class="w-full px-3 py-1.5 border border-input rounded-lg outline-none placeholder:text-muted-fg text-fg shadow-xs
-    focus-visible:ring-[3px] focus-visible:border-ring focus-visible:ring-ring/20 transition-all
-    disabled:cursor-not-allowed disabled:opacity-50
-    aria-invalid:border-destructive focus-visible:aria-invalid:ring-destructive/20"
-    [ngClass]="size() === 'sm' ? 'text-sm' : size() === 'lg' ? 'text-lg' : 'text-base'"
-    #input 
-    [id]="identifier()"
-    [type]="type()"
-    [value]="value()"
-    [disabled]="disabled()"
-    [placeholder]="placeholder()"
-    (blur)="onBlur()"
-    (input)="onInput($event)">
-
+    @if (type() === 'textarea') {
+      <textarea
+      [attr.aria-invalid]="invalid() ? 'true' : 'false'"
+      class="w-full px-3 py-1.5 border border-input rounded-lg outline-none placeholder:text-muted-fg text-fg shadow-xs
+      focus-visible:ring-[3px] focus-visible:border-ring focus-visible:ring-ring/20 transition-[outline,border,color,opacity,box-shadow]
+      disabled:cursor-not-allowed disabled:opacity-50
+      aria-invalid:border-destructive focus-visible:aria-invalid:ring-destructive/20 resize-y min-h-[80px]"
+      [class.text-sm]="size() === 'sm'"
+      [class.text-base]="size() === 'base'"
+      [class.text-lg]="size() === 'lg'"
+      #input
+      [id]="identifier()"
+      [value]="value()"
+      [disabled]="disabled()"
+      [placeholder]="placeholder()"
+      [rows]="rows()"
+      (blur)="onBlur()"
+      (input)="onInput($event)"></textarea>
+    } @else {
+      <input
+      [attr.aria-invalid]="invalid() ? 'true' : 'false'"
+      class="w-full px-3 py-1.5 border border-input rounded-lg outline-none placeholder:text-muted-fg text-fg shadow-xs
+      focus-visible:ring-[3px] focus-visible:border-ring focus-visible:ring-ring/20 transition-all
+      disabled:cursor-not-allowed disabled:opacity-50
+      aria-invalid:border-destructive focus-visible:aria-invalid:ring-destructive/20"
+      [class.text-sm]="size() === 'sm'"
+      [class.text-base]="size() === 'base'"
+      [class.text-lg]="size() === 'lg'"
+      #input
+      [id]="identifier()"
+      [type]="type()"
+      [value]="value()"
+      [disabled]="disabled()"
+      [placeholder]="placeholder()"
+      (blur)="onBlur()"
+      (input)="onInput($event)">
+    }
   `,
   providers: [
     {
@@ -51,11 +73,12 @@ export class InputComponent implements ControlValueAccessor, OnInit, OnDestroy{
   type = input<InputTypes>('text');
   size = input<'sm' | 'base' | 'lg'>('sm');
   disabled = input<boolean>(false);
+  rows = input<number>(4);
   // signals
   value = signal('');
   invalid = signal(false);
   // viewchild
-  inputRef = viewChild.required('input', { read: ElementRef });
+  inputRef = viewChild('input', { read: ElementRef });
   // 
   private mutationObserver!: MutationObserver
 
@@ -96,7 +119,7 @@ export class InputComponent implements ControlValueAccessor, OnInit, OnDestroy{
   }
   setDisabledState?(isDisabled: boolean): void {
     if (this.inputRef()) {
-      this.inputRef().nativeElement.disabled = isDisabled;
+      this.inputRef()!.nativeElement.disabled = isDisabled;
     }
   }
 
