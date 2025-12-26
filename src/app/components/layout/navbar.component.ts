@@ -11,7 +11,7 @@ import { createAnimation } from 'app/angular-animations/animations.utils';
 @Component({
   selector: 'app-navbar',
   host: {
-    class: 'sticky block top-[0] left-[0] w-full z-50 page-container py-4 flex items-center justify-between transition-colors border-b relative',
+    class: 'sticky block top-[0] left-[0] w-full z-50 py-4 transition-colors border-b relative',
     '[attr.style]': '"transform: translateY(-" + navbarOffset() + "px);"',
     '[class.bg-extreme]': 'sm() ? scrollFromTop() > 60 : scrollFromTop() > 30',
     '[class.border-b-border/40]': 'scrollFromTop() > 20',

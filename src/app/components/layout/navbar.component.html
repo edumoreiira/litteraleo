@@ -1,5 +1,4 @@
-<!-- <div class="sticky top-[0] left-[0] w-full z-50 bg-white px-12 py-4 flex items-center justify-between"
-    [ngStyle]="{'transform': 'translateY(' + -navbarOffset() + 'px)'}"> -->
+<div class="page-container flex items-center justify-between">
     <div class="flex items-center gap-4 shrink-0">
         <a routerLink="/" 
         class="block text-3xl font-bold text-primary font-[Abril_Fatface]">litteraleo</a>
@@ -9,7 +8,7 @@
     @if((navBarOpen() && !sm()) || sm()) {
         <div @popNavbar
         class="sm:flex-row flex-col items-center gap-3 lg:gap-4
-        sm:static absolute right-[3px] shadow-xs sm:shadow-none top-full px-16 sm:px-0 py-8 sm:py-0 rounded-2xl
+        sm:static absolute right-[3px] shadow-xs sm:shadow-none top-full px-10 sm:px-0 py-8 sm:py-0 rounded-2xl
         border border-border bg-white sm:border-0 sm:bg-transparent">
             <ul class="flex sm:flex-row flex-col items-center gap-8 text-muted-fg font-medium mx-auto">
                 <li><a class="hover:text-primary transition-colors" 
@@ -37,8 +36,9 @@
             (logout)="logout()"
             />
         }
-        <i class="fi fi-br-menu-burger text-3xl text-muted-fg sm:hidden! cursor-pointer"
+        <i class="fi fi-rr-menu-burger text-2xl text-muted-fg sm:hidden! cursor-pointer"
         (click)="toggleNavBar()"></i>
     </div>
+</div>
 
 <!-- </div> -->
