@@ -3,7 +3,7 @@
   <app-infinite-scrolling
   speed="50"
   >
-    @for(video of youtubeMockData; track $index) {
+    @for(video of youtubeVideos(); track $index) {
       <div 
       #item
       class="flex flex-col gap-2 shrink-0 w-[180px] sm:w-[270px] aspect-video bg-primary-200 rounded-3xl overflow-hidden relative group cursor-pointer"
@@ -13,7 +13,7 @@
         <i class="fi fi-sr-play flex text-primary-50"></i>
       </div>
       <img class="w-full h-full"
-      [src]="video.urlImg" alt="">
+      [src]="video.urlImage" alt="Thumbnail do vídeo do youtube {{ video.title }}">
       </div>
     }
   </app-infinite-scrolling>

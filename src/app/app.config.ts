@@ -9,6 +9,7 @@ import { provideEnvironmentNgxMask } from 'ngx-mask';
 import { QuillModule } from 'ngx-quill';
 import { registerLocaleData } from '@angular/common';
 import localePt from '@angular/common/locales/pt';
+import { provideHttpClient, withFetch } from '@angular/common/http';
 
 registerLocaleData(localePt);
 
@@ -26,6 +27,7 @@ export const appConfig: ApplicationConfig = {
     provideZonelessChangeDetection(),
     provideAppInitializer(() => inject(AuthService).load()),
     provideEnvironmentNgxMask(),
+    provideHttpClient(withFetch()),
     importProvidersFrom(QuillModule.forRoot()),
     { provide: LOCALE_ID, useValue: 'pt' }
   ]

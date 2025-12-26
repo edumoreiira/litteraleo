@@ -4,6 +4,7 @@ import {
   isMainModule,
   writeResponseToNodeResponse,
 } from '@angular/ssr/node';
+import { YoutubeServerService } from 'app/services/server/youtube.service.server';
 import express from 'express';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -11,9 +12,19 @@ import { fileURLToPath } from 'node:url';
 const serverDistFolder = dirname(fileURLToPath(import.meta.url));
 const browserDistFolder = resolve(serverDistFolder, '../browser');
 
-const app = express();
+export const app = express();
 const angularApp = new AngularNodeAppEngine();
 
+const youtubeService = new YoutubeServerService();
+
+app.get('/api/youtube', async (req, res) => {
+  try {
+    const videos = await youtubeService.getLastVideos(5);
+    res.json(videos);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch videos' });
+  }
+})
 /**
  * Example Express Rest API endpoints can be defined here.
  * Uncomment and define endpoints as necessary.
