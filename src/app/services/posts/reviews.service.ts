@@ -79,6 +79,7 @@ export class ReviewsService {
      .rpc('create_review', {
        p_title: dto.title,
        p_content: dto.content,
+       p_description: dto.description ?? null,
        p_rating: dto.rating,
        p_book_id: dto.book_id,
        p_author_id: this.auth.$userId(),
@@ -149,6 +150,7 @@ export class ReviewsService {
       p_review_id: review.id,
       p_title: review.title,
       p_content: review.content,
+      p_description: review.description ?? null,
       p_rating: review.rating,
       p_book_id: review.book_id,
       p_category_ids: review.category_ids

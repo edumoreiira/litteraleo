@@ -87,7 +87,8 @@ export class PostService {
       .from('posts')
       .update({
         title: post.title,
-        content: post.content
+        content: post.content,
+        description: post.description
       })
       .eq('id', post.id)
       .select()

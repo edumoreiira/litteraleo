@@ -20,7 +20,7 @@ export class UserProfileService {
   }
 
   async refreshCurrentUserProfile() {
-    const userId = (await this.supabase.auth.getUser()).data.user?.id;
+    const userId = (await this.supabase.auth.getSession()).data.session?.user.id
     if (!userId) return;
     const { data, error } = await this.getUserProfile(userId);
     if (error) {

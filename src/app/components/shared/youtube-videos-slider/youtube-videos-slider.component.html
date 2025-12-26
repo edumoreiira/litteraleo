@@ -26,6 +26,7 @@
       @for(video of latestVideos().value(); track $index) {
         <a
         target="_blank"
+        [attr.aria-label]="'Assistir vídeo ' + video.title + ' no YouTube'"
         rel="noopener noreferrer"
         [href]="video.urlVideo"
         #item

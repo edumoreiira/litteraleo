@@ -4,6 +4,7 @@ import { ComboboxOption } from "app/components/shared/combobox/combobox.componen
 export interface ReviewForm {
   title: FormControl<string>;
   content: FormControl<string>;
+  description: FormControl<string | null>;
   book: FormControl<number | null>;
   rating: FormControl<number | null>;
   categories: FormControl<string[]>;
@@ -13,11 +14,12 @@ export interface UpdateReviewDTO {
   id: string;
   title?: string;
   content?: string;
+  description?: string;
   rating?: number;
   book_id?: number;
   category_ids?: string[];
 }
-export type CreateReviewDTO = Required<Omit<UpdateReviewDTO, 'id'>>;
+export type CreateReviewDTO = Required<Omit<UpdateReviewDTO, 'id' | 'description'>> & { description?: string };
 
 export type updateReviewDTO = Pick<Review, 'id'> & Partial<Pick<Review, 'title' | 'content' | 'rating'>>;
 
@@ -26,6 +28,7 @@ export interface CreateReviewResponseDTO {
   book_id: number;
   author_id: string;
   title: string;
+  description: string | null;
   slug: string;
   rating: number;
   content: string;
@@ -40,6 +43,7 @@ export interface Review {
   title: string;
   rating: number;
   content: string;
+  description: string | null;
   author: {
     short_name: string;
     full_name: string;

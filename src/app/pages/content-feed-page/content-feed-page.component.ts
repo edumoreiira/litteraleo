@@ -23,6 +23,7 @@ interface FeedCard {
   title: string;
   slug: string;
   content: string;
+  description: string | null;
   created_at: Date;
   author: {
     short_name: string;
@@ -285,6 +286,7 @@ export class ContentFeedComponent implements OnInit {
         title: post.title,
         slug: post.slug,
         content: post.content,
+        description: post.description,
         created_at: post.created_at,
         author: post.author
       })),
@@ -294,6 +296,7 @@ export class ContentFeedComponent implements OnInit {
         title: review.title,
         slug: review.slug,
         content: review.content,
+        description: review.description,
         created_at: review.created_at,
         author: review.author,
         rating: review.rating,

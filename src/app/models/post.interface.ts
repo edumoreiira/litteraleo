@@ -3,16 +3,18 @@ import { ComboboxOption } from "app/components/shared/combobox/combobox.componen
 
 export interface PostForm {
   title: FormControl<string | null>;
+  description: FormControl<string | null>;
   content: FormControl<string | null>;
 }
 
 export interface CreatePostDTO {
   title: string;
   content: string;
+  description?: string;
   author_id: string;
 }
 
-export type UpdatePostDTO = Pick<Post, 'id'> & Partial<Pick<Post, 'title' | 'content'>>;
+export type UpdatePostDTO = Pick<Post, 'id'> & Partial<Pick<Post, 'title' | 'content' | 'description'>>;
 
 export interface CreatePostResponse {
   title: string;
@@ -28,6 +30,7 @@ export interface Post {
   id: string;
   title: string;
   content: string;
+  description: string | null;
   likes_count: number;
   slug: string;
   is_liked?: boolean;

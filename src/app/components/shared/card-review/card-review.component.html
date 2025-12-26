@@ -55,7 +55,7 @@
           @if(type() === 'review'){
             <span class="block text-sm text-muted-fg opacity-70">de {{ book_author() }}</span>
           }
-          <p appText size="sm" class="my-2 line-clamp-2">{{ content() | stripHtml }}</p>
+          <p appText size="sm" class="my-2 line-clamp-2">{{ description() || 'Sem descrição' }}</p>
         </div>
         <div class="flex items-center gap-2 justify-between">
           <div class="flex items-center gap-2">

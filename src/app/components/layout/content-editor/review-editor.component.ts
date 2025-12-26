@@ -24,6 +24,9 @@ import { ContentCacheService } from 'app/services/platform/content-cache.service
         <app-input size="base" class="w-full" label="Título" identifier="post-editor-title"
         placeholder="Sherlock Holmes e o Mistério da Biblioteca"
         formControlName="title" />
+        <app-input size="base" label="Descrição" identifier="post-editor-description" type="textarea" [rows]="2"
+        formControlName="description" placeholder="Escreva uma breve descrição da sua resenha..."
+        />
         <div class="flex gap-4 justify-between flex-wrap">
           <div class="flex gap-2 min-w-0">
             <button app-button appCombobox size="base" type="button" variant="combobox" class="font-light rounded-lg min-w-0"
@@ -49,7 +52,6 @@ import { ContentCacheService } from 'app/services/platform/content-cache.service
               </button>
             }
         </div>
-
         <div class="flex flex-wrap items-center gap-2">
           <app-rate class="xs:gap-2 gap-1 xs:text-2xl text-xl text-primary"
           [canVote]="true" [maxStars]="5" [rating]="form.get('rating')?.value || 0"
@@ -98,6 +100,7 @@ export class ReviewEditorComponent {
   form: FormGroup<ReviewForm> = this.fb.group({
     title: this.fb.control('', { nonNullable: true, validators: [Validators.required] }),
     content: this.fb.control('', { nonNullable: true, validators: [Validators.required] }),
+    description: this.fb.control('',),
     categories: this.fb.control<string[]>([], { nonNullable: true, validators: [Validators.required] }),
     rating: this.fb.control<number | null>(3.5, { validators: [Validators.min(0), Validators.max(5)] }),
     book: this.fb.control<number | null>(null, { nonNullable: true, validators: [Validators.required] }),
@@ -120,6 +123,7 @@ export class ReviewEditorComponent {
       this.form.patchValue({
         title: reviewData.title,
         content: reviewData.content,
+        description: reviewData.description,
         rating: reviewData.rating,
         book: reviewData.book.id,
         categories: reviewData.categories.map(c => c.id)
@@ -186,7 +190,7 @@ export class ReviewEditorComponent {
       return;
     }
 
-    const { title, content, categories, rating, book } = this.form.value;
+    const { title, content, description, categories, rating, book } = this.form.value;
 
     this.form.disable(); // prevent multiple submissions
 
@@ -194,6 +198,7 @@ export class ReviewEditorComponent {
       const reviewData: CreateReviewDTO = {
         title: title!,
         content: content!,
+        description: description ?? undefined,
         rating: rating!,
         book_id: book!,
         category_ids: categories!,
@@ -204,6 +209,7 @@ export class ReviewEditorComponent {
         id: this.review()!.id,
         title: title!,
         content: content!,
+        description: description ?? undefined,
         rating: rating!,
         book_id: book!,
         category_ids: categories!,

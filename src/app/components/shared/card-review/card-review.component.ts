@@ -19,6 +19,7 @@ export class CardReviewComponent {
   tags = input<ReviewCategory[]>([]);
   title = input<string>('');
   content = input<string>('');
+  description = input<string | null>('');
   rating = input<number>(0);
   created_at = input<Date>();
   book_author = input<string>('');

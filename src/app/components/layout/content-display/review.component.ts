@@ -9,7 +9,6 @@ import { Review } from 'app/models/review.interface';
 import { SafeHtmlPipe } from 'app/pipes/safe-html.pipe';
 import { AuthService } from 'app/services/auth/auth.service';
 import { ContentCacheService } from 'app/services/platform/content-cache.service';
-import { ContentService } from 'app/services/posts/content.service';
 import { ReviewsService } from 'app/services/posts/reviews.service';
 import { AuthModalService } from 'app/services/ui/auth-modal.service';
 import { DialogService } from 'app/services/ui/dialog.service';
@@ -52,16 +51,21 @@ import { QuillModule } from 'ngx-quill';
     </div>
     <div class="flex flex-col gap-8 min-w-0 w-full">
       <div class="flex flex-col gap-6">
-        <h1 appTitle size="lg">{{ review.title }}</h1>
-        <div class="flex items-center justify-between">
-          <div class="flex items-center gap-3">
-            <div class="flex items-center gap-2">
+        <div class="flex flex-col gap-2">
+          <h1 appTitle size="lg">{{ review.title }}</h1>
+          @if(review.description) {
+            <p class="font-serif italic text-muted-fg text-lg sm:text-xl">{{ review.description }}</p>
+          }
+        </div>
+        <div class="flex items-center justify-between gap-4 flex-wrap">
+          <div class="flex items-center gap-3 flex-wrap">
+            <div class="flex items-center gap-2 flex-wrap">
               <img class="h-8 w-8 rounded-full"
               src="/icons/default_user.jpg" alt="Foto do usuário">
               <span class="text-sm text-muted-fg">{{ review.author.full_name }}</span>
             </div>
-            <div class="h-1 w-1 bg-muted-fg rounded-full"></div>
-            <span class="text-sm text-muted-fg">{{ review.created_at | date: "dd MMM y" }}</span>
+            <div class="h-1 w-1 bg-muted-fg rounded-full shrink-0"></div>
+            <span class="text-sm text-muted-fg min-w-fit">{{ review.created_at | date: "dd MMM y" }}</span>
           </div>
           <div class="flex items-center gap-4">
             <button class="flex items-center gap-1 hover:text-primary cursor-pointer"
@@ -120,7 +124,8 @@ import { QuillModule } from 'ngx-quill';
   styles: `
   .no-padding { padding: 0 !important; }
   `,
-  imports: [QuillModule, CommonModule, SafeHtmlPipe, RateComponent, TitleDirective, HasRoleDirective, EditContentDropdownComponent]
+  imports: [QuillModule, CommonModule, SafeHtmlPipe, RateComponent, TitleDirective, HasRoleDirective,
+     EditContentDropdownComponent]
 })
 export class ReviewComponent {
   private reviewService = inject(ReviewsService);

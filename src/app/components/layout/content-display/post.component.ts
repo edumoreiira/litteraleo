@@ -22,15 +22,20 @@ import { QuillModule } from 'ngx-quill';
   @let post = postData();
     <div class="flex flex-col gap-8 min-w-0 w-full">
       <div class="flex flex-col gap-6">
-        <h1 appTitle size="lg">{{ post.title }}</h1>
-        <div class="flex items-center justify-between">
-          <div class="flex items-center gap-3">
-            <div class="flex items-center gap-2">
+        <div class="flex flex-col gap-2">
+          <h1 appTitle size="lg">{{ post.title }}</h1>
+          @if(post.description) {
+            <p class="font-serif italic text-muted-fg text-lg sm:text-xl">{{ post.description }}</p>
+          }
+        </div>
+        <div class="flex items-center justify-between flex-wrap gap-2">
+          <div class="flex items-center gap-3 flex-wrap">
+            <div class="flex items-center gap-2 flex-wrap">
               <img class="h-8 w-8 rounded-full"
               src="/icons/default_user.jpg" alt="Foto do usuário">
               <span class="text-sm text-muted-fg">{{ post.author.full_name }}</span>
             </div>
-            <div class="h-1 w-1 bg-muted-fg rounded-full"></div>
+            <div class="h-1 w-1 bg-muted-fg shrink-0 rounded-full"></div>
             <span class="text-sm text-muted-fg">{{ post.created_at | date: "dd MMM y" }}</span>
           </div>
           <div class="flex items-center gap-4">

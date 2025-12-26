@@ -14,9 +14,14 @@ import { QuillModule } from "ngx-quill";
   selector: 'app-post-editor',
   template: `
     <form [formGroup]="form" (ngSubmit)="submitPost()">
-      <app-input size="base" class="w-full" label="Título" identifier="post-editor-title"
-      placeholder="Meu texto incrível"
-      formControlName="title" />
+      <div class="flex flex-col gap-4">
+        <app-input size="base" class="w-full" label="Título" identifier="post-editor-title"
+        placeholder="Meu texto incrível"
+        formControlName="title" />
+        <app-input size="base" label="Descrição" identifier="post-editor-description" type="textarea" [rows]="2"
+        formControlName="description" placeholder="Escreva uma breve descrição do seu texto..."
+        />
+      </div>
       <quill-editor
         class="w-full h-[400px] my-4 rounded"
         [theme]="'snow'"
@@ -46,7 +51,8 @@ export class PostEditorComponent {
 
   form: FormGroup<PostForm> = this.fb.group({
     title: ['', [Validators.required]],
-    content: ['', [Validators.required]]
+    description: ['', [Validators.required]],
+    content: ['', [Validators.required]],
   })
 
   editorModules = EDITOR_MODULES; // imported from quill-config.ts
@@ -56,6 +62,7 @@ export class PostEditorComponent {
       if (this.mode() === 'edit' && this.post()) {
         this.form.controls.title.setValue(this.post()!.title);
         this.form.controls.content.setValue(this.post()!.content);
+        this.form.controls.description.setValue(this.post()!.description || '');
       }
     })
   }
