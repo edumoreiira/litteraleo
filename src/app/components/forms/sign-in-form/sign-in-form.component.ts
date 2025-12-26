@@ -4,6 +4,7 @@ import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } 
 import { ButtonComponent } from '../../base/Button/button.component';
 import { AuthService } from '../../../services/auth/auth.service';
 import { ToastService } from 'app/services/ui/toast.service';
+import { ModalComponent } from 'app/components/dialogs/base/modal/modal.component';
 interface SignInForm {
   email: FormControl<string>;
   password: FormControl<string>;
@@ -17,6 +18,7 @@ interface SignInForm {
 export class SignInFormComponent {
   private auth = inject(AuthService);
   private toast = inject(ToastService);
+  private modal = inject(ModalComponent, { optional: true });
   // 
   loginForm!: FormGroup<SignInForm>;
 
@@ -43,6 +45,7 @@ export class SignInFormComponent {
       if (res.data.session) {
         this.toast.create({ variant: 'success', message: 'Login realizado com sucesso!' });
         this.loginForm.enable();
+        this.modal?.onCloseModal.emit(); // close the modal on successful login
       }
     })
   }

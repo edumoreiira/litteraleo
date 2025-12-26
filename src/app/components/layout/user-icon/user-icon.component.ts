@@ -5,6 +5,7 @@ import { createAnimation } from 'app/angular-animations/animations.utils';
 import { PopOverDirective } from 'app/directives/utils/pop-over.directive';
 import { A11yModule } from '@angular/cdk/a11y';
 import { AuthService } from 'app/services/auth/auth.service';
+import { UserProfileService } from 'app/services/api/user-profile/user-profile.service';
 
 @Component({
   selector: 'app-user-icon',
@@ -48,11 +49,11 @@ import { AuthService } from 'app/services/auth/auth.service';
   animations: [createAnimation('popConfig', { transform: 'scale(.95)', duration: '100ms' })],
 })
 export class UserIconComponent {
-  private authService = inject(AuthService);
+  private userProfile = inject(UserProfileService);
   // 
   readonly imgUrl = input('');
   logout = output<void>();
 
-  protected readonly username = computed(() => this.authService.$currentUser()?.user_metadata.full_name)
-  protected readonly email = computed(() => this.authService.$currentUser()?.email);
+  protected readonly username = computed(() => this.userProfile.userProfile$()?.full_name);
+  protected readonly email = computed(() => this.userProfile.userProfile$()?.email);
 }

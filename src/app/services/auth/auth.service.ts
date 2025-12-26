@@ -3,6 +3,7 @@ import { SupabaseService } from "../supabase/supabase.service";
 import { CurrentUser, CustomJwtPayload, JwtUserRoles } from "app/models/user.interface";
 import { jwtDecode } from 'jwt-decode'
 import { Session } from "@supabase/supabase-js";
+import { UserProfileService } from "../api/user-profile/user-profile.service";
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +11,8 @@ import { Session } from "@supabase/supabase-js";
 export class AuthService {
   private supabase = inject(SupabaseService).client;
   private supabaseUrl = inject(SupabaseService).url;
+  private userProfileService = inject(UserProfileService);
+  // 
   private currentUser = signal<CurrentUser | undefined>(undefined);
   private role = signal<JwtUserRoles>('anon');
   $userId = computed(() => this.currentUser()?.id);
@@ -44,6 +47,7 @@ export class AuthService {
     if (!data.session) return;
     const user = data.session.user;
     this.currentUser.set(user as unknown as CurrentUser);
+    this.userProfileService.refreshCurrentUserProfile();
     this.handleAuthStateChange();
   }
 
@@ -53,9 +57,11 @@ export class AuthService {
       const user = session?.user;
       this.currentUser.set(user! as unknown as CurrentUser);
       this.refreshRole(session!);
+      this.userProfileService.refreshCurrentUserProfile();
     } else if (event === 'SIGNED_OUT') {
       this.currentUser.set(undefined);
       this.refreshRole(undefined);
+      this.userProfileService.clearUserProfile();
     }
 })
   }

@@ -7,6 +7,7 @@ import { UserIconComponent } from "./user-icon/user-icon.component";
 import { HasRoleDirective } from 'app/directives/auth/has-role.directive';
 import { AuthModalService } from 'app/services/ui/auth-modal.service';
 import { createAnimation } from 'app/angular-animations/animations.utils';
+import { UserProfileService } from 'app/services/api/user-profile/user-profile.service';
 
 @Component({
   selector: 'app-navbar',
@@ -27,11 +28,12 @@ export class NavbarComponent implements AfterViewInit {
   private el = inject(ElementRef);
   private auth = inject(AuthService);
   private authModal = inject(AuthModalService);
+  private userProfileService = inject(UserProfileService);
   // 
   protected isUserLoggedIn = computed(() => !!this.auth.$currentUser());
   //
   protected navBarOpen = signal(false);
-  protected user = computed(() => this.auth.$currentUser());
+  protected userProfile = computed(() => this.userProfileService.userProfile$());
   protected navbarOffset = signal(0);
   protected lastScrollTop = 0;
   protected maxOffset = 90;

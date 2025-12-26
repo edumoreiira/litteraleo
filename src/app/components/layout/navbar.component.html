@@ -32,7 +32,7 @@
                 (click)="openSignUpModal()">Registrar</button>
             </div>
         } @else {
-            <app-user-icon [imgUrl]="user()?.user_metadata?.avatar_url || '' " 
+            <app-user-icon [imgUrl]="userProfile()?.avatar_url || '' " 
             (logout)="logout()"
             />
         }

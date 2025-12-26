@@ -19,6 +19,14 @@ export interface CurrentUser {
   }
 }
 
+export interface UserProfile {
+  id: string;
+  full_name: string;
+  short_name: string;
+  avatar_url: string;
+  email: string;
+}
+
 export interface CustomJwtPayload {
   user_role: JwtUserRoles;
 }
