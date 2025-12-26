@@ -5,6 +5,7 @@ import { XMLParser } from 'fast-xml-parser';
 export interface VideoInfo {
   title: string;
   urlImage: string;
+  urlVideo: string;
 }
 
 export class YoutubeServerService {
@@ -38,6 +39,9 @@ export class YoutubeServerService {
         // extracting video id to construct the high-res image url
         const videoId = entry['yt:videoId'];
 
+        // constructing the video url to watch on youtube
+        const urlVideo = `https://www.youtube.com/watch?v=${videoId}`;
+
         // accessing thumbnail from media:group -> media:thumbnail
         // note: fast-xml-parser handles namespaced tags like 'media:group'
         // usually as 'media:group' key in the object
@@ -54,6 +58,7 @@ export class YoutubeServerService {
         return {
           title,
           urlImage,
+          urlVideo,
         };
       });
 
