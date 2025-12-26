@@ -4,33 +4,6 @@
 @use '@angular/cdk/overlay-prebuilt.css';
 @use '@enzedonline/quill-blot-formatter2/dist/css/quill-blot-formatter2.css';
 
-
 :root {
-  font-size: 14.5px;
-  @media screen and (min-width: 420px) {
-    font-size: 15px;
-  }
-  @media screen and (min-width: 768px) { 
-    font-size: 15.5px;
-  }
-  @media screen and (min-width: 1024px) {
-    font-size: 16px;
-  }
-}
-
-html {
-  scrollbar-width: thin;
-}
-
-body {
-    background-color: var(--color-bg);
-    color: var(--color-fg);
-    min-height: 100dvh;
-    display: flex;
-    flex-direction: column;
-}
-
-
-.fi {
-  display: flex;
+  color-scheme: light;
 }

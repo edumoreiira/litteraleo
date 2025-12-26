@@ -9,6 +9,9 @@
   @media screen and (min-width: 1024px) {
     font-size: 16px;
   }
+  @media screen and (min-width: 1792px) {
+    font-size: 16.5px;
+  }
 }
 
 html {
@@ -18,11 +21,17 @@ html {
 body {
     background-color: var(--color-bg);
     color: var(--color-fg);
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
 }
 
 .page-container {
   width: min(1200px, 100% - 3rem);
   margin: 0 auto;
+  @media screen and (min-width: 1792px) {
+    width: min(1400px, 100% - 3.5rem);
+  }
   &--sm {
     width: min(1000px, 100% - 3rem);
     margin: 0 auto;
@@ -41,4 +50,8 @@ body {
 
 .hide-scrollbar::-webkit-scrollbar {
   display: none; /* Chrome, Safari e Edge (baseado em Chromium) */
+}
+
+.fi {
+  display: flex;
 }

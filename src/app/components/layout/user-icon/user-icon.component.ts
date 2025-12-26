@@ -1,9 +1,10 @@
 import { CdkOverlayOrigin } from '@angular/cdk/overlay';
-import { Component, input, OnInit, output } from '@angular/core';
+import { Component, computed, inject, input, OnInit, output } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { createAnimation } from 'app/angular-animations/animations.utils';
 import { PopOverDirective } from 'app/directives/utils/pop-over.directive';
 import { A11yModule } from '@angular/cdk/a11y';
+import { AuthService } from 'app/services/auth/auth.service';
 
 @Component({
   selector: 'app-user-icon',
@@ -19,8 +20,8 @@ import { A11yModule } from '@angular/cdk/a11y';
       aria-label="Menu de opções do usuário"
       class="bg-popover rounded border border-border shadow-xs min-w-[13rem] max-w-[15rem] overflow-hidden overflow-ellipsis">
         <li role="none" class="p-4 pb-2">
-          <span class="block leading-none">Jeckwilke</span>
-          <span class="text-sm text-muted-fg leading-none wrap-anywhere">eduuardomoreira9&#64;gmail.com</span>
+          <span class="block leading-none">{{ username() }}</span>
+          <span class="text-sm text-muted-fg leading-none wrap-anywhere">{{ email() }}</span>
         </li>
         <li role="none" class="h-px bg-border"></li>
         <li role="none" class="p-1 pb-0">
@@ -47,6 +48,11 @@ import { A11yModule } from '@angular/cdk/a11y';
   animations: [createAnimation('popConfig', { transform: 'scale(.95)', duration: '100ms' })],
 })
 export class UserIconComponent {
+  private authService = inject(AuthService);
+  // 
   readonly imgUrl = input('');
   logout = output<void>();
+
+  protected readonly username = computed(() => this.authService.$currentUser()?.user_metadata.full_name)
+  protected readonly email = computed(() => this.authService.$currentUser()?.email);
 }

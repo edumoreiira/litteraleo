@@ -42,10 +42,13 @@ export class SignUpFormComponent {
       if(res.error) {
         this.toast.create({ variant: 'error', message: res.error.message || 'Erro ao tentar criar conta' });
         this.signUpForm.enable();
-        return;
       } else if(res.data.session) {
         this.signUpForm.enable();
         this.toast.create({ variant: 'success', message: 'Cadastro realizado com sucesso!' });
+      } else if(res.data.user) {
+        this.signUpForm.enable();
+        this.signUpForm.reset();
+        this.toast.create({ variant: 'success', message: 'Cadastro realizado! Verifique seu e-mail para confirmar a conta.', duration: 8000 });
       }
       
     })
