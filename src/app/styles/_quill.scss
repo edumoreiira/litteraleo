@@ -1,0 +1,27 @@
+/* 1. Set the content for the dropdown items (the list when you open it) */
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="10px"]::before { content: '10px'; }
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="12px"]::before { content: '12px'; }
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="14px"]::before { content: '14px'; }
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="16px"]::before { content: '16px'; }
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="20px"]::before { content: '20px'; }
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="24px"]::before { content: '24px'; }
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="32px"]::before { content: '32px'; }
+
+/* 2. Set the content for the selected label (what you see when the list is closed) */
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="10px"]::before { content: '10px'; }
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="12px"]::before { content: '12px'; }
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="14px"]::before { content: '14px'; }
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="16px"]::before { content: '16px'; }
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="20px"]::before { content: '20px'; }
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="24px"]::before { content: '24px'; }
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="32px"]::before { content: '32px'; }
+
+/* 3. Handle the Default/Normal State */
+/* This ensures that if no size is selected, it says "Normal" or "16px" (whatever you prefer) */
+.ql-snow .ql-picker.ql-size .ql-picker-label::before {
+  content: '14px';
+}
+
+.ql-editor {
+  font-size: 14px;
+}
