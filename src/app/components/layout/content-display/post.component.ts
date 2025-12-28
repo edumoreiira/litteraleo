@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, input, model, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { EditContentDropdownComponent } from 'app/components/shared/edit-content-dropdown/edit-content-dropdown.component';
+import { NewCommentComponent } from 'app/components/shared/new-comment/new-comment.component';
 import { HasRoleDirective } from 'app/directives/auth/has-role.directive';
 import { TitleDirective } from 'app/directives/ui/title.directive';
 import { Post } from 'app/models/post.interface';
@@ -63,12 +64,16 @@ import { QuillModule } from 'ngx-quill';
       <div class="ql-snow">
         <div class="ql-editor no-padding" [innerHTML]="post.content | safeHtml"></div>
       </div>
+
+      <app-new-comment/>
     </div>
   `,
   styles: `
   .no-padding { padding: 0 !important; }
   `,
-  imports: [QuillModule, CommonModule, SafeHtmlPipe, TitleDirective, EditContentDropdownComponent, HasRoleDirective]
+  imports: [QuillModule, CommonModule, SafeHtmlPipe, TitleDirective, EditContentDropdownComponent, HasRoleDirective,
+    NewCommentComponent
+  ]
 })
 export class PostComponent {
   private postService = inject(PostService);

@@ -6,17 +6,19 @@ type InputTypes = 'text' | 'email' | 'password' | 'number' | 'tel' | 'url' | 'te
   selector: 'app-input',
   imports: [],
   host: {
-    class: 'inline-block'
+    class: 'flex flex-col'
   },
   template: `
-    <label
-    class="font-medium leading-none mb-2 block" 
-    [class.text-sm]="size() === 'sm'"
-    [class.text-base]="size() === 'base'"
-    [class.text-lg]="size() === 'lg'"
-    [for]="identifier()"> 
-      {{ label() }}
-    </label>
+    @if(label()) {
+      <label
+      class="font-medium leading-none mb-2 block" 
+      [class.text-sm]="size() === 'sm'"
+      [class.text-base]="size() === 'base'"
+      [class.text-lg]="size() === 'lg'"
+      [for]="identifier()"> 
+        {{ label() }}
+      </label>
+    }
     @if (type() === 'textarea') {
       <textarea
       [attr.aria-invalid]="invalid() ? 'true' : 'false'"
@@ -68,7 +70,7 @@ export class InputComponent implements ControlValueAccessor, OnInit, OnDestroy{
   el = inject(ElementRef);
   // inputs
   identifier = input.required<string>();
-  label = input.required<string>();
+  label = input<string>('');
   placeholder = input<string>('');
   type = input<InputTypes>('text');
   size = input<'sm' | 'base' | 'lg'>('sm');

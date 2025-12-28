@@ -28,7 +28,6 @@ export class UserProfileService {
       return;
     }
     this.userProfile.set(data);
-    console.log(this.userProfile$());
   }
 
   clearUserProfile() {

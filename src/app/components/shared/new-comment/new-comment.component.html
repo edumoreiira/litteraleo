@@ -1,0 +1,28 @@
+<div class="rounded flex flex-col gap-6 p-4 bg-muted">
+  @if(type() === 'comment') {
+    <div class="flex items-center gap-4 flex-wrap">
+      <div class="rounded-full size-10.5 bg-primary-100 overflow-hidden">
+        <img [src]="profile()?.avatar_url || '/icons/default_user.jpg'" alt="Avatar" class="w-full h-full object-cover"/>
+      </div>
+      <span class="text-base">{{ profile()?.full_name || 'Usuário' }}</span>
+    </div>
+  }
+  <app-input #input
+  class="bg-white rounded"
+  [disabled]="disabled()"
+  type="textarea"
+  [rows]="0"
+  identifier="comment-textarea"
+  placeholder="Deixe sua opinião aqui..."
+  
+  ></app-input>
+  <button class="self-end px-4 rounded-lg flex items-center gap-2"
+  [disabled]="input.value().length <= 0 || disabled()"
+  app-button (click)="onSubmit(input.value())">
+  <i class="fi text-xs"
+  [class.fi-sr-comment-dots]="type() === 'comment'"
+  [class.fi-sr-auto-reply]="type() === 'reply'"
+  ></i>
+  {{ type() === 'comment' ? 'Comentar' : 'Responder' }}
+</button>
+</div>
