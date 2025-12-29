@@ -58,6 +58,7 @@ export class AuthService {
       this.currentUser.set(user! as unknown as CurrentUser);
       this.refreshRole(session!);
       this.userProfileService.refreshCurrentUserProfile();
+      console.log("Usuário assinado:", user);
     } else if (event === 'SIGNED_OUT') {
       this.currentUser.set(undefined);
       this.refreshRole(undefined);

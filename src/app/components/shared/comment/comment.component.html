@@ -1,0 +1,89 @@
+<div class="flex flex-col gap-3 md:gap-4">
+  <!-- First column: Image and author info header -->
+  <div class="flex items-center gap-3 justify-between">
+    <div class="flex items-center gap-3 flex-wrap">
+      <div class="size-9.5 rounded-full bg-primary/10 flex items-center justify-center overflow-hidden shrink-0">
+        <img 
+          [src]="data().author.avatar_url || '/icons/default_user.jpg'" 
+          [alt]="'Avatar de ' + data().author.full_name"
+          class="w-full h-full object-cover"
+        />
+      </div>
+  
+      <div class="flex flex-col">
+        <div class="flex items-center gap-2">
+          <h4 class="font-semibold text-sm">
+            {{ data().author.full_name }}
+          </h4>
+          @if(data().is_post_author) {
+            <span class="text-xs font-medium font-serif lowercase italic px-2.5 py-0.5 bg-primary text-primary-50 rounded-lg">
+              Autor
+            </span>
+          }
+          @if (data().updated_at) {
+            <span class="text-xs text-muted-fg/70 italic font-serif">
+              (edited)
+            </span>
+          }
+        </div>
+        <span class="text-xs text-muted-fg" [title]="data().created_at | date:'short'">
+          {{ data().created_at | timeAgo }}
+        </span>
+      </div>
+    </div>
+    <app-edit-content-dropdown/>
+  </div>
+
+  <!-- Second column: Text and control buttons -->
+  <div class="flex flex-col gap-3">
+    <div class="text-sm text-accent-fg break-words">
+      {{ data().content }}
+    </div>
+
+    @if(isRoot()) {
+      <div class="flex flex-wrap items-center gap-3">
+        
+        @if (isRoot()) {
+          @let count = repliesCount();
+          @if (count > 0) {
+            <button app-button variant="text" class="flex items-center gap-1 font-normal"
+              (click)="loadReplies()"
+              [disabled]="isLoadingReplies()">
+              <i class="fi fi-rr-comments"></i>
+              {{ count }} {{ count === 1 ? 'Resposta' : 'Respostas' }}
+              @if (isLoadingReplies()) {
+                ...
+              }
+            </button>
+          }
+        }
+        <button app-button 
+          variant="link"
+          size="sm"
+          (click)="toggleReplyForm()"
+          class="px-0! flex items-center gap-1"
+        >
+        <i class="fi fi-br-pen-field"></i>
+          {{ showReplyForm() ? 'Cancelar' : 'Responder' }}
+        </button>
+      </div>
+    }
+
+    @if (showReplyForm()) {
+      <div class="mt-4">
+        <app-new-comment
+          [type]="'reply'"
+          (comment)="onReplySubmit($event)"
+        />
+      </div>
+    }
+    <!-- display replies -->
+    @if (isRoot() && repliesList().length > 0 && showReplies()) {
+      <div class="mt-4 pl-0 md:pl-4 border-l-3 border-border/50 flex flex-col">
+        @for (reply of repliesList(); track reply.id) {
+          <app-comment [data]="reply" class="ml-6 py-6 border-t border-border/50 first:border-0" />
+        }
+      </div>
+    }
+  </div>
+</div>

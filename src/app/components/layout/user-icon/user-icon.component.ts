@@ -50,10 +50,11 @@ import { UserProfileService } from 'app/services/api/user-profile/user-profile.s
 })
 export class UserIconComponent {
   private userProfile = inject(UserProfileService);
+  private authService = inject(AuthService);
   // 
   readonly imgUrl = input('');
   logout = output<void>();
 
   protected readonly username = computed(() => this.userProfile.userProfile$()?.full_name);
-  protected readonly email = computed(() => this.userProfile.userProfile$()?.email);
+  protected readonly email = computed(() => this.authService.$currentUser()?.email);
 }

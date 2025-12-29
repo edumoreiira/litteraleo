@@ -7,6 +7,9 @@ import { AuthModalService } from 'app/services/ui/auth-modal.service';
 
 @Component({
   selector: 'app-new-comment',
+  host: {
+    class: 'rounded flex flex-col gap-6 p-4 bg-muted'
+  },
   templateUrl: './new-comment.component.html',
   imports: [InputComponent, ButtonComponent],
 })

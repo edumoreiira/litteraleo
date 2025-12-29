@@ -1,19 +1,32 @@
 // models/comment.interface.ts
+export interface CommentAuthor {
+  id: string;
+  full_name: string;
+  avatar_url: string;
+  short_name: string;
+}
 
-import { UserProfile } from "./user.interface";
+export type CommentReply = Omit<iComment, 'replies_count' | 'replies'> & { parent_id: string };
 
-export interface Comment {
+export interface CommentResponse {
+  data: iComment[];
+  meta: {
+    total: number;
+    page: number;
+    limit: number;
+    total_pages: number;
+  };
+}
+
+export interface iComment {
   id: string;
   content: string;
-  created_at: string;
-  updated_at?: string;
-  parent_id?: string;
-  
-  // Relação Deep Select
-  author: UserProfile;
-  // Propriedades auxiliares para a UI (não vêm do Insert)
+  created_at: Date;
+  updated_at: Date | null;
+  is_post_author: boolean;
+  author: CommentAuthor;
   replies_count: number; 
-  replies?: Comment[];
+  replies?: CommentReply[];
 }
 
 export interface CreateCommentDTO {

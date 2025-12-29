@@ -1,14 +1,17 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, input, model, OnInit } from '@angular/core';
+import { Component, effect, inject, input, model, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
+import { CommentComponent } from 'app/components/shared/comment/comment.component';
 import { EditContentDropdownComponent } from 'app/components/shared/edit-content-dropdown/edit-content-dropdown.component';
 import { NewCommentComponent } from 'app/components/shared/new-comment/new-comment.component';
 import { HasRoleDirective } from 'app/directives/auth/has-role.directive';
 import { TitleDirective } from 'app/directives/ui/title.directive';
+import { iComment } from 'app/models/comments.interface';
 import { Post } from 'app/models/post.interface';
 import { SafeHtmlPipe } from 'app/pipes/safe-html.pipe';
 import { AuthService } from 'app/services/auth/auth.service';
 import { ContentCacheService } from 'app/services/platform/content-cache.service';
+import { CommentsService } from 'app/services/posts/comments.service';
 import { PostService } from 'app/services/posts/post.service';
 import { AuthModalService } from 'app/services/ui/auth-modal.service';
 import { DialogService } from 'app/services/ui/dialog.service';
@@ -33,7 +36,7 @@ import { QuillModule } from 'ngx-quill';
           <div class="flex items-center gap-3 flex-wrap">
             <div class="flex items-center gap-2 flex-wrap">
               <img class="h-8 w-8 rounded-full"
-              src="/icons/default_user.jpg" alt="Foto do usuário">
+              [src]="post.author.avatar_url || '/icons/default_user.jpg'" [alt]="'Foto do usuário ' + post.author.full_name">
               <span class="text-sm text-muted-fg">{{ post.author.full_name }}</span>
             </div>
             <div class="h-1 w-1 bg-muted-fg shrink-0 rounded-full"></div>
@@ -64,15 +67,20 @@ import { QuillModule } from 'ngx-quill';
       <div class="ql-snow">
         <div class="ql-editor no-padding" [innerHTML]="post.content | safeHtml"></div>
       </div>
-
       <app-new-comment/>
+      <div class="flex flex-col">
+        @for(comment of comments(); track comment.id) {
+          <app-comment class="border-t border-border py-6"
+          [data]="comment"></app-comment>
+        }
+      </div>
     </div>
   `,
   styles: `
   .no-padding { padding: 0 !important; }
   `,
   imports: [QuillModule, CommonModule, SafeHtmlPipe, TitleDirective, EditContentDropdownComponent, HasRoleDirective,
-    NewCommentComponent
+    NewCommentComponent, CommentComponent
   ]
 })
 export class PostComponent {
@@ -82,9 +90,19 @@ export class PostComponent {
   private router = inject(Router);
   private authModal = inject(AuthModalService);
   private auth = inject(AuthService);
+  private commentService = inject(CommentsService);
   // 
   postData = model.required<Post>();
+  comments = signal<iComment[]>([]);
 
+  constructor() {
+    effect(() => {
+      this.commentService.getComments('post', this.postData().id, 1).then(comments => {
+        console.log('Comentários do post:', comments);
+        this.comments.set(comments.data);
+      });
+    });
+  }
   protected handleLike() {
     const isUserLoggedIn = !!this.auth.isLoggedIn();
     if(!isUserLoggedIn) {

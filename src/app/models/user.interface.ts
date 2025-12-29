@@ -24,7 +24,6 @@ export interface UserProfile {
   full_name: string;
   short_name: string;
   avatar_url: string;
-  email: string;
 }
 
 export interface CustomJwtPayload {
