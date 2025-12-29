@@ -6,11 +6,14 @@ import { NewCommentComponent } from '../new-comment/new-comment.component';
 import { CommentsService } from 'app/services/posts/comments.service';
 import { TimeAgoPipe } from 'app/pipes/time-ago.pipe';
 import { EditContentDropdownComponent } from "../edit-content-dropdown/edit-content-dropdown.component";
+import { HasRoleDirective } from 'app/directives/auth/has-role.directive';
 
 @Component({
   selector: 'app-comment',
   templateUrl: './comment.component.html',
-  imports: [ButtonComponent, NewCommentComponent, DatePipe, TimeAgoPipe, EditContentDropdownComponent],
+  imports: [ButtonComponent, NewCommentComponent, DatePipe, TimeAgoPipe, EditContentDropdownComponent,
+    HasRoleDirective
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CommentComponent {

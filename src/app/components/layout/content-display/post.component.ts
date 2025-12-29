@@ -16,6 +16,7 @@ import { PostService } from 'app/services/posts/post.service';
 import { AuthModalService } from 'app/services/ui/auth-modal.service';
 import { DialogService } from 'app/services/ui/dialog.service';
 import { QuillModule } from 'ngx-quill';
+import { CommentsSectionComponent } from "../comments-section/comments-section.component";
 
 @Component({
   selector: 'article[app-post]',
@@ -68,20 +69,16 @@ import { QuillModule } from 'ngx-quill';
         <div class="ql-editor no-padding" [innerHTML]="post.content | safeHtml"></div>
       </div>
       <app-new-comment/>
-      <div class="flex flex-col">
-        @for(comment of comments(); track comment.id) {
-          <app-comment class="border-t border-border py-6"
-          [data]="comment"></app-comment>
-        }
-      </div>
+      <app-comments-section
+      [postId]="post.id"
+      />
     </div>
   `,
   styles: `
   .no-padding { padding: 0 !important; }
   `,
   imports: [QuillModule, CommonModule, SafeHtmlPipe, TitleDirective, EditContentDropdownComponent, HasRoleDirective,
-    NewCommentComponent, CommentComponent
-  ]
+    NewCommentComponent, CommentsSectionComponent]
 })
 export class PostComponent {
   private postService = inject(PostService);
@@ -90,19 +87,8 @@ export class PostComponent {
   private router = inject(Router);
   private authModal = inject(AuthModalService);
   private auth = inject(AuthService);
-  private commentService = inject(CommentsService);
   // 
   postData = model.required<Post>();
-  comments = signal<iComment[]>([]);
-
-  constructor() {
-    effect(() => {
-      this.commentService.getComments('post', this.postData().id, 1).then(comments => {
-        console.log('Comentários do post:', comments);
-        this.comments.set(comments.data);
-      });
-    });
-  }
   protected handleLike() {
     const isUserLoggedIn = !!this.auth.isLoggedIn();
     if(!isUserLoggedIn) {
