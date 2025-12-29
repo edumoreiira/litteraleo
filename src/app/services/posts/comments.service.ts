@@ -32,13 +32,13 @@ export class CommentsService {
         author:author_id ( id, full_name, avatar_url, short_name )
       `)
       .eq('parent_id', parentId)
-      .order('created_at', { ascending: true }); // Respostas em ordem cronológica
+      .order('created_at', { ascending: false });
       
     if (error) throw error;
     return data as unknown as CommentReply[];
   }
 
-  async createComment(payload: CreateCommentDTO): Promise<CommentReply> {
+  async createComment(payload: CreateCommentDTO): Promise<CommentReply | iComment> {
     const userId = this.auth.$userId();
     if (!userId) throw new Error('Usuário não autenticado');
 
@@ -71,8 +71,12 @@ export class CommentsService {
       .single();
 
     if (error) throw error;
-
-    return data as unknown as CommentReply;
+    
+    if (payload.parent_id) {
+      return data as unknown as CommentReply;
+    } else {
+      return data as unknown as iComment;
+    }
   }
 
   // =================================================================

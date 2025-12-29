@@ -1,7 +1,10 @@
-import { Component, ChangeDetectionStrategy, ElementRef, effect, inject, input, OnDestroy, OnInit, signal, viewChild } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ElementRef, effect, inject, input, OnDestroy, OnInit, signal, viewChild, computed } from '@angular/core';
 import { CommentComponent } from 'app/components/shared/comment/comment.component';
 import { iComment } from 'app/models/comments.interface';
 import { CommentsService } from 'app/services/posts/comments.service';
+import { NewCommentComponent } from "app/components/shared/new-comment/new-comment.component";
+import { TitleDirective } from 'app/directives/ui/title.directive';
+import { ToastService } from 'app/services/ui/toast.service';
 
 @Component({
   selector: 'app-comments-section',
@@ -9,6 +12,10 @@ import { CommentsService } from 'app/services/posts/comments.service';
     class: 'flex flex-col'
   },
   template: `
+    <app-new-comment class="mb-12"
+    [disabled]="commentFormLoading()"
+    (comment)="onNewComment($event)"/>
+    <h2 appTitle class="mb-4">{{ totalComments() > 0 ? totalComments() : 'nenhum' }} {{ totalComments() <= 1 ? 'Comentário' : 'Comentários' }}</h2>
   @for(comment of comments(); track comment.id) {
     <app-comment [type]="type()" class="py-5 border-b border-border/50 last-of-type:border-0"
     [data]="comment"
@@ -25,20 +32,24 @@ import { CommentsService } from 'app/services/posts/comments.service';
   <!-- Sentinel element observed to load more when visible -->
   <div #sentinel class="h-1"></div>
   `,
-  imports: [CommentComponent],
+  imports: [CommentComponent, NewCommentComponent, TitleDirective],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CommentsSectionComponent implements OnInit, OnDestroy {
   private commentService = inject(CommentsService);
+  private toast = inject(ToastService);
   // 
   postId = input.required<string>();
   type = input.required<'post' | 'review'>();
   protected comments = signal<iComment[]>([]);
   protected isLoading = signal<boolean>(false);
+  protected commentFormLoading = signal<boolean>(false);
   protected meta = signal<{ total: number; page: number; limit: number; total_pages: number } | null>(null);
+  protected totalComments = computed(() => this.meta()?.total || 0);
   protected page = signal<number>(1);
   private observer: IntersectionObserver | null = null;
   private readonly sentinel = viewChild<ElementRef>('sentinel');
+  private readonly newCommentComponent = viewChild.required(NewCommentComponent);
 
 
   constructor() {
@@ -107,5 +118,32 @@ export class CommentsSectionComponent implements OnInit, OnDestroy {
     if (this.isLoading()) return;
     const nextPage = this.page() + 1;
     this.fetchPage(nextPage);
+  }
+
+  protected onNewComment(content: string) {
+    this.commentFormLoading.set(true);
+    this.commentService.createComment({
+      content,
+      post_id: this.postId()
+    })
+    .then(newComment => {
+      this.comments.update(list => [newComment as iComment, ...list]);
+      this.meta.update(current => {
+        if (!current) return current;
+        return {
+          ...current,
+          total: current.total + 1
+        }
+      });
+      this.newCommentComponent().clear();
+    })
+    .catch(error => {
+      this.toast.create({ variant: 'error', message: 'Erro ao enviar comentário. Tente novamente mais tarde.' });
+      console.error('Erro ao criar comentário:', error);
+    })
+    .finally(() => {
+      this.commentFormLoading.set(false);
+    })
+    
   }
 }

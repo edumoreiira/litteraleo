@@ -8,6 +8,7 @@ import { TimeAgoPipe } from 'app/pipes/time-ago.pipe';
 import { EditContentDropdownComponent } from "../edit-content-dropdown/edit-content-dropdown.component";
 import { HasRoleDirective } from 'app/directives/auth/has-role.directive';
 import { createAnimation } from 'app/angular-animations/animations.utils';
+import { ToastService } from 'app/services/ui/toast.service';
 
 @Component({
   selector: 'app-comment',
@@ -15,11 +16,13 @@ import { createAnimation } from 'app/angular-animations/animations.utils';
   imports: [ButtonComponent, NewCommentComponent, DatePipe, TimeAgoPipe, EditContentDropdownComponent,
     HasRoleDirective
   ],
-  animations: [createAnimation('popComments', { animateY: true, transform: 'scale(.95)'})],
+  animations: [createAnimation('popItem', { animateY: true, transform: 'scale(.95)'})],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CommentComponent {
   private commentService = inject(CommentsService);
+  private toast = inject(ToastService);
+  // 
   data = input.required<iComment | CommentReply>(); // receives either a root comment or a reply
   type = input.required<'post' | 'review'>();
   resourceId = input.required<string>();
@@ -42,6 +45,7 @@ export class CommentComponent {
   });
 
   showReplyForm = signal(false);
+  loadingReplyForm = signal(false);
   showReplies = signal(false);
   isLoadingReplies = signal(false);
 
@@ -61,11 +65,21 @@ export class CommentComponent {
       payload.review_id = this.resourceId();
     }
 
-    this.commentService.createComment(payload).then(newReply => {
-      this.repliesList.update(replies => [...replies, newReply]);
+    this.loadingReplyForm.set(true);
+
+    this.commentService.createComment(payload)
+    .then(newReply => {
+      this.repliesList.update(replies => [newReply as CommentReply, ...replies]);
       this.repliesCount.update(count => count + 1);
       this.showReplies.set(true);
       this.showReplyForm.set(false);
+    })
+    .catch(err => {
+      this.toast.create({ variant: 'error', message: 'Erro ao enviar resposta. Tente novamente mais tarde.' });
+      console.error('Erro ao enviar resposta:', err);
+    })
+    .finally(() => {
+      this.loadingReplyForm.set(false);
     });
   }
 

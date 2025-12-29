@@ -68,7 +68,6 @@ import { CommentsSectionComponent } from "../comments-section/comments-section.c
       <div class="ql-snow">
         <div class="ql-editor no-padding" [innerHTML]="post.content | safeHtml"></div>
       </div>
-      <app-new-comment/>
       <app-comments-section
       type="post"
       [postId]="post.id"
@@ -79,7 +78,7 @@ import { CommentsSectionComponent } from "../comments-section/comments-section.c
   .no-padding { padding: 0 !important; }
   `,
   imports: [QuillModule, CommonModule, SafeHtmlPipe, TitleDirective, EditContentDropdownComponent, HasRoleDirective,
-    NewCommentComponent, CommentsSectionComponent]
+  CommentsSectionComponent]
 })
 export class PostComponent {
   private postService = inject(PostService);
