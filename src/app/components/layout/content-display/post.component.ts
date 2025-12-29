@@ -70,6 +70,7 @@ import { CommentsSectionComponent } from "../comments-section/comments-section.c
       </div>
       <app-new-comment/>
       <app-comments-section
+      type="post"
       [postId]="post.id"
       />
     </div>

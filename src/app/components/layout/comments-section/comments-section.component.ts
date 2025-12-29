@@ -10,8 +10,10 @@ import { CommentsService } from 'app/services/posts/comments.service';
   },
   template: `
   @for(comment of comments(); track comment.id) {
-    <app-comment class="py-5 border-b border-border/50 last-of-type:border-0"
-    [data]="comment"></app-comment>
+    <app-comment [type]="type()" class="py-5 border-b border-border/50 last-of-type:border-0"
+    [data]="comment"
+    [resourceId]="postId()"
+    ></app-comment>
   }
 
   @if (isLoading()) {
@@ -30,6 +32,7 @@ export class CommentsSectionComponent implements OnInit, OnDestroy {
   private commentService = inject(CommentsService);
   // 
   postId = input.required<string>();
+  type = input.required<'post' | 'review'>();
   protected comments = signal<iComment[]>([]);
   protected isLoading = signal<boolean>(false);
   protected meta = signal<{ total: number; page: number; limit: number; total_pages: number } | null>(null);

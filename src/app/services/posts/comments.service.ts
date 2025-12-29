@@ -17,7 +17,7 @@ export class CommentsService {
       .rpc('get_comments', {
         [typeParam]: postId,
         p_page: page,
-        p_page_size: 10
+        p_page_size: 4
       });
 
     if (error) throw error;
@@ -38,7 +38,7 @@ export class CommentsService {
     return data as unknown as CommentReply[];
   }
 
-  async createComment(payload: CreateCommentDTO): Promise<iComment> {
+  async createComment(payload: CreateCommentDTO): Promise<CommentReply> {
     const userId = this.auth.$userId();
     if (!userId) throw new Error('Usuário não autenticado');
 
@@ -60,24 +60,19 @@ export class CommentsService {
         created_at,
         updated_at,
         parent_id,
+        is_post_author,
         author:author_id (
           id,
           full_name,
           avatar_url,
-          short_name,
-          email
+          short_name
         )
       `)
       .single();
 
     if (error) throw error;
 
-
-    return {
-      ...data,
-      replies_count: 0,
-      replies: []
-    } as unknown as iComment;
+    return data as unknown as CommentReply;
   }
 
   // =================================================================
