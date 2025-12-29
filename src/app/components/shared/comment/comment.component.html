@@ -31,7 +31,11 @@
         </span>
       </div>
     </div>
-    <app-edit-content-dropdown *appHasRole="['user', 'admin', 'writer']"/>
+    <app-edit-content-dropdown 
+    *appHasRole="['user', 'admin', 'writer']"
+    (edit)="this.toggleForm('edit')"
+    (delete)="this.onDeleteComment()"
+    />
   </div>
 
   <!-- Second column: Text and control buttons -->
@@ -60,21 +64,29 @@
         <button app-button 
           variant="link"
           size="sm"
-          (click)="toggleReplyForm()"
+          (click)="toggleForm('reply')"
           class="px-0! flex items-center gap-1"
         >
         <i class="fi fi-br-pen-field"></i>
-          {{ showReplyForm() ? 'Cancelar' : 'Responder' }}
+          {{ showForm() === 'reply' ? 'Cancelar' : 'Responder' }}
         </button>
       </div>
     }
-
-    @if (showReplyForm()) {
+    @if(showForm() !== 'none') { 
       <div class="mt-4" @popItem>
-        <app-new-comment
-          [type]="'reply'"
-          (comment)="onReplySubmit($event)"
-        />
+          @if (showForm() === 'reply') {
+          <app-new-comment
+            [type]="'reply'"
+            (comment)="onReplySubmit($event)"
+            [disabled]="loadingForm()"
+          />
+        }@else if(showForm() === 'edit') {
+          <app-new-comment
+            [type]="'edit'"
+            (comment)="onEditSubmit($event)"
+            [initialValue]="data().content"
+          />
+        }
       </div>
     }
     <!-- display replies -->
@@ -86,6 +98,7 @@
             [data]="reply" 
             [type]="type()"
             [resourceId]="resourceId()"
+            (deleted)="removeReply($event)"
             class="py-6 border-t border-border/50 first:border-0" 
           />
         }

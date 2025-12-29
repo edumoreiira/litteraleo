@@ -87,9 +87,8 @@ export class CommentsService {
       .from('comments')
       .update({ 
         content: newContent,
-        updated_at: new Date() // Opcional: Atualiza a data manual ou via trigger
       })
-      .eq('id', commentId) // A RLS vai checar se auth.uid() == author_id
+      .eq('id', commentId)
       .select(`
         id,
         content,

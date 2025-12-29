@@ -20,6 +20,7 @@ import { ToastService } from 'app/services/ui/toast.service';
     <app-comment [type]="type()" class="py-5 border-b border-border/50 last-of-type:border-0"
     [data]="comment"
     [resourceId]="postId()"
+    (deleted)="onCommentDeleted($event)"
     ></app-comment>
   }
 
@@ -145,5 +146,16 @@ export class CommentsSectionComponent implements OnInit, OnDestroy {
       this.commentFormLoading.set(false);
     })
     
+  }
+
+  protected onCommentDeleted(deletedCommentId: string) {
+    this.comments.update(comments => comments.filter(comment => comment.id !== deletedCommentId));
+    this.meta.update(current => {
+      if (!current) return current;
+      return {
+        ...current,
+        total: current.total - 1
+      };
+    });
   }
 }

@@ -18,11 +18,12 @@
   
   ></app-input>
   <button class="self-end px-4 rounded-lg flex items-center gap-2"
-  [disabled]="value().length <= 0 || disabled()"
+  [disabled]="disabledForm()"
   app-button (click)="onSubmit()">
   <i class="fi text-xs"
   [class.fi-sr-comment-dots]="type() === 'comment'"
   [class.fi-sr-auto-reply]="type() === 'reply'"
+  [class.fi-sr-pen-field]="type() === 'edit'"
   ></i>
-    {{ type() === 'comment' ? 'Comentar' : 'Responder' }}
+    {{ type() === 'comment' ? 'Comentar' : type() === 'reply' ? 'Responder' : 'Editar' }}
   </button>

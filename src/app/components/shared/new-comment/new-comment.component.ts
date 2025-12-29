@@ -14,19 +14,27 @@ import { FormsModule } from "@angular/forms";
   templateUrl: './new-comment.component.html',
   imports: [InputComponent, ButtonComponent, FormsModule],
 })
-export class NewCommentComponent {
+export class NewCommentComponent implements OnInit {
   private userProfileService = inject(UserProfileService);
   private auth = inject(AuthService);
   private authModal = inject(AuthModalService);
 
   profile = computed(() => this.userProfileService.userProfile$() );
+  initialValue = input<string>('');
   protected value = signal<string>('');
-  type = input<'comment' | 'reply'>('comment');
+  type = input<'comment' | 'reply' | 'edit'>('comment');
   disabled = input<boolean>(false);
   comment = output<string>();
 
+  disabledForm = computed(() => this.disabled() || this.value().length === 0 || this.initialValue() === this.value());
+
+  ngOnInit(): void {
+    this.value.set(this.initialValue());
+  }
 
   onSubmit() {
+    if(this.disabledForm()) return;
+    
     if(this.auth.isLoggedIn()) {
       this.comment.emit(this.value());
     } else {

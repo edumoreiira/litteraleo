@@ -23,8 +23,8 @@ export class DialogService {
       componentInputs: {
         title: data.title,
         message: data.message,
-        confirmText: data.confirmText,
-        cancelText: data.cancelText,
+        confirmText: data.confirmText ?? 'Confirmar',
+        cancelText: data.cancelText ?? 'Cancelar',
         variant: data.variant
       }
     })

@@ -1,7 +1,9 @@
 import { A11yModule } from '@angular/cdk/a11y';
-import { ChangeDetectionStrategy, Component, inject, output, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output, viewChild } from '@angular/core';
 import { createAnimation } from 'app/angular-animations/animations.utils';
 import { PopOverDirective } from "app/directives/utils/pop-over.directive";
+
+export type DropdownOption = 'edit' | 'delete';
 
 @Component({
   selector: 'app-edit-content-dropdown',
@@ -12,6 +14,9 @@ import { PopOverDirective } from "app/directives/utils/pop-over.directive";
 })
 export class EditContentDropdownComponent {
   popOver = viewChild.required(PopOverDirective);
+  
+  options = input<DropdownOption[]>(['edit', 'delete']);
+
   edit = output<void>();
   delete = output<void>();
 
