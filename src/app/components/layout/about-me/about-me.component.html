@@ -1,15 +1,23 @@
 <!-- <div class="flex lg:flex-row flex-col lg:text-start text-center items-center lg:gap-12 gap-6"> -->
   <h1 appTitle size="lg" class="lg:hidden">Sobre Mim</h1>
-  <div class="bg-primary-200 lg:size-[320px] size-[240px] rounded-4xl shrink-0 overflow-hidden">
-    <img class="h-full object-cover"
-    src="https://cdn.naturettl.com/wp-content/uploads/2019/06/27085016/black-white-wildlife-photography-2.jpg" alt="">
+  <div class="bg-primary-200 lg:size-[350px] size-[240px] rounded-4xl shrink-0 overflow-hidden">
+    <img class="h-full w-full object-center object-cover"
+    src="images/leonardo.jpg" alt="Foto de Leonardo Moreira Pinto">
   </div>
-  <div class="flex flex-col justify-center lg:gap-6 gap-4">
-    <h1 appTitle size="lg" class="lg:block hidden">Sobre Mim</h1>
-    <p class="font-semibold text-2xl">Leonardo Moreira</p>
-    <p appText size="lg">
-      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vel, quibusdam officiis quia voluptatem magnam, veritatis totam perspiciatis in, eveniet consectetur optio! Explicabo, sunt expedita? Velit quaerat possimus sunt earum temporibus ipsa ratione.
-    </p>
+  <div class="flex flex-col justify-center gap-4">
+    <h1 appTitle size="base" class="lg:block hidden">Sobre Mim</h1>
+    <p class="font-semibold text-2xl">Leonardo Moreira Pinto</p>
+    <div class="space-y-2">
+      <p appText size="base">
+        Trabalho minha leitura literária em diálogo com as ciências humanas, mas parto sempre de uma experiência primeira com o texto, mais sensível do que explicativa.
+      </p>
+      <p appText size="base">
+        O Litteraleo nasce do meu percurso de formação em Letras e do interesse por leituras que colocam em questão o que entendemos por vida, humanidade e civilização.
+      </p>
+      <p appText size="base">
+        Este é um espaço de leitura em processo, que não se orienta apenas por método, linearidade ou sentido fixo.
+      </p>
+    </div>
     <ul class="flex items-center gap-12 lg:justify-start justify-center">
       @for(social of socials; track $index) {
         <li>
