@@ -1,3 +1,44 @@
+// Helper mixin to generate quill font styles
+// key: the name in the whitelist
+// name: the font-family name in css
+// label: (optional) how it appears in the dropdown. defaults to 'name'
+@mixin quill-font($key, $name, $label: $name) {
+  // 1. Applied to the text inside the editor
+  .ql-editor .ql-font-#{$key} {
+    font-family: $name;
+  }
+
+  // 2. Applied to the dropdown label (the selected item)
+  .ql-snow .ql-picker.ql-font .ql-picker-label[data-value="#{$key}"]::before,
+  .ql-snow .ql-picker.ql-font .ql-picker-item[data-value="#{$key}"]::before {
+    content: "#{$label}";
+    font-family: $name;
+  }
+}
+
+// 2. Generate styles for each font
+// Note: We leave the 'Sans Serif' default (empty key) as is, or we can treat 'Inter' or 'Roboto' as default if you prefer.
+
+@include quill-font('abril-fatface', 'Abril Fatface', 'Abril');
+@include quill-font('geist', 'Geist');
+@include quill-font('inter', 'Inter');
+@include quill-font('lora', 'Lora');
+@include quill-font('outfit', 'Outfit');
+@include quill-font('roboto', 'Roboto');
+@include quill-font('source-serif-4', 'Source Serif 4', 'Source Serif');
+
+// Optional: Improve dropdown width if names are long
+.ql-snow .ql-picker.ql-font {
+  width: 120px !important;
+}
+
+
+
+
+
+
+
+
 /* 1. Set the content for the dropdown items (the list when you open it) */
 .ql-snow .ql-picker.ql-size .ql-picker-item[data-value="10px"]::before { content: '10px'; }
 .ql-snow .ql-picker.ql-size .ql-picker-item[data-value="12px"]::before { content: '12px'; }
@@ -19,9 +60,10 @@
 /* 3. Handle the Default/Normal State */
 /* This ensures that if no size is selected, it says "Normal" or "16px" (whatever you prefer) */
 .ql-snow .ql-picker.ql-size .ql-picker-label::before {
-  content: '14px';
+  content: '20px';
 }
 
 .ql-editor {
-  font-size: 14px;
+  font-size: 20px;
+  font-family: 'source-serif-4';
 }
