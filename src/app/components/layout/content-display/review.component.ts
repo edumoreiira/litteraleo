@@ -31,11 +31,11 @@ import { QuillModule } from 'ngx-quill';
           <app-rate [canVote]="false" [rating]="review.rating" class="text-primary gap-0.5"></app-rate>
           <span class="text-sm text-primary opacity-50">{{ review.rating || 0 }}</span>
         </div>
-        <h2 class="font-serif italic font-semibold leading-none" title="{{ review.book.title }}">{{ review.book.title }}</h2>
+        <h2 class="font-semibold leading-none" title="{{ review.book.title }}">{{ review.book.title }}</h2>
         <span class="text-sm text-muted-fg">{{ review.book.author }}</span>
         <div class="flex gap-1.5 flex-wrap mt-4 items-start">
           @for(category of review.categories; track $index) {
-            <span class="inline-block px-2 py-[.1rem] border border-zinc-300 text-zinc-500 rounded-lg text-xs font-[Lora]
+            <span class="inline-block px-2 py-[.1rem] border border-zinc-300 text-zinc-500 rounded-lg text-xs font-serif
             text-light italic">{{ category.name }}</span>
           }
         </div>
@@ -51,10 +51,10 @@ import { QuillModule } from 'ngx-quill';
     </div>
     <div class="flex flex-col gap-8 min-w-0 w-full">
       <div class="flex flex-col gap-6">
-        <div class="flex flex-col gap-2">
+        <div class="flex flex-col gap-3.5">
           <h1 appTitle size="lg">{{ review.title }}</h1>
           @if(review.description) {
-            <p class="font-serif italic text-muted-fg text-lg sm:text-xl">{{ review.description }}</p>
+            <p class="text-muted-fg text-lg sm:text-xl">{{ review.description }}</p>
           }
         </div>
         <div class="flex items-center justify-between gap-4 flex-wrap">

@@ -6,11 +6,11 @@
   variant="combobox"
   appCombobox
   [options]="library().books.comboboxOptions"
-  label="selecione um livro"
+  label="Selecione um livro"
   (updatedLabel)="bookLabel = $event"
   (activeOptions)="onBookSelect($event)"
-  class="font-medium rounded-lg min-w-0">
-    <span class="font-light">{{ bookLabel }}</span>
+  class="rounded-lg min-w-0">
+    <span>{{ bookLabel }}</span>
   </button>
   <div class="flex">
     <button class="bg-green-100/40 rounded-lg rounded-r-none text-green-600 px-3
@@ -42,11 +42,11 @@
   variant="combobox"
   appCombobox
   [options]="library().categories.comboboxOptions"
-  label="selecione uma categoria"
+  label="Selecione uma categoria"
   (updatedLabel)="categoryLabel = $event"
   (activeOptions)="onCategorySelect($event)"
-  class="font-medium rounded-lg min-w-0">
-    <span class="font-light">{{ categoryLabel }}</span>
+  class="rounded-lg min-w-0">
+    <span>{{ categoryLabel }}</span>
   </button>
   <div class="flex">
     <button class="bg-green-100/40 rounded-lg rounded-r-none text-green-600 px-3

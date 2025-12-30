@@ -22,7 +22,7 @@ type InputTypes = 'text' | 'email' | 'password' | 'number' | 'tel' | 'url' | 'te
     @if (type() === 'textarea') {
       <textarea
       [attr.aria-invalid]="invalid() ? 'true' : 'false'"
-      class="w-full px-3 py-1.5 border border-input rounded-lg outline-none placeholder:text-muted-fg text-fg shadow-xs
+      class="bg-white w-full px-3 py-1.5 border border-input rounded-lg outline-none placeholder:text-muted-fg text-fg shadow-xs
       focus-visible:ring-[3px] focus-visible:border-ring focus-visible:ring-ring/20 transition-[outline,border,color,opacity,box-shadow]
       disabled:cursor-not-allowed disabled:opacity-50
       aria-invalid:border-destructive focus-visible:aria-invalid:ring-destructive/20 resize-y min-h-[80px]"
@@ -40,7 +40,7 @@ type InputTypes = 'text' | 'email' | 'password' | 'number' | 'tel' | 'url' | 'te
     } @else {
       <input
       [attr.aria-invalid]="invalid() ? 'true' : 'false'"
-      class="w-full px-3 py-1.5 border border-input rounded-lg outline-none placeholder:text-muted-fg text-fg shadow-xs
+      class="bg-white w-full px-3 py-1.5 border border-input rounded-lg outline-none placeholder:text-muted-fg text-fg shadow-xs
       focus-visible:ring-[3px] focus-visible:border-ring focus-visible:ring-ring/20 transition-all
       disabled:cursor-not-allowed disabled:opacity-50
       aria-invalid:border-destructive focus-visible:aria-invalid:ring-destructive/20"

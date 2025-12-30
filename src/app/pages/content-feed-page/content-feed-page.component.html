@@ -8,7 +8,7 @@
       placeholder="Pesquisar pelo título, autor ou palavra-chave..."/>
       <em-button-toggle-group
       name="content-feed-filter"
-      class="font-serif italic font-light shadow-xs shrink-0"
+      class="bg-white shadow-xs shrink-0"
       aria-label="Filtro de busca"
       variant="contained"
       em-button-toggle-animation
@@ -19,40 +19,40 @@
         em-button-toggle 
         value="reviews"
         active="text-primary-50"
-        >resenhas</button>
+        >Resenhas</button>
         <button 
         em-button-toggle
         value="posts"
         active="text-primary-50"
-        >textos</button>
+        >Textos</button>
         <button
         em-button-toggle
         value="both"
         active="text-primary-50"
-        >ambos</button>
+        >Ambos</button>
       </em-button-toggle-group>
     </div>
     
     <div class="flex gap-2 overflow-hidden">
       <button class="flex items-center justify-between gap-1 flex-1 md:flex-auto min-w-0" size="base"
       app-button variant="outline_static" appCombobox [options]="rateOptions()"
-      [allowMultipleOptions]="false" label="avaliações"
+      [allowMultipleOptions]="false" label="Avaliações"
       [dumbComponent]="true"
       [searchable]="false"
       (updatedLabel)="labelAvaliacoes.set($event)"
       (activeOptions)="searchRateOptions($event)"
       >
-        <span class="md:max-w-[200px] w-fit whitespace-nowrap overflow-hidden text-ellipsis font-light">{{ labelAvaliacoes() }}</span>
+        <span class="md:max-w-[200px] w-fit whitespace-nowrap overflow-hidden text-ellipsis font-normal">{{ labelAvaliacoes() }}</span>
         <i class="fi fi-rr-caret-down"></i>
       </button>
       <button class="flex items-center justify-between gap-1 flex-1 md:flex-auto min-w-0" size="base"
       app-button variant="outline_static" appCombobox [options]="categoryOptions()"
-      [allowMultipleOptions]="true" label="todas as categorias"
+      [allowMultipleOptions]="true" label="Todas as categorias"
       [dumbComponent]="true"
       (updatedLabel)="labelCategorias.set($event)"
       (activeOptions)="searchCategoriesOptions($event)"
       >
-        <span class="md:max-w-[200px] w-fit whitespace-nowrap overflow-hidden text-ellipsis font-light">{{ labelCategorias() }}</span>
+        <span class="md:max-w-[200px] w-fit whitespace-nowrap overflow-hidden text-ellipsis font-normal">{{ labelCategorias() }}</span>
         <i class="fi fi-rr-caret-down"></i>
       </button>
     </div>
@@ -75,7 +75,7 @@
       (click)="navigateToContent(feed.type, feed.slug)"
       ></article>
     } @empty {
-      <div class="font-serif italic font-semibold text-2xl text-primary text-center mx-auto py-20">nenhum conteúdo encontrado...</div>
+      <div class="font-semibold text-2xl text-primary text-center mx-auto py-20">Nenhum conteúdo encontrado...</div>
     }
   </section>
 

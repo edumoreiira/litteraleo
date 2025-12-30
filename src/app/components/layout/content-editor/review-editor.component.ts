@@ -29,17 +29,17 @@ import { ContentCacheService } from 'app/services/platform/content-cache.service
         />
         <div class="flex gap-4 justify-between flex-wrap">
           <div class="flex gap-2 min-w-0">
-            <button app-button appCombobox size="base" type="button" variant="combobox" class="font-light rounded-lg min-w-0"
+            <button app-button appCombobox size="base" type="button" variant="combobox" class="rounded-lg min-w-0"
             [options]="categories()" [allowMultipleOptions]="true"
-            label="categorias"
+            label="Categorias"
             (updatedLabel)="categoryLabel = $event"
             (activeOptions)="updateFormCategories($event)"
             >
               <span class="max-w-[200px] w-fit whitespace-nowrap overflow-ellipsis overflow-hidden"> {{ categoryLabel }} </span>
             </button>
-            <button app-button appCombobox size="base" type="button" variant="combobox" class="font-light rounded-lg min-w-0"
+            <button app-button appCombobox size="base" type="button" variant="combobox" class="rounded-lg min-w-0"
             [options]="books()" [allowMultipleOptions]="false"
-            label="livros"
+            label="Livros"
             (updatedLabel)="bookLabel = $event"
             (activeOptions)="updateFormBook($event)"
             >
@@ -69,16 +69,19 @@ import { ContentCacheService } from 'app/services/platform/content-cache.service
         </div>
       </div>
       <quill-editor
-        class="w-full h-[400px] my-4 rounded"
+        class="w-full h-[400px] my-4 rounded bg-white"
         [theme]="'snow'"
         formControlName="content"
         [modules]="editorModules"
-        placeholder="Escreva sua review aqui...">
+        placeholder="Escreva sua resenha aqui...">
       </quill-editor>
       <div class="flex justify-end mt-4 gap-2">
         <button app-button size="base" class="font-medium" variant="text" type="button"
         (click)="onPreview()">Pré Visualizar</button>
-        <button app-button size="base" type="submit" [disabled]="this.form.invalid">{{ mode() === 'create' ? 'Publicar' : 'Editar' }}</button>
+        <button app-button size="base" type="submit" [disabled]="this.form.invalid" class="flex items-center gap-2">
+          <i class="fi fi-sr-poll-h"></i>
+          {{ mode() === 'create' ? 'Publicar' : 'Editar' }}
+        </button>
       </div>
     </form>
   `,

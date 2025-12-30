@@ -16,13 +16,14 @@
             {{ data().author.full_name }}
           </h4>
           @if(data().is_post_author) {
-            <span class="text-xs font-medium font-serif lowercase italic px-2.5 py-0.5 bg-primary text-primary-50 rounded-lg">
+            <span class="text-xs font-medium px-2.5 py-0.5 bg-primary text-primary-50 rounded-lg">
               Autor
             </span>
           }
           @if (data().updated_at) {
-            <span class="text-xs text-muted-fg/70 italic font-serif">
-              (edited)
+            <span title="Editado em {{ data().updated_at | date:'short' }}"
+            class="text-xs text-muted-fg/70">
+              (editado)
             </span>
           }
         </div>
@@ -50,7 +51,7 @@
         @if (isRoot()) {
           @let count = repliesCount();
           @if (count > 0) {
-            <button app-button variant="text" class="flex items-center gap-1 font-normal"
+            <button app-button variant="text" class="flex items-center gap-1 font-normal!"
               (click)="loadReplies()"
               [disabled]="isLoadingReplies()">
               <i class="fi fi-rr-comments"></i>

@@ -27,10 +27,10 @@ import { CommentsSectionComponent } from "../comments-section/comments-section.c
   @let post = postData();
     <div class="flex flex-col gap-8 min-w-0 w-full">
       <div class="flex flex-col gap-6">
-        <div class="flex flex-col gap-2">
+        <div class="flex flex-col gap-3.5">
           <h1 appTitle size="lg">{{ post.title }}</h1>
           @if(post.description) {
-            <p class="font-serif italic text-muted-fg text-lg sm:text-xl">{{ post.description }}</p>
+            <p class="text-muted-fg text-lg sm:text-xl">{{ post.description }}</p>
           }
         </div>
         <div class="flex items-center justify-between flex-wrap gap-2">

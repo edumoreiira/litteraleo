@@ -23,7 +23,7 @@ import { QuillModule } from "ngx-quill";
         />
       </div>
       <quill-editor
-        class="w-full h-[400px] my-4 rounded"
+        class="w-full h-[400px] my-4 rounded bg-white"
         [theme]="'snow'"
         formControlName="content"
         [modules]="editorModules"
@@ -32,7 +32,10 @@ import { QuillModule } from "ngx-quill";
       <div class="flex justify-end mt-4 gap-2">
         <button app-button size="base" class="font-medium" variant="text" type="button"
         (click)="onPreview()">Pré Visualizar</button>
-        <button app-button size="base" type="submit" [disabled]="this.form.invalid">{{ mode() === 'create' ? 'Publicar' : 'Editar' }}</button>
+        <button app-button size="base" type="submit" [disabled]="this.form.invalid" class="flex items-center gap-2">
+          <i class="fi fi-sr-poll-h"></i>
+          {{ mode() === 'create' ? 'Publicar' : 'Editar' }}
+        </button>
       </div>
     </form>
   `,

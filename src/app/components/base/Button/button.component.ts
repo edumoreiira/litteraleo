@@ -15,7 +15,7 @@ export class ButtonComponent {
     baseless = input<boolean>(false);
     _size = input<"sm" | "base" | "lg" | "xl" | "2xl">("sm", { alias: "size" });
 
-    private base = "py-1.5 rounded font-[700] font-serif italic lowercase transition-[background-color,color,opacity] " +
+    private base = "py-1.5 rounded transition-[background-color,color,opacity] " +
     "disabled:opacity-50 disabled:cursor-not-allowed" 
     private size = computed(() => {
         return this._size() === "sm" ? "text-sm px-3" :
@@ -26,7 +26,7 @@ export class ButtonComponent {
     })
     
     private contained = 
-    "bg-primary text-primary-fg font-semibold shadow-xs " +
+    "bg-primary text-primary-fg shadow-xs font-semibold " +
     "hover:opacity-85"
 
     private outline = "border border-border shadow-xs " +
@@ -36,9 +36,9 @@ export class ButtonComponent {
 
     private combobox = this.outline_static + " flex items-center gap-2 ";
 
-    private text = "text-fg hover:bg-accent";
+    private text = "text-fg hover:bg-accent font-normal";
 
-    private link = "text-primary hover:underline cursor-pointer";
+    private link = "text-primary hover:underline cursor-pointer font-medium";
 
     @HostBinding("class")
     get variantClasses() {

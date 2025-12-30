@@ -45,14 +45,14 @@ type AuthWrapperMode = 'sign-in' | 'sign-up';
   @if(mode() === 'sign-in') {
     <app-sign-in-form style="view-transition-name: auth-method"/>
     <button app-button variant="link" size="sm"
-    class="block mx-auto"
+    class="block mx-auto text-xs"
     style="view-transition-name: auth-change-mode"
     (click)="setMode('sign-up')">Não tem conta?</button>
   } @else if(mode() === 'sign-up') {
     <app-sign-up-form style="view-transition-name: auth-method"/>
     <button app-button variant="link" size="sm"
     style="view-transition-name: auth-change-mode"
-    class="block mx-auto"
+    class="block mx-auto text-xs"
     (click)="setMode('sign-in')">Já possuo uma conta</button>
   }
   `,
