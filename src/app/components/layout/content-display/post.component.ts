@@ -1,17 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect, inject, input, model, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, input, model, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { CommentComponent } from 'app/components/shared/comment/comment.component';
 import { EditContentDropdownComponent } from 'app/components/shared/edit-content-dropdown/edit-content-dropdown.component';
-import { NewCommentComponent } from 'app/components/shared/new-comment/new-comment.component';
 import { HasRoleDirective } from 'app/directives/auth/has-role.directive';
 import { TitleDirective } from 'app/directives/ui/title.directive';
-import { iComment } from 'app/models/comments.interface';
 import { Post } from 'app/models/post.interface';
 import { SafeHtmlPipe } from 'app/pipes/safe-html.pipe';
 import { AuthService } from 'app/services/auth/auth.service';
 import { ContentCacheService } from 'app/services/platform/content-cache.service';
-import { CommentsService } from 'app/services/posts/comments.service';
 import { PostService } from 'app/services/posts/post.service';
 import { AuthModalService } from 'app/services/ui/auth-modal.service';
 import { DialogService } from 'app/services/ui/dialog.service';
@@ -68,9 +64,10 @@ import { CommentsSectionComponent } from "../comments-section/comments-section.c
       <div class="ql-snow">
         <div class="ql-editor no-padding" [innerHTML]="post.content | safeHtml"></div>
       </div>
+      <hr class="border-border/50 my-8">
       <app-comments-section
       type="post"
-      [postId]="post.id"
+      [resourceId]="post.id"
       />
     </div>
   `,
@@ -78,7 +75,8 @@ import { CommentsSectionComponent } from "../comments-section/comments-section.c
   .no-padding { padding: 0 !important; }
   `,
   imports: [QuillModule, CommonModule, SafeHtmlPipe, TitleDirective, EditContentDropdownComponent, HasRoleDirective,
-  CommentsSectionComponent]
+  CommentsSectionComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PostComponent {
   private postService = inject(PostService);

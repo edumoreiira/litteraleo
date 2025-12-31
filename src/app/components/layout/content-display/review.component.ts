@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, model } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, model } from '@angular/core';
 import { Router } from '@angular/router';
 import { EditContentDropdownComponent } from 'app/components/shared/edit-content-dropdown/edit-content-dropdown.component';
 import { RateComponent } from 'app/components/shared/rate/rate.component';
@@ -13,6 +13,7 @@ import { ReviewsService } from 'app/services/posts/reviews.service';
 import { AuthModalService } from 'app/services/ui/auth-modal.service';
 import { DialogService } from 'app/services/ui/dialog.service';
 import { QuillModule } from 'ngx-quill';
+import { CommentsSectionComponent } from "../comments-section/comments-section.component";
 
 @Component({
   selector: 'article[app-review]',
@@ -119,13 +120,19 @@ import { QuillModule } from 'ngx-quill';
       <div class="ql-snow">
         <div class="ql-editor no-padding" [innerHTML]="review.content | safeHtml"></div>
       </div>
+      <hr class="border-border/50 my-8">
+      <app-comments-section
+      type="review"
+      [resourceId]="reviewData().id"
+      />
     </div>
   `,
   styles: `
   .no-padding { padding: 0 !important; }
   `,
   imports: [QuillModule, CommonModule, SafeHtmlPipe, RateComponent, TitleDirective, HasRoleDirective,
-     EditContentDropdownComponent]
+    EditContentDropdownComponent, CommentsSectionComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ReviewComponent {
   private reviewService = inject(ReviewsService);

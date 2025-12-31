@@ -84,7 +84,7 @@ export class CommentsService {
   // =================================================================
   // 2. UPDATE (Com Deep Select para garantir dados frescos)
   // =================================================================
-  async updateComment(commentId: string, newContent: string): Promise<iComment> {
+  async updateComment(commentId: string, newContent: string): Promise<iComment | CommentReply> {
     const { data, error } = await this.supabase
       .from('comments')
       .update({ 
@@ -108,9 +108,14 @@ export class CommentsService {
 
     if (error) throw error;
     
-    // Nota: No update, você pode manter o replies/replies_count que já 
-    // estava na memória do componente, ou retornar assim e fazer o merge.
-    return data as unknown as iComment; 
+    if ('parent_id' in data && data.parent_id) {
+      return data as unknown as CommentReply;
+    }
+    else {
+      const commentData = data;
+      delete commentData.parent_id;
+      return commentData as unknown as iComment;
+    }
   }
 
   // =================================================================

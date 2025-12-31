@@ -117,7 +117,7 @@ export class CommentComponent {
     this.loadingForm.set(true);
     this.commentService.updateComment(this.data().id, newContent)
       .then(updatedComment => {
-        this.data.set(updatedComment);
+        this.data.update(current => ( current.content = updatedComment.content, current.updated_at = updatedComment.updated_at, current)); // update only the content without spreading to prevent linked signal to trigger
         this.showForm.set('none');
         this.toast.create({ variant: 'success', message: 'Comentário atualizado com sucesso!' });
       })

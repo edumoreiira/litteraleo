@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, ElementRef, effect, inject, input, OnDestroy, OnInit, signal, viewChild, computed } from '@angular/core';
 import { CommentComponent } from 'app/components/shared/comment/comment.component';
-import { iComment } from 'app/models/comments.interface';
+import { CreateCommentDTO, iComment } from 'app/models/comments.interface';
 import { CommentsService } from 'app/services/posts/comments.service';
 import { NewCommentComponent } from "app/components/shared/new-comment/new-comment.component";
 import { TitleDirective } from 'app/directives/ui/title.directive';
@@ -12,14 +12,14 @@ import { ToastService } from 'app/services/ui/toast.service';
     class: 'flex flex-col'
   },
   template: `
+    <h2 appTitle class="mb-8">{{ totalComments() > 0 ? totalComments() : 'nenhum' }} {{ totalComments() <= 1 ? 'Comentário' : 'Comentários' }}</h2>
     <app-new-comment class="mb-12"
     [disabled]="commentFormLoading()"
     (comment)="onNewComment($event)"/>
-    <h2 appTitle class="mb-4">{{ totalComments() > 0 ? totalComments() : 'nenhum' }} {{ totalComments() <= 1 ? 'Comentário' : 'Comentários' }}</h2>
   @for(comment of comments(); track comment.id) {
     <app-comment [type]="type()" class="py-5 border-b border-border/50 last-of-type:border-0"
     [data]="comment"
-    [resourceId]="postId()"
+    [resourceId]="resourceId()"
     (deleted)="onCommentDeleted($event)"
     ></app-comment>
   }
@@ -40,7 +40,7 @@ export class CommentsSectionComponent implements OnInit, OnDestroy {
   private commentService = inject(CommentsService);
   private toast = inject(ToastService);
   // 
-  postId = input.required<string>();
+  resourceId = input.required<string>();
   type = input.required<'post' | 'review'>();
   protected comments = signal<iComment[]>([]);
   protected isLoading = signal<boolean>(false);
@@ -76,7 +76,7 @@ export class CommentsSectionComponent implements OnInit, OnDestroy {
     if (this.isLoading()) return;
     this.isLoading.set(true);
     try {
-      const res = await this.commentService.getComments('post', this.postId(), page);
+      const res = await this.commentService.getComments(this.type(), this.resourceId(), page);
       if (page === 1) {
         this.comments.set(res.data);
       } else {
@@ -123,10 +123,12 @@ export class CommentsSectionComponent implements OnInit, OnDestroy {
 
   protected onNewComment(content: string) {
     this.commentFormLoading.set(true);
-    this.commentService.createComment({
-      content,
-      post_id: this.postId()
-    })
+    const insertPayload: CreateCommentDTO = {
+      content: content,
+      post_id: this.type() === 'post' ? this.resourceId() : undefined,
+      review_id: this.type() === 'review' ? this.resourceId() : undefined,
+    }
+    this.commentService.createComment(insertPayload)
     .then(newComment => {
       this.comments.update(list => [newComment as iComment, ...list]);
       this.meta.update(current => {
