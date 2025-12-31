@@ -5,6 +5,7 @@ import { ToastService } from '../ui/toast.service';
 import { PostgrestError } from '@supabase/supabase-js';
 import { Book, BooksAndCategories, CreateReviewDTO, CreateReviewResponseDTO, PaginatedReviews, Review, ReviewCategory, ReviewSearchParams, UpdateReviewDTO } from 'app/models/review.interface';
 import { LikeResponse } from 'app/models/post.interface';
+import { ContentCacheService } from '../platform/content-cache.service';
 
 @Injectable({
   providedIn: 'root',
@@ -12,6 +13,7 @@ import { LikeResponse } from 'app/models/post.interface';
 export class ReviewsService {
   private supabase = inject(SupabaseService).client;
   private auth = inject(AuthService);
+  private contentCacheService = inject(ContentCacheService);
   private toast = inject(ToastService);
   // 
   private booksAndCategories = signal<BooksAndCategories | null>(null);
@@ -27,37 +29,6 @@ export class ReviewsService {
 
   // --- CRUD ---
   // --- REVIEWS ---
-
-  public async searchReviews(params: ReviewSearchParams)
-  : Promise<{ data: PaginatedReviews; error: PostgrestError | null }>
-  {
-    const { 
-      search_text, 
-      rating, 
-      category_ids, 
-      page = 1, 
-      page_size = 8 
-    } = params;
-  
-    const { data, error } = await this.supabase
-      .rpc('search_reviews', {
-        r_search_text: search_text ?? null,  
-        r_rating: rating ?? null,
-        r_category_ids: category_ids ?? null,
-        r_page : page ?? null,
-        r_page_size : page_size ?? null
-      });
-    
-    if (error) {
-      this.toast.create({
-        variant: 'error',
-        message: 'Ocorreu um erro ao buscar as reviews.',
-      });
-      console.error('Erro ao buscar reviews:', error);
-      throw error;
-    }
-    return { data, error }
-  }
 
   public async getAllBooksAndCategories()
   : Promise<{ data: BooksAndCategories; error: PostgrestError | null }>
@@ -99,6 +70,7 @@ export class ReviewsService {
      variant: 'success',
      message: 'Resenha criada com sucesso!',
    });
+   this.contentCacheService.clear();
 
    return data as CreateReviewResponseDTO; // Retorna o objeto da review criada
   }
@@ -141,6 +113,7 @@ export class ReviewsService {
         message: 'Resenha deletada com sucesso!',
         variant: 'success'
       });
+      this.contentCacheService.clear();
     }
   }
 
@@ -169,6 +142,7 @@ export class ReviewsService {
         variant: 'success'
       });
     }
+    this.contentCacheService.clear();
     return data as Review;
   }
 
@@ -385,6 +359,7 @@ export class ReviewsService {
         variant: 'success',
         message: 'Livro removido com sucesso!',
       });
+      this.contentCacheService.clear();
 
     } catch (error) {
       console.error('Erro ao deletar livro:', error);
@@ -394,6 +369,27 @@ export class ReviewsService {
       });
       throw error;
     }
+  }
+
+  public async getReviewsNameFromBook(bookId: number): Promise<string[]> {
+    const { data, error } = await this.supabase
+      .from('reviews')
+      .select('title, author:author_id(full_name)')
+      .eq('book_id', bookId);
+      if (error) {
+        console.error('Erro ao buscar resenhas do livro:', error);
+        throw error;
+      }
+      return data.map((review: any) => { // Use 'any' temporário ou a interface correta se tiver gerada
+        // PROBLEMA ORIGINAL: O TypeScript via isso como array.
+        // SOLUÇÃO: Verificamos se é array e pegamos o primeiro item, ou tratamos como objeto.
+        const authorData = Array.isArray(review.author) ? review.author[0] : review.author;
+
+        // Tratamento para caso o usuário tenha sido deletado do banco (null safety)
+        const authorName = authorData?.full_name || 'Autor Desconhecido';
+
+        return `${review.title} - ${authorName}`;
+      });
   }
 
   // --- CATEGORIES ---
@@ -462,6 +458,7 @@ export class ReviewsService {
       variant: 'success',
       message: 'Categoria atualizada com sucesso!',
     });
+    this.contentCacheService.clear();
     return data as ReviewCategory;
   }
 
@@ -482,10 +479,11 @@ export class ReviewsService {
       variant: 'success',
       message: 'Categoria deletada com sucesso!',
     });
+    this.contentCacheService.clear();
   }
 
 
-  // --- MÉTODOS AUXILIARES ---
+  // --- UTILS ---
 
   /**
    * Transforma a URL completa:

@@ -3,6 +3,7 @@ import { SupabaseService } from "../supabase/supabase.service";
 import { CreatePostDTO, CreatePostResponse, LikeResponse, Post, UpdatePostDTO } from "app/models/post.interface";
 import { ToastService } from "../ui/toast.service";
 import { AuthService } from "../auth/auth.service";
+import { ContentCacheService } from "../platform/content-cache.service";
 
 @Injectable({
   providedIn: 'root',
@@ -11,6 +12,7 @@ export class PostService {
   private supabase = inject(SupabaseService).client;
   private auth = inject(AuthService);
   private toast = inject(ToastService);
+  private contentCacheService = inject(ContentCacheService);
 
   async getPostBySlug(slug: string) {
     const { data, error } = await this.supabase
@@ -48,6 +50,8 @@ export class PostService {
           variant: 'success'
         });
       }
+
+    this.contentCacheService.clear();
     return { data: data as CreatePostResponse, error };
   }
 
@@ -79,6 +83,7 @@ export class PostService {
         variant: 'success'
       });
     }
+    this.contentCacheService.clear();
     return true;
   }
 
@@ -107,6 +112,7 @@ export class PostService {
         variant: 'success'
       });
     }
+    this.contentCacheService.clear();
     return { data: data as CreatePostResponse, error };
   }
 }
