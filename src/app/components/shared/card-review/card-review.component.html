@@ -2,7 +2,13 @@
   @if(layout() === 'minimal'){
     <div class="flex gap-2 items-start">
       <div class="aspect-5/8 w-27 shrink-0 p-1 rounded overflow-hidden">
-        <img class="h-full w-full object-cover rounded" [src]="book_cover()" alt="Foto da capa do livro {{ title() }}">
+        @if(isMock()) {
+          <div class="h-full w-full bg-neutral-200 animate-pulse rounded flex items-center justify-center">
+            <i class="fi fi-rr-cloud-question text-4xl text-neutral-400"></i>
+          </div>
+        } @else {
+          <img class="h-full w-full object-cover rounded" [src]="book_cover()" alt="Foto da capa do livro {{ title() }}">
+        }
       </div>
       <div class="flex flex-col justify-between p-5 pl-1 min-w-0 w-full h-full">
         <div class="flex flex-col">
@@ -17,9 +23,11 @@
             <h1 class="font-semibold text-lg leading-none mb-0.5 truncate overflow-ellipsis max-w-full">{{ title() }}</h1>
           </div>
           <span class="block text-sm text-muted-fg mb-2 opacity-70">por {{ author_name() }}</span>
-          <p appText size="xs" class="line-clamp-2 overflow-ellipsis"> {{ content() | stripHtml}} </p>
+          <p class="text-sm text-muted-fg line-clamp-2 overflow-ellipsis"> {{ description() || 'Sem descrição' }} </p>
         </div>
         <a [routerLink]="url()"
+        [class.opacity-50]="isMock()"
+        [class.pointer-events-none]="isMock()"
         class="block text-primary font-medium ml-auto
         hover:underline cursor-pointer text-sm">Ver resenha</a>
       </div>

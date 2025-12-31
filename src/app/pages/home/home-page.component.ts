@@ -19,7 +19,7 @@ import { YoutubeVideosSliderComponent } from 'app/components/shared/youtube-vide
   templateUrl: './home-page.component.html',
 })
 export class HomeComponent implements OnInit{
-  private reviews = inject(ReviewsService);
+  private contentService = inject(ContentService);
   protected latestReviews = signal<Review[]>([]);
 
   ngOnInit(): void {
@@ -27,11 +27,52 @@ export class HomeComponent implements OnInit{
   }
 
   private fetchLatestReviews() {
-    this.reviews.searchReviews({ page: 1, page_size: 5 }).then(({ data, error }) => {
+    this.contentService.searchContent({ page: 1, page_size: 5, search_type: 'reviews' }).then(({ data, error }) => {
       if(data) {
-        this.latestReviews.set(data.reviews);
+        const reviews = [...data.reviews];
+        const missingCount = 5 - reviews.length;
+        if (missingCount > 0) { // fill with mock reviews if less than 5
+          for (let i = 0; i < missingCount; i++) {
+            reviews.push(this.createMockReview(i));
+          }
+        }
+        this.latestReviews.set(reviews);
+      } else {
+        const mockReviews: Review[] = [];
+        for (let i = 0; i < 5; i++) {
+          mockReviews.push(this.createMockReview(i));
+        }
+        this.latestReviews.set(mockReviews);
       }
     })
+  }
+
+  private createMockReview(index: number): Review {
+    return {
+      id: `mock-${index}`,
+      slug: 'mock-review',
+      title: 'Resenha Misteriosa',
+      rating: 0,
+      content: '',
+      description: 'Essa resenha ainda não foi escrita. Em breve, novidades!',
+      author: {
+        short_name: 'Sistema',
+        full_name: 'Litteraleo',
+        avatar_url: ''
+      },
+      book: {
+        id: 0,
+        title: 'Livro Indisponível',
+        author: 'Desconhecido',
+        cover_image_url: '',
+        pages: 0,
+        publication_year: new Date().getFullYear()
+      },
+      likes_count: 0,
+      categories: [],
+      created_at: new Date(),
+      updated_at: null
+    };
   }
 
 }

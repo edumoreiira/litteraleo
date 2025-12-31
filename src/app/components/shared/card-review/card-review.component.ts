@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 import { TextDirective } from '../../../directives/ui/text.directive';
 import { RateComponent } from "../rate/rate.component";
 import { DatePipe } from '@angular/common';
@@ -28,4 +28,5 @@ export class CardReviewComponent {
   author_avatar = input<string>('');
   url = input<string[]>();
   type = input<'post' | 'review'>('review');
+  isMock = computed(() => this.url()?.includes('mock-review') || false);
 }
