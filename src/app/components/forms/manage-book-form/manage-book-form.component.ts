@@ -83,6 +83,7 @@ export class ManageBookFormComponent {
     formData.id = undefined;
     const imageFile = this.coverImageFile;
     if (imageFile) {
+      this.bookForm.disable();
       this.reviews.createBook(formData, imageFile).then((data) => {
         if (data) {
           this.bookForm.reset();
@@ -90,7 +91,7 @@ export class ManageBookFormComponent {
           this.bookHoverUrl.set('');
           this.onBookManage.emit();
         }
-      });
+      }).finally(() => { this.bookForm.enable(); });
     }
   }
 
