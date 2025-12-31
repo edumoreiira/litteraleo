@@ -267,6 +267,7 @@ export class ContentFeedComponent implements OnInit {
       }
       if (error) {
         console.error('Error fetching posts:', error);
+        this.setDumbOptions();
       }
     });
   }

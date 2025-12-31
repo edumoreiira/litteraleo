@@ -332,7 +332,8 @@ export class ReviewsService {
       const { error: deleteError } = await this.supabase
         .from('books')
         .delete()
-        .eq('id', bookId);
+        .eq('id', bookId)
+        .single();
 
       if (deleteError) throw deleteError;
 
@@ -466,7 +467,8 @@ export class ReviewsService {
     const { error } = await this.supabase
       .from('categories')
       .delete()
-      .eq('id', id);
+      .eq('id', id)
+      .single();
 
     if (error) {
       this.toast.create({

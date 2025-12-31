@@ -70,12 +70,22 @@ export class LibraryManagerComponent {
     this.updateLibraryAndCloseModal(modalRef);
   }
 
-  protected onDeleteBook() {
+  protected async onDeleteBook() {
     const bookTitle = this.library().books.data.find(book => book.id.toString() === this.library().books.selectedId)?.title ?? 'unknown';
+    let attachedReviews: string[] = [];
+    await this.reviews.getReviewsNameFromBook(Number(this.library().books.selectedId!)).then(reviews => {
+      attachedReviews = reviews ?? [];
+    })
+
+    const dialogMessage = attachedReviews.length > 0 ? 
+    `Tem certeza que deseja excluir o livro ${bookTitle}? Esta ação irá deletar todas as resenhas associadas a este livro:` 
+    : `Tem certeza que deseja excluir o livro ${bookTitle}? Esta ação não pode ser desfeita.`;
+
     this.dialog.openConfirmationDialog(
       {
         title: 'Confirmar exclusão',
-        message: `Tem certeza que deseja excluir o livro ${bookTitle}? Esta ação não pode ser desfeita.`,
+        message: dialogMessage,
+        highlightedText: attachedReviews.length > 0 ? `${attachedReviews.join(', ')}.` : '',
         confirmText: 'Excluir',
         cancelText: 'Cancelar',
         variant: 'destructive'
@@ -88,7 +98,7 @@ export class LibraryManagerComponent {
 
   private deleteBook() {
     if (!this.library().books.selectedId) return;
-    this.reviews.deleteBook(this.library().books.selectedId!).then(() => {
+    this.reviews.deleteBook(Number(this.library().books.selectedId!)).then(() => {
       this.reviews.updateBooksAndCategories();
     });
   }

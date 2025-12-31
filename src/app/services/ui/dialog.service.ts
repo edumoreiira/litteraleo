@@ -5,6 +5,7 @@ import { ConfirmationDialogComponent } from "app/components/dialogs/base/confirm
 interface ConfirmationDialogData {
   title: string;
   message: string;
+  highlightedText?: string;
   confirmText?: string;
   cancelText?: string;
   variant?: 'destructive' | 'info';
@@ -23,6 +24,7 @@ export class DialogService {
       componentInputs: {
         title: data.title,
         message: data.message,
+        highlightedText: data.highlightedText ?? '',
         confirmText: data.confirmText ?? 'Confirmar',
         cancelText: data.cancelText ?? 'Cancelar',
         variant: data.variant
