@@ -53,10 +53,12 @@ import { CommentsSectionComponent } from "../comments-section/comments-section.c
             <button class="flex items-center gap-1 text-muted-fg hover:text-primary cursor-pointer">
               <i class="fi fi-rr-arrow-up-right-from-square"></i>
             </button>
-            <app-edit-content-dropdown *appHasRole="['admin', 'writer']"
-            (delete)="onDelete()"
-            (edit)="onEdit()"
-            />
+            @if(post.author.is_owner) {
+              <app-edit-content-dropdown *appHasRole="['admin', 'writer']"
+              (delete)="onDelete()"
+              (edit)="onEdit()"
+              />
+            }
           </div>
         </div>
         <hr class="border-border/50">
@@ -68,6 +70,7 @@ import { CommentsSectionComponent } from "../comments-section/comments-section.c
       <app-comments-section
       type="post"
       [resourceId]="post.id"
+      [content]="post"
       />
     </div>
   `,

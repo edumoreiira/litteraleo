@@ -32,11 +32,13 @@
         </span>
       </div>
     </div>
-    <app-edit-content-dropdown 
-    *appHasRole="['user', 'admin', 'writer']"
-    (edit)="this.toggleForm('edit')"
-    (delete)="this.onDeleteComment()"
-    />
+    @if(editDropdownOptions().length > 0) {
+      <app-edit-content-dropdown
+      [options]="editDropdownOptions()"
+      (edit)="this.toggleForm('edit')"
+      (delete)="this.onDeleteComment()"
+      />
+    }
   </div>
 
   <!-- Second column: Text and control buttons -->
@@ -96,6 +98,7 @@
       @popItem>
         @for (reply of repliesList(); track reply.id) {
           <app-comment
+            [content]="content()"
             [data]="reply" 
             [type]="type()"
             [resourceId]="resourceId()"

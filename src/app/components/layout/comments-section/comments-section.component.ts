@@ -5,6 +5,8 @@ import { CommentsService } from 'app/services/posts/comments.service';
 import { NewCommentComponent } from "app/components/shared/new-comment/new-comment.component";
 import { TitleDirective } from 'app/directives/ui/title.directive';
 import { ToastService } from 'app/services/ui/toast.service';
+import { Review } from 'app/models/review.interface';
+import { Post } from 'app/models/post.interface';
 
 @Component({
   selector: 'app-comments-section',
@@ -19,6 +21,7 @@ import { ToastService } from 'app/services/ui/toast.service';
   @for(comment of comments(); track comment.id) {
     <app-comment [type]="type()" class="py-5 border-b border-border/50 last-of-type:border-0"
     [data]="comment"
+    [content]="content()"
     [resourceId]="resourceId()"
     (deleted)="onCommentDeleted($event)"
     ></app-comment>
@@ -42,6 +45,7 @@ export class CommentsSectionComponent implements OnInit, OnDestroy {
   // 
   resourceId = input.required<string>();
   type = input.required<'post' | 'review'>();
+  content = input.required<Post | Review>();
   protected comments = signal<iComment[]>([]);
   protected isLoading = signal<boolean>(false);
   protected commentFormLoading = signal<boolean>(false);

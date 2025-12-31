@@ -124,6 +124,7 @@ import { CommentsSectionComponent } from "../comments-section/comments-section.c
       <app-comments-section
       type="review"
       [resourceId]="reviewData().id"
+      [content]="review"
       />
     </div>
   `,

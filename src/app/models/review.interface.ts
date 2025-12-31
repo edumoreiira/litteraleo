@@ -48,6 +48,7 @@ export interface Review {
     short_name: string;
     full_name: string;
     avatar_url: string;
+    is_owner?: boolean;
   }
   book: {
     id: number;

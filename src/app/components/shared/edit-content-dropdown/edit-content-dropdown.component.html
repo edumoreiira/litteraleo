@@ -7,9 +7,9 @@ class="text-muted-fg hover:text-primary transition-colors cursor-pointer">
 <ng-template #optionsTemplate>
   <ul role="menu" @popConfig cdkTrapFocus [cdkTrapFocusAutoCapture]="true"
   aria-label="Menu de opções do conteúdo"
-  class="bg-popover rounded border border-border shadow-xs min-w-[13rem] max-w-[15rem] overflow-hidden overflow-ellipsis">
+  class="bg-popover rounded border border-border shadow-xs min-w-[13rem] max-w-[15rem] overflow-hidden overflow-ellipsis p-1">
     @if (options().includes('edit')) {
-      <li role="none" class="p-1 pb-0">
+      <li role="none">
         <button type="button" role="menuitem"
         class="flex w-full items-center gap-2 rounded-lg px-3 py-1.5 hover:bg-accent focus:bg-accent outline-none"
         (click)="onEdit()">
@@ -19,7 +19,7 @@ class="text-muted-fg hover:text-primary transition-colors cursor-pointer">
       </li>
     }
     @if (options().includes('delete')) {
-      <li role="none" class="p-1 pt-0">
+      <li role="none">
         <button type="button" role="menuitem"
         class="flex w-full items-center text-destructive gap-2 rounded-lg px-3 py-1.5 hover:bg-accent focus:bg-accent outline-none"
         (click)="onDelete()">

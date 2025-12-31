@@ -37,6 +37,7 @@ export interface Post {
     full_name: string;
     short_name: string;
     avatar_url: string;
+    is_owner?: boolean;
   }
   created_at: Date;
   updated_at: Date | null;

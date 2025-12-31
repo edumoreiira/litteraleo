@@ -6,18 +6,19 @@ import { NewCommentComponent } from '../new-comment/new-comment.component';
 import { CommentsService } from 'app/services/posts/comments.service';
 import { TimeAgoPipe } from 'app/pipes/time-ago.pipe';
 import { EditContentDropdownComponent } from "../edit-content-dropdown/edit-content-dropdown.component";
-import { HasRoleDirective } from 'app/directives/auth/has-role.directive';
 import { createAnimation } from 'app/angular-animations/animations.utils';
 import { ToastService } from 'app/services/ui/toast.service';
 import { DialogService } from 'app/services/ui/dialog.service';
+import { AuthService } from 'app/services/auth/auth.service';
+import { Post } from 'app/models/post.interface';
+import { Review } from 'app/models/review.interface';
 
 type CommentFormType = 'reply' | 'edit' | 'none';
 
 @Component({
   selector: 'app-comment',
   templateUrl: './comment.component.html',
-  imports: [ButtonComponent, NewCommentComponent, DatePipe, TimeAgoPipe, EditContentDropdownComponent,
-    HasRoleDirective
+  imports: [ButtonComponent, NewCommentComponent, DatePipe, TimeAgoPipe, EditContentDropdownComponent
   ],
   animations: [createAnimation('popItem', { animateY: true, transform: 'scale(.95)'})],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -26,13 +27,36 @@ export class CommentComponent {
   private commentService = inject(CommentsService);
   private toast = inject(ToastService);
   private dialog = inject(DialogService);
+  private authService = inject(AuthService);
   // 
   data = model.required<iComment | CommentReply>(); // receives either a root comment or a reply
+  content = input.required<Post | Review>();
   type = input.required<'post' | 'review'>();
   resourceId = input.required<string>();
   isReply = computed(() => 'parent_id' in this.data());
   isRoot = computed(() => !this.isReply());
   deleted = output<string>(); // emits the id of the deleted comment
+
+
+  editDropdownOptions = computed<('edit' | 'delete')[]>(() => {
+    const options: ('edit' | 'delete')[] = [];
+    const userRoles = this.authService.$role();
+    const userId = this.authService.$userId();
+    // 
+    const isAdmin = userRoles.includes('admin');
+    const isWriter = userRoles.includes('writer');
+    const isCommentAuthor = userId === this.data().author.id;
+    const isContentAuthor = this.content().author.is_owner;
+
+    if (isAdmin || isCommentAuthor || isContentAuthor && isWriter) {
+      options.push('delete');
+    }
+
+    if (isCommentAuthor) {
+      options.push('edit');
+    }
+    return options;
+  });
 
   // handles the list of replies separately.
   // initializes with existing replies if available in the input data, otherwise empty.
