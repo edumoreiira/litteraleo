@@ -1,0 +1,44 @@
+<h1 class="text-xl font-semibold">Editar Perfil</h1>
+<div class="flex items-center gap-4">
+  <input 
+  #ImageInput
+  type="file"
+  accept="image/png, image/jpg, image/jpeg"
+  class="hidden"
+  (change)="onImageSelected($event)"
+  >
+  <div
+    class="size-16 bg-primary-100 rounded-full cursor-pointer relative group bg-cover bg-center"
+    [style.backgroundImage]="'url(' + user_avatar_url() + ')'"
+    role="button"
+    aria-label="Selecione a foto de perfil"
+    tabindex="0"
+    (keydown.enter)="ImageInput.click()"
+    (keydown.space)="ImageInput.click()"
+    (click)="ImageInput.click()"
+    >
+
+    <div class="absolute inset-0 bg-black/30 rounded-full flex flex-col items-center justify-center
+    opacity-0 group-hover:opacity-100 transition-opacity ">
+      <i class="fi fi-rr-add-image text-white"></i>
+    </div>
+  </div>
+
+  <app-input
+    identifier="username_input"
+    label="Nome Completo"
+    size="sm"
+    placeholder="John Doe"
+    type="text"
+    [(ngModel)]="full_name"
+    class="flex-1"
+    ></app-input>
+</div>
+
+<button app-button class="self-end px-4 flex items-center gap-2"
+  (click)="onSubmit()"
+  [disabled]="invalid_form()"
+  >
+  <i class="fi fi-sr-user-pen"></i>
+  Salvar
+</button>

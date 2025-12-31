@@ -8,6 +8,7 @@ import { HasRoleDirective } from 'app/directives/auth/has-role.directive';
 import { AuthModalService } from 'app/services/ui/auth-modal.service';
 import { createAnimation } from 'app/angular-animations/animations.utils';
 import { UserProfileService } from 'app/services/api/user-profile/user-profile.service';
+import { ClickOutsideDirective } from "app/directives/utils/click-outside.directive";
 
 @Component({
   selector: 'app-navbar',
@@ -19,7 +20,7 @@ import { UserProfileService } from 'app/services/api/user-profile/user-profile.s
     '[class.border-b-transparent]': 'scrollFromTop() <= 20',
   },
   templateUrl: './navbar.component.html',
-  imports: [ButtonComponent, RouterLink, UserIconComponent, HasRoleDirective],
+  imports: [ButtonComponent, RouterLink, UserIconComponent, HasRoleDirective, ClickOutsideDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [createAnimation('popNavbar', { transform: 'scale(.95)', duration: '100ms' })]
 })

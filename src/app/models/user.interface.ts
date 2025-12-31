@@ -24,6 +24,8 @@ export interface UserProfile {
   full_name: string;
   short_name: string;
   avatar_url: string;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface CustomJwtPayload {
@@ -31,3 +33,5 @@ export interface CustomJwtPayload {
 }
 
 export type JwtUserRoles = 'anon' | 'user' | 'writer' | 'admin';
+
+export type UpdateUserProfileDTO = Pick<UserProfile, 'id' | 'full_name'>;

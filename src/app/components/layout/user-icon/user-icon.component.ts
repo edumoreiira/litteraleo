@@ -1,11 +1,13 @@
 import { CdkOverlayOrigin } from '@angular/cdk/overlay';
-import { Component, computed, inject, input, OnInit, output } from '@angular/core';
+import { Component, computed, inject, input, OnInit, output, viewChild } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { createAnimation } from 'app/angular-animations/animations.utils';
 import { PopOverDirective } from 'app/directives/utils/pop-over.directive';
 import { A11yModule } from '@angular/cdk/a11y';
 import { AuthService } from 'app/services/auth/auth.service';
 import { UserProfileService } from 'app/services/api/user-profile/user-profile.service';
+import { ModalService } from 'app/services/ui/modal.service';
+import { UpdateUserFormComponent } from 'app/components/forms/update-user-form/update-user-form.component';
 
 @Component({
   selector: 'app-user-icon',
@@ -17,7 +19,7 @@ import { UserProfileService } from 'app/services/api/user-profile/user-profile.s
     />
 
     <ng-template #options>
-      <ul role="menu" @popConfig cdkTrapFocus
+      <ul role="menu" @popConfig cdkTrapFocus [cdkTrapFocusAutoCapture]="true"
       aria-label="Menu de opções do usuário"
       class="bg-popover rounded border border-border shadow-xs min-w-[13rem] max-w-[15rem] overflow-hidden overflow-ellipsis">
         <li role="none" class="p-4 pb-2">
@@ -26,17 +28,18 @@ import { UserProfileService } from 'app/services/api/user-profile/user-profile.s
         </li>
         <li role="none" class="h-px bg-border"></li>
         <li role="none" class="p-1 pb-0">
-          <a role="menuitem" routerLink="/configuracoes" 
-          class="flex items-center gap-2 rounded-lg px-3 py-1.5 hover:bg-accent focus:bg-accent">
+          <button role="menuitem"
+          class="flex w-full items-center gap-2 rounded-lg px-3 py-1.5 hover:bg-accent focus:bg-accent outline-none"
+          (click)="onEditProfile()">
             <i class="fi fi-rr-circle-user"></i>
-            Configurar perfil
-          </a>
+            Editar perfil
+          </button>
         </li>
         <li role="none" class="p-1 pt-0">
           <button role="menuitem"
-          class="flex w-full cursor-pointer items-center text-destructive gap-2 rounded-lg px-3 py-1.5 hover:bg-accent focus:bg-accent"
+          class="flex w-full items-center text-destructive gap-2 rounded-lg px-3 py-1.5 hover:bg-accent focus:bg-accent outline-none"
           aria-label="Sair da conta"
-          (click)="logout.emit()">
+          (click)="logout()">
             <i class="fi fi-rr-sign-out-alt"></i>
             <span aria-hidden="true">Sair</span>
           </button>
@@ -45,16 +48,28 @@ import { UserProfileService } from 'app/services/api/user-profile/user-profile.s
     </ng-template>
     
   `,
-  imports: [PopOverDirective, CdkOverlayOrigin, RouterLink, A11yModule],
+  imports: [PopOverDirective, CdkOverlayOrigin, A11yModule],
   animations: [createAnimation('popConfig', { transform: 'scale(.95)', duration: '100ms' })],
 })
 export class UserIconComponent {
   private userProfile = inject(UserProfileService);
   private authService = inject(AuthService);
+  private modalService = inject(ModalService);
   // 
-  readonly imgUrl = input('');
-  logout = output<void>();
-
+  protected readonly imgUrl = computed(() => this.userProfile.userProfile$()?.avatar_url || 'icons/default_user.jpg');
   protected readonly username = computed(() => this.userProfile.userProfile$()?.full_name);
   protected readonly email = computed(() => this.authService.$currentUser()?.email);
+  private popOver = viewChild(PopOverDirective);
+
+  protected logout() {
+    this.popOver()?.close();
+    this.authService.logout();
+  }
+
+  protected onEditProfile() {
+    this.popOver()?.close();
+    this.modalService.open(UpdateUserFormComponent, { role: 'alertdialog' })
+  }
+
+
 }

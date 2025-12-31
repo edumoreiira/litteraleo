@@ -36,7 +36,7 @@ import { CommentsSectionComponent } from "../comments-section/comments-section.c
         <div class="flex items-center justify-between flex-wrap gap-2">
           <div class="flex items-center gap-3 flex-wrap">
             <div class="flex items-center gap-2 flex-wrap">
-              <img class="h-8 w-8 rounded-full"
+              <img class="h-8 w-8 rounded-full object-cover object-center"
               [src]="post.author.avatar_url || '/icons/default_user.jpg'" [alt]="'Foto do usuário ' + post.author.full_name">
               <span class="text-sm text-muted-fg">{{ post.author.full_name }}</span>
             </div>

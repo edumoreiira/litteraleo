@@ -52,18 +52,21 @@ export class AuthService {
   }
 
   private handleAuthStateChange() {
-  this.supabase.auth.onAuthStateChange((event, session) => {
-    if (event === 'SIGNED_IN') {
-      const user = session?.user;
-      this.currentUser.set(user! as unknown as CurrentUser);
-      this.refreshRole(session!);
-      this.userProfileService.refreshCurrentUserProfile();
-    } else if (event === 'SIGNED_OUT') {
-      this.currentUser.set(undefined);
-      this.refreshRole(undefined);
-      this.userProfileService.clearUserProfile();
-    }
-})
+    this.supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN' || event === 'INITIAL_SESSION') {
+        const newUser = session?.user;
+        const currentUserId = this.currentUser()?.id;
+        if (currentUserId && newUser?.id === currentUserId) return; // Mesma sessão, não faz nada
+        // 
+        this.currentUser.set(newUser! as unknown as CurrentUser);
+        this.refreshRole(session!);
+        this.userProfileService.refreshCurrentUserProfile();
+      } else if (event === 'SIGNED_OUT') {
+        this.currentUser.set(undefined);
+        this.refreshRole(undefined);
+        this.userProfileService.clearUserProfile();
+      }
+    })
   }
 
   async logout() {

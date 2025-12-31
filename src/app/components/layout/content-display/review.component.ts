@@ -60,7 +60,7 @@ import { QuillModule } from 'ngx-quill';
         <div class="flex items-center justify-between gap-4 flex-wrap">
           <div class="flex items-center gap-3 flex-wrap">
             <div class="flex items-center gap-2 flex-wrap">
-              <img class="h-8 w-8 rounded-full"
+              <img class="h-8 w-8 rounded-full object-cover object-center"
               [src]="review.author.avatar_url || '/icons/default_user.jpg'" [alt]="'Foto do usuário ' + review.author.full_name">
               <span class="text-sm text-muted-fg">{{ review.author.full_name }}</span>
             </div>

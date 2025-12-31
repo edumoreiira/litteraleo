@@ -136,7 +136,7 @@ export class CommentsSectionComponent implements OnInit, OnDestroy {
           total: current.total + 1
         }
       });
-      this.newCommentComponent().clear();
+      this.newCommentComponent().clear(); // Clear the form after successful submission
     })
     .catch(error => {
       this.toast.create({ variant: 'error', message: 'Erro ao enviar comentário. Tente novamente mais tarde.' });

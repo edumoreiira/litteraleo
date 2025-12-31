@@ -9,7 +9,9 @@
         <div @popNavbar
         class="sm:flex-row flex-col items-center gap-3 lg:gap-4
         sm:static absolute right-[3px] shadow-xs sm:shadow-none top-full px-10 sm:px-0 py-8 sm:py-0 rounded-2xl
-        border border-border bg-white sm:border-0 sm:bg-transparent">
+        border border-border bg-white sm:border-0 sm:bg-transparent"
+        (clickOutside)="navBarOpen.set(false)"
+        allowFirstClick="true">
             <ul class="flex sm:flex-row flex-col items-center gap-8 text-muted-fg font-medium mx-auto">
                 <li><a class="hover:text-primary transition-colors" 
                     routerLink="/">Home</a></li>
@@ -32,9 +34,7 @@
                 (click)="openSignUpModal()">Registrar</button>
             </div>
         } @else {
-            <app-user-icon [imgUrl]="userProfile()?.avatar_url || '' " 
-            (logout)="logout()"
-            />
+            <app-user-icon />
         }
         <i class="fi fi-rr-menu-burger text-2xl text-muted-fg sm:hidden! cursor-pointer"
         (click)="toggleNavBar()"></i>

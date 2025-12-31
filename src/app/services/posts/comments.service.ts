@@ -75,7 +75,9 @@ export class CommentsService {
     if (payload.parent_id) {
       return data as unknown as CommentReply;
     } else {
-      return data as unknown as iComment;
+      const commentData = data;
+      delete commentData.parent_id; // root comments don't have parent_id
+      return commentData as unknown as iComment;
     }
   }
 
@@ -118,7 +120,9 @@ export class CommentsService {
     const { error } = await this.supabase
       .from('comments')
       .delete()
-      .eq('id', commentId); // A RLS checa dono ou admin automaticamente
+      .eq('id', commentId) // A RLS checa dono ou admin automaticamente
+      .single(); // force return single row to trigger error if user cannot delete
+      
 
     if (error) throw error;
     return true;

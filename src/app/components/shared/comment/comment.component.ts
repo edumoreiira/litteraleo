@@ -31,7 +31,7 @@ export class CommentComponent {
   type = input.required<'post' | 'review'>();
   resourceId = input.required<string>();
   isReply = computed(() => 'parent_id' in this.data());
-  isRoot = computed(() => 'replies_count' in this.data());
+  isRoot = computed(() => !this.isReply());
   deleted = output<string>(); // emits the id of the deleted comment
 
   // handles the list of replies separately.
