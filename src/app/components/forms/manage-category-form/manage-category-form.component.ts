@@ -44,11 +44,12 @@ export class ManageCategoryFormComponent {
 
   protected onSubmit() {
     if (this.categoryForm.invalid) return;
+    this.categoryForm.disable();
     if (this.mode() === 'create') {
       this.reviews.createCategory({ name: this.categoryForm.value.name! }).then(() => {
         this.categoryForm.reset();
         this.onCategoryManage.emit();
-      })
+      }).finally(() => { this.categoryForm.enable(); });
     } else {
       if (!this.categoryForm.value.id) return;
 
@@ -59,7 +60,7 @@ export class ManageCategoryFormComponent {
       this.reviews.updateCategory(updatedCategory).then(() => {
         this.categoryForm.reset();
         this.onCategoryManage.emit();
-      });
+      }).finally(() => { this.categoryForm.enable(); });
     }
   }
 
