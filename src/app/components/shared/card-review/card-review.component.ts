@@ -2,7 +2,6 @@ import { Component, computed, input } from '@angular/core';
 import { TextDirective } from '../../../directives/ui/text.directive';
 import { RateComponent } from "../rate/rate.component";
 import { DatePipe } from '@angular/common';
-import { StripHtmlPipe } from 'app/pipes/strip-html.pipe';
 import { RouterLink } from "@angular/router";
 import { ReviewCategory } from 'app/models/review.interface';
 
@@ -11,7 +10,7 @@ import { ReviewCategory } from 'app/models/review.interface';
   host: {
     class: 'flex flex-col justify-between bg-card text-card-fg rounded'
   },
-  imports: [TextDirective, RateComponent, DatePipe, StripHtmlPipe, RouterLink],
+  imports: [TextDirective, RateComponent, DatePipe, RouterLink],
   templateUrl: './card-review.component.html',
 })
 export class CardReviewComponent {

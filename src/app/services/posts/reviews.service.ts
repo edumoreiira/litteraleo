@@ -6,6 +6,7 @@ import { PostgrestError } from '@supabase/supabase-js';
 import { Book, BooksAndCategories, CreateReviewDTO, CreateReviewResponseDTO, PaginatedReviews, Review, ReviewCategory, ReviewSearchParams, UpdateReviewDTO } from 'app/models/review.interface';
 import { LikeResponse } from 'app/models/post.interface';
 import { ContentCacheService } from '../platform/content-cache.service';
+import { normalizeText } from 'app/utils/text-parser';
 
 @Injectable({
   providedIn: 'root',
@@ -156,7 +157,8 @@ export class ReviewsService {
       // 1. PREPARAR O UPLOAD
       // Dica: Use timestamp para garantir nome único
       const fileExt = bookCover.name.split('.').pop();
-      const fileName = `${Date.now()}_${bookData.title?.replace(/\s/g, '-')}.${fileExt}`;
+      const safeTitle = normalizeText(bookData.title || 'new-book').replace(/\s/g, '-');
+      const fileName = `${Date.now()}_${safeTitle}.${fileExt}`;
       // Se quiser salvar na raiz, use apenas fileName. Se quiser pasta, use `covers/${fileName}`
       const filePath = fileName; 
 
@@ -198,11 +200,7 @@ export class ReviewsService {
       return data as Book;
 
     } catch (error) {
-      // 5. ROLLBACK MANUAL (A Mágica da Transação)
-      // Se chegamos aqui e temos um caminho de upload, significa que a imagem subiu,
-      // mas o banco falhou. Então, deletamos a imagem imediatamente.
       if (uploadedPath) {
-        console.warn('Rollback: Deletando imagem órfã devido a erro no banco...');
         await this.supabase.storage
           .from('book-covers')
           .remove([uploadedPath]);
@@ -508,6 +506,7 @@ export class ReviewsService {
     
     return null;
   }
+
 
 
 }
