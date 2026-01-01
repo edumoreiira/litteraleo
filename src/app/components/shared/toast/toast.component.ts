@@ -62,7 +62,7 @@ export class ToastComponent {
   }
 
   private startDismissTimer(toast: Toast) {
-    const duration = toast.duration || 3000;
+    const duration = toast.duration || 8000;
     if (this.timeoutIds[toast.id!]) { // checks if the toast already has a timeout set, if so, it doesn't set another one
       return;
     }

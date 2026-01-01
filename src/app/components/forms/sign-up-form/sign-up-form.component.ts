@@ -40,6 +40,11 @@ export class SignUpFormComponent {
     this.signUpForm.disable(); // prevent multiple submissions
     await this.auth.signUpWithEmail(name!, email!, password!).then(res => {
       if(res.error) {
+        if (res.error.code === 'weak_password') {
+          this.toast.create({ variant: 'error', title: 'Senha fraca', message: 'Utilize ao menos um caractere maiúsculo, um minúsculo e um número.' });
+          this.signUpForm.enable();
+          return;
+        }
         this.toast.create({ variant: 'error', message: res.error.message || 'Erro ao tentar criar conta' });
         this.signUpForm.enable();
       } else if(res.data.session) {

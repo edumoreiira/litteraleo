@@ -58,9 +58,12 @@
 
     &__message {
         line-height: 1.2;
+        white-space: break-spaces;
+        overflow-wrap: anywhere;
     }
 
     &__icon {
+        margin-top: 2px;
         &--success {
             color: hsl(var(--success));
         }
@@ -81,13 +84,13 @@
     
     &__body {
         display: flex;
-        align-items: center;
+        align-items: flex-start;
         gap: 8px;
 
         &--with-title {
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 8px;
             align-items: flex-start;
         }
     }
@@ -95,7 +98,7 @@
     &__header {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 6px;
 
         &--danger {
             color: hsl(var(--danger));
@@ -104,7 +107,8 @@
             color: hsl(var(--success));
         }
         .toast__icon {
-            font-size: 17px;
+            font-size: 16px;
+            margin-top: 0;
         }
     }
 
