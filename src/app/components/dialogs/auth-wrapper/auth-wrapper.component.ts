@@ -28,9 +28,10 @@ type AuthWrapperMode = 'sign-in' | 'sign-up';
           class="h-4.5 mx-auto"
         />
       </button>
-      <button app-button variant="outline" class="flex-1 rounded-lg">
-        <span class="sr-only">Entrar com a Apple</span>
-        <img src="./icons/apple.png" alt="Ícone da Apple" class="h-4.5 mx-auto" />
+      <button app-button variant="outline" class="flex-1 rounded-lg"
+      (click)="signInWithDiscord()">
+        <span class="sr-only">Entrar com o Discord</span>
+        <img src="./icons/discord.png" alt="Ícone do Discord" class="h-4.5 mx-auto" />
       </button>
     </div>
     <div class="flex items-center gap-4 py-3"
@@ -84,6 +85,10 @@ export class AuthWrapperComponent implements OnInit {
 
   signInWithGoogle() {
     this.auth.signInWithGoogle()
+  }
+
+  signInWithDiscord() {
+    this.auth.signInWithDiscord()
   }
   
 }

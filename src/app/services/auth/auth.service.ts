@@ -41,6 +41,15 @@ export class AuthService {
     });
   }
 
+  async  signInWithDiscord() {
+    return await this.supabase.auth.signInWithOAuth({
+      provider: 'discord',
+      options: {
+        redirectTo: window.location.origin
+      }
+    })
+  }
+
   async load() {
     const data = (await this.supabase.auth.getSession()).data;
     this.refreshRole(data.session ?? undefined);
