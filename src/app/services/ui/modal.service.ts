@@ -11,7 +11,7 @@ export class ModalService {
     private envInjector = inject(EnvironmentInjector);
     private document = inject(DOCUMENT);
     
-    public open<T>(
+    public open<T extends Object>(
         component: Type<T>,
         config: ModalConfig<T>,
     ): ModalRef<T> {
@@ -62,15 +62,17 @@ export class ModalService {
     }
     
 
-    private close<T>(modalRef: ComponentRef<ModalComponent<T>>) {
+    private close<T extends Object>(modalRef: ComponentRef<ModalComponent<T>>) {
         this.document.body.classList.remove('overflow-hidden'); // re-enable body scroll
         this.appRef.detachView(modalRef.hostView);
         modalRef.destroy();
     }
 
-    private setInputs<T>(config: ModalConfig<T>, modalRef: ComponentRef<ModalComponent<T>>, component: Type<T>) {
+    private setInputs<T extends Object>(config: ModalConfig<T>, modalRef: ComponentRef<ModalComponent<T>>, component: Type<T>) {
         modalRef.setInput('component', component);
         modalRef.setInput('componentInputs', config.componentInputs ?? {});
+        modalRef.setInput('componentOutputs', config.componentOutputs ?? {});
+        
         modalRef.setInput('role', config.role);
         if (config.minWidth)       modalRef.setInput('minWidth', config.minWidth);
         if (config.maxWidth)       modalRef.setInput('maxWidth', config.maxWidth);

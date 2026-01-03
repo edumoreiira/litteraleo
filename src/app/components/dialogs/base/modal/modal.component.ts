@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, ComponentRef, effect, ElementRef, EnvironmentInjector, HostListener, inject, input, output, Type, ViewChild, ViewContainerRef } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ComponentRef, DestroyRef, effect, ElementRef, EnvironmentInjector, HostListener, inject, input, output, Type, ViewChild, ViewContainerRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { createAnimation, createQueryAnimations } from '../../../../angular-animations/animations.utils';
 import { DocumentListenerService } from '../../../../services/platform/document-listener.service';
@@ -10,7 +10,6 @@ import { ModalSizeUnit } from '../../../../models/modal.interface';
   imports: [CommonModule],
   host: { '[@queryAnimationsModal]': '', class: 'modal' },
   template: `
-  <!-- <div class="modal"> host div-->
   <div class="modal__content" @popUp focusTrap
     style="view-transition-name: modal-content;
     max-width: calc(100% - 1.5rem);"
@@ -24,7 +23,7 @@ import { ModalSizeUnit } from '../../../../models/modal.interface';
         <ng-template #vc></ng-template>
     </div>
     <div class="modal__backdrop" @fadeInOut (click)="onCloseModal.emit()"></div>
-  <!-- </div> -->`,
+  `,
   styleUrl: './modal.component.scss',
   animations: [
     createAnimation('popUp', { duration: '200ms', transform: 'scale(1.1)', opacity: '0' }),
@@ -33,16 +32,18 @@ import { ModalSizeUnit } from '../../../../models/modal.interface';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-
-
-export class ModalComponent<T> implements AfterViewInit {
+export class ModalComponent<T extends Object> implements AfterViewInit {
   // injections
   private envInjector = inject(EnvironmentInjector);
   private documentListener = inject(DocumentListenerService);
+  private destroyRef = inject(DestroyRef);
 
   //content inputs
   public component = input.required<Type<T>>();
   public componentInputs = input<Partial<T>>({});
+  
+  // content outputs map
+  public componentOutputs = input<Record<string, (event: any) => void>>({});
 
   // modal controls
   onCloseModal = output();
@@ -79,6 +80,28 @@ export class ModalComponent<T> implements AfterViewInit {
     for (const [key, value] of Object.entries(this.componentInputs())) {
       this.cmpRef.setInput(key, value);
     }
+    
+    // bind outputs
+    this.bindOutputs();
+  }
+  
+  private bindOutputs(): void {
+      if (!this.cmpRef) return;
+      const outputs = this.componentOutputs();
+      
+      for (const [key, callback] of Object.entries(outputs)) {
+          // check if the component instance has the property
+          if (key in this.cmpRef.instance) {
+              const emitter = (this.cmpRef.instance as any)[key];
+              
+              // check if it is an observable-like object (EventEmitter or OutputEmitterRef)
+              if (emitter && typeof emitter.subscribe === 'function') {
+                  const sub = emitter.subscribe(callback);
+                  // automatically unsubscribe when the modal wrapper is destroyed
+                  this.destroyRef.onDestroy(() => sub.unsubscribe());
+              }
+          }
+      }
   }
 
   onKeydownClose(event: KeyboardEvent) {

@@ -28,15 +28,17 @@ export class DialogService {
         confirmText: data.confirmText ?? 'Confirmar',
         cancelText: data.cancelText ?? 'Cancelar',
         variant: data.variant
+      },
+      componentOutputs: {
+        cancel: () => {
+          if (actions.onCancel) actions.onCancel();
+          modalRef.close();
+        },
+        confirm: () => {
+          if (actions.onConfirm) actions.onConfirm();
+          modalRef.close();
+        }
       }
     })
-    modalRef.componentRef.instance.confirm.subscribe(() => {
-      if (actions.onConfirm) actions.onConfirm();
-      modalRef.close();
-    });
-    modalRef.componentRef.instance.cancel.subscribe(() => {
-      if (actions.onCancel) actions.onCancel();
-      modalRef.close();
-    });
   }
 }
