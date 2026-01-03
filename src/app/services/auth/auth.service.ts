@@ -53,11 +53,11 @@ export class AuthService {
   async load() {
     const data = (await this.supabase.auth.getSession()).data;
     this.refreshRole(data.session ?? undefined);
+    this.handleAuthStateChange();
     if (!data.session) return;
     const user = data.session.user;
     this.currentUser.set(user as unknown as CurrentUser);
     this.userProfileService.refreshCurrentUserProfile();
-    this.handleAuthStateChange();
   }
 
   private handleAuthStateChange() {
