@@ -1,2 +1,2 @@
-# starter-kit
-Initial structure i use to build my projects.
+# Litteraleo
+Blog Litteraleo feito em Angular + Supabase
