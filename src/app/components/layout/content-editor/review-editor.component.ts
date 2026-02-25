@@ -193,7 +193,11 @@ export class ReviewEditorComponent {
       return;
     }
 
-    const { title, content, description, categories, rating, book } = this.form.value;
+    let { title, content, description, categories, rating, book } = this.form.value;
+
+    content = content // prevent &nbsp; and non-breaking space characters from quill editor
+    ?.replace(/&nbsp;/g, ' ')
+    .replace(/\u00A0/g, ' ');
 
     this.form.disable(); // prevent multiple submissions
 

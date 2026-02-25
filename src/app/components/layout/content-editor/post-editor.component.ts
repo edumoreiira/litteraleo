@@ -72,7 +72,14 @@ export class PostEditorComponent {
 
   protected submitPost() {
     if (this.form.valid) {
-      const postFormValues = this.form.value as { title: string; content: string };
+      let { title, content, description } = this.form.value;
+
+      content = content // prevent &nbsp; and non-breaking space characters from quill editor
+      ?.replace(/&nbsp;/g, ' ')
+      .replace(/\u00A0/g, ' ');
+      
+      const postFormValues = { title: title!, content: content!, description: description!};
+      
       this.form.disable(); // prevent multiple submissions
       if(this.mode() === 'create') {
         this.createPost(postFormValues);
@@ -86,7 +93,7 @@ export class PostEditorComponent {
     }
   }
 
-  private createPost(postValues: { title: string; content: string }) {
+  private createPost(postValues: { title: string; content: string; description: string }) {
     this.postService.createPost(postValues).then(({data, error}) => {
       if (data) {
         this.contentCache.clear();
@@ -99,6 +106,7 @@ export class PostEditorComponent {
   }
 
   private updatePost(postValues: UpdatePostDTO) {
+    console.log('Updating post with values:', postValues);
     this.postService.updatePost(postValues).then(({data, error}) => {
       if (data) {
         this.contentCache.clear();
