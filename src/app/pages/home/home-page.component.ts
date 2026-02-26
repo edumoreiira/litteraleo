@@ -4,12 +4,14 @@ import { TitleDirective } from '../../directives/ui/title.directive';
 import { CardSlider } from "../../components/shared/card-slider/card-slider.component";
 import { CardReviewComponent } from '../../components/shared/card-review/card-review.component';
 import { ContentService } from 'app/services/posts/content.service';
-import { ReviewsService } from 'app/services/posts/reviews.service';
 import { Review } from 'app/models/review.interface';
+import { Post } from 'app/models/post.interface';
 import { RouterLink } from '@angular/router';
 import { HeroComponent } from 'app/components/layout/hero/hero.component';
 import { AboutMeComponent } from 'app/components/layout/about-me/about-me.component';
 import { YoutubeVideosSliderComponent } from 'app/components/shared/youtube-videos-slider/youtube-videos-slider.component';
+
+export type FeedItem = (Review & { type: 'review' }) | (Post & { type: 'post' });
 
 @Component({
   selector: 'app-home',
@@ -20,35 +22,42 @@ import { YoutubeVideosSliderComponent } from 'app/components/shared/youtube-vide
 })
 export class HomeComponent implements OnInit{
   private contentService = inject(ContentService);
-  protected latestReviews = signal<Review[]>([]);
+  protected latestFeed = signal<FeedItem[]>([]);
 
   ngOnInit(): void {
-    this.fetchLatestReviews();
+    this.fetchLatestFeed();
   }
 
-  private fetchLatestReviews() {
-    this.contentService.searchContent({ page: 1, page_size: 5, search_type: 'reviews' }).then(({ data, error }) => {
+  private fetchLatestFeed() {
+    this.contentService.searchContent({ page: 1, page_size: 5, search_type: 'both' }).then(({ data, error }) => {
       if(data) {
-        const reviews = [...data.reviews];
-        const missingCount = 5 - reviews.length;
+        const reviews: FeedItem[] = data.reviews.map(r => ({ ...r, type: 'review' as const }));
+        const posts: FeedItem[] = data.posts.map(p => ({ ...p, type: 'post' as const }));
+        
+        const combined = [...reviews, ...posts]
+          .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+          .slice(0, 5);
+
+        const missingCount = 5 - combined.length;
         if (missingCount > 0) { // fill with mock reviews if less than 5
           for (let i = 0; i < missingCount; i++) {
-            reviews.push(this.createMockReview(i));
+            combined.push(this.createMockReview(i));
           }
         }
-        this.latestReviews.set(reviews);
+        this.latestFeed.set(combined);
       } else {
-        const mockReviews: Review[] = [];
+        const mockReviews: FeedItem[] = [];
         for (let i = 0; i < 5; i++) {
           mockReviews.push(this.createMockReview(i));
         }
-        this.latestReviews.set(mockReviews);
+        this.latestFeed.set(mockReviews);
       }
     })
   }
 
-  private createMockReview(index: number): Review {
+  private createMockReview(index: number): FeedItem {
     return {
+      type: 'review',
       id: `mock-${index}`,
       slug: 'mock-review',
       title: 'Resenha Misteriosa',
@@ -73,6 +82,22 @@ export class HomeComponent implements OnInit{
       created_at: new Date(),
       updated_at: null
     };
+  }
+
+  getCoverImage(item: FeedItem): string {
+    return item.type === 'review' ? item.book.cover_image_url : '';
+  }
+
+  getBookAuthor(item: FeedItem): string {
+    return item.type === 'review' ? item.book.author : '';
+  }
+
+  getRating(item: FeedItem): number {
+    return item.type === 'review' ? item.rating : 0;
+  }
+
+  getUrl(item: FeedItem): string[] {
+    return item.type === 'review' ? ['/resenha/', item.slug] : ['/post/', item.slug];
   }
 
 }

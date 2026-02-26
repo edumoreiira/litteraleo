@@ -1,5 +1,4 @@
 import { FormControl } from "@angular/forms";
-import { ComboboxOption } from "app/components/shared/combobox/combobox.component";
 
 export interface ReviewForm {
   title: FormControl<string>;
